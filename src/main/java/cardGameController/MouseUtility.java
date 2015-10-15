@@ -7,6 +7,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -117,7 +118,18 @@ public class MouseUtility {
     mousePos.y = e.getSceneY();
   };
 
-  /**
+  EventHandler<MouseEvent> onDragExitedHandler = e -> {
+		// Get the pile that contained the actual card
+	    /** get current pile view. */
+	    CardPileView activePileView = gameBoard.getP1_HandPileView();
+	    
+	  //reorder CardViews
+	    for (CardView cv : activePileView){
+	    	cv.toFront();
+	    }
+	};
+	
+	/**
    * This event handler is attached to all the cards that are not on the stock.
    * Handles the card movements, applies a drop shadow effect, and others.
    */
@@ -184,9 +196,13 @@ public class MouseUtility {
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
     CardPile activePile = game.getPileById(activePileView.getShortID());
-
+    
+    System.out.println(activePileView.getCards());
+    
     // check if card(s) are intersecting with any of the piles
     if (checkAllPiles(card, cardView, activePile, activePileView)) {
+    	System.out.println(activePileView.getCards());
+        
       /*if (game.isGameWon()) {
 
         // Alert dialog box informing the player that he/she has won.
@@ -213,6 +229,15 @@ public class MouseUtility {
     draggedCardView = null;
   };
 
+  EventHandler<MouseEvent> onDragDoneProperty = e -> {
+	  Alert alert = new Alert(Alert.AlertType.INFORMATION);
+      alert.setTitle("Game Over");
+      alert.setHeaderText(null);
+      alert.setContentText("Congratulations, you have won the game!");
+      alert.showAndWait();
+  };
+
+
   /**
    * Constructs a {@link MouseUtility} object for the given
    * {@link CardGame} and {@link GameBoard} objects.
@@ -235,6 +260,7 @@ public class MouseUtility {
     card.setOnMousePressed(onMousePressedHandler);
     card.setOnMouseDragged(onMouseDraggedHandler);
     card.setOnMouseReleased(onMouseReleasedHandler);
+    card.setOnMouseDragExited(onDragExitedHandler);
   }
   
   public void removeDraggable(CardView card){
@@ -350,7 +376,7 @@ public class MouseUtility {
     		//switch cards in piles
     		game.switchCards(draggedCard, cardToSwitch, sourcePile, destPile);
     		
-    		//change draggable event
+    		//change draggable status
     		removeDraggable(draggedCardView);
     		makeDraggable(cardViewToSwitch);
     		
@@ -359,13 +385,7 @@ public class MouseUtility {
     		
     		//slide pile card to hand
     		slideToHand(cardViewToSwitch, destPileView, sourcePileView, 
-    				draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);
-    		//slideToPile(cardViewToSwitch, destPileView, sourcePileView);
-    		
-    		//reorder CardViews
-    	    for (CardView cv : sourcePileView.cardViewsAbove(sourcePileView.getCardView(0))){
-    	    	cv.toFront();
-    	    }
+    				draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);    		
     	    
     		draggedCard = null;
     	    draggedCardView = null;
