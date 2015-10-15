@@ -16,19 +16,21 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
+import java.io.Console;
 import java.util.List;
 import java.util.ListIterator;
 
 import cardGameModel.Card;
 import cardGameModel.CardPile;
+import cardGameModel.Player;
 import cardGameView.CardPileView;
 import cardGameView.CardView;
 import cardGameView.CardViewFactory;
 
 /**
- * This class serves as the controller for the application (sort-of).
+ * This class serves as the controller for the application.
  */
-public class KlondikeMouseUtil {
+public class MouseUtility {
 
   /**
    * Helper inner class for determining the position of the mouse.
@@ -44,16 +46,20 @@ public class KlondikeMouseUtil {
    * Same for the view of the cards.
    */
   private CardView draggedCardView;
+  
+  private int draggedCardViewIndex;
+  
+  private int draggedCardIndex;
+  
+  /**
+   * The {@link CardGame} object to manipulate.
+   */
+  private CardGame game;
 
   /**
-   * The {@link KlondikeGame} object to manipulate.
+   * The {@link GameBoard} object to manipulate.
    */
-  private KlondikeGame game;
-
-  /**
-   * The {@link KlondikeGameArea} object to manipulate.
-   */
-  private KlondikeGameArea gameArea;
+  private GameBoard gameBoard;
 
   /**
    * This event handler is attached to cards that are still on the stock.
@@ -67,7 +73,7 @@ public class KlondikeMouseUtil {
     Card card = game.getDeck().getById(cardView.getShortID());
 
     game.drawFromStock(card);
-    gameArea.getStockView().moveCardViewToPile(cardView, gameArea.getWasteView());
+    gameBoard.getStockView().moveCardViewToPile(cardView, gameBoard.getWasteView());
     cardView.flip();
     cardView.setMouseTransparent(false);
     makeDraggable(cardView);
@@ -82,10 +88,10 @@ public class KlondikeMouseUtil {
     game.refillStockFromWaste();
 
     /** get view for waste. */
-    CardPileView wasteView = gameArea.getWasteView();
+    CardPileView wasteView = gameBoard.getWasteView();
 
     /** get view for stock. */
-    CardPileView stockView = gameArea.getStockView();
+    CardPileView stockView = gameBoard.getStockView();
 
     /** reverse iterator for list. */
     ListIterator<CardView> revIt = wasteView.getCards().listIterator(wasteView.numOfCards());
@@ -141,6 +147,7 @@ public class KlondikeMouseUtil {
 
     // Put this card and all above it to the list of dragged cards
     draggedCardView = cardView;
+    draggedCardViewIndex = activePileView.getCardViewIndex(cardView);
     draggedCard = card;
     
     // Handles dragging coordinates
@@ -180,22 +187,23 @@ public class KlondikeMouseUtil {
 
     // check if card(s) are intersecting with any of the piles
     if (checkAllPiles(card, cardView, activePile, activePileView)) {
-      if (game.isGameWon()) {
+      /*if (game.isGameWon()) {
 
-        /** Alert dialog box informing the player that he/she has won. */
+        // Alert dialog box informing the player that he/she has won.
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Game Over");
         alert.setHeaderText(null);
         alert.setContentText("Congratulations, you have won the game!");
         alert.showAndWait();
       }
-
+    */
       return;
     }
 
     // if not intersecting with any valid pile, slide them back
     slideBack(draggedCardView);
     
+    //reorder CardViews
     for (CardView cv : activePileView){
     	cv.toFront();
     }
@@ -206,15 +214,15 @@ public class KlondikeMouseUtil {
   };
 
   /**
-   * Constructs a {@link KlondikeMouseUtil} object for the given
-   * {@link KlondikeGame} and {@link KlondikeGameArea} objects.
+   * Constructs a {@link MouseUtility} object for the given
+   * {@link CardGame} and {@link GameBoard} objects.
    *
-   * @param game     The {@link KlondikeGame object}.
-   * @param gameArea The {@link KlondikeGameArea} object.
+   * @param game     The {@link CardGame object}.
+   * @param gameBoard The {@link GameBoard} object.
    */
-  public KlondikeMouseUtil(KlondikeGame game, KlondikeGameArea gameArea) {
+  public MouseUtility(CardGame game, GameBoard gameBoard) {
     this.game = game;
-    this.gameArea = gameArea;
+    this.gameBoard = gameBoard;
   }
 
   /**
@@ -227,6 +235,13 @@ public class KlondikeMouseUtil {
     card.setOnMousePressed(onMousePressedHandler);
     card.setOnMouseDragged(onMouseDraggedHandler);
     card.setOnMouseReleased(onMouseReleasedHandler);
+  }
+  
+  public void removeDraggable(CardView card){
+	  card.setOnMouseClicked(null);
+	  card.setOnMousePressed(null);
+	  card.setOnMouseDragged(null);
+	  card.setOnMouseReleased(null);
   }
 
   /**
@@ -256,12 +271,12 @@ public class KlondikeMouseUtil {
 
     // check the standard piles
 /*    if (checkPiles(card, cardView, activePile,
-        activePileView, gameArea.getStandardPileViews()))
+        activePileView, gameBoard.getStandardPileViews()))
       return true;
 */
     // check player foundation piles
     return checkPiles(card, cardView, activePile,
-        activePileView, gameArea.getP1_FoundationPileViews());
+        activePileView, gameBoard.getP1_FoundationPileViews());
     
   }
 
@@ -323,40 +338,51 @@ public class KlondikeMouseUtil {
                                   CardPileView sourcePileView,
                                   CardPileView destPileView) {
     CardPile destPile = game.getPileById(destPileView.getShortID());
-
-    if (game.getRules().isMoveValid(card, destPile)) {
-      String msg = null;
-
-      if (destPile.isEmpty()) {
-        if (destPile.getType().equals(CardPile.Type.Foundation))
-          msg = String.format("Placed %s to the foundation.", card);
-
-        if (destPile.getType().equals(CardPile.Type.Klondike))
-          msg = String.format("Placed %s to a new pile.", card);
-      } else {
-        msg = String.format("Placed %s to %s.",
-            card, destPile.getTopCard());
-      }
-
+    
+    if(!game.isGameInProgress()){
+    	Player activePlayer = game.getActivePlayer();
+    	
+    	if(game.getP1_Foundations().contains(destPile) && sourcePile.equals(game.getP1_HandPile()) 
+    			&& activePlayer.equals(game.getPlayer1())){
+    		Card cardToSwitch = destPile.getTopCard();
+    		CardView cardViewToSwitch = destPileView.getTopCardView();
+    		
+    		//switch cards in piles
+    		game.switchCards(draggedCard, cardToSwitch, sourcePile, destPile);
+    		
+    		//change draggable event
+    		removeDraggable(draggedCardView);
+    		makeDraggable(cardViewToSwitch);
+    		
+    		//slide dragged card to player pile
+    		slideToPile(draggedCardView, sourcePileView, destPileView);
+    		
+    		//slide pile card to hand
+    		slideToHand(cardViewToSwitch, destPileView, sourcePileView, 
+    				draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);
+    		//slideToPile(cardViewToSwitch, destPileView, sourcePileView);
+    		
+    		//reorder CardViews
+    	    for (CardView cv : sourcePileView.cardViewsAbove(sourcePileView.getCardView(0))){
+    	    	cv.toFront();
+    	    }
+    	    
+    		draggedCard = null;
+    	    draggedCardView = null;
+    		return true;
+    	} else if(game.getP2_Foundations().contains(destPile) && activePlayer.equals(game.getPlayer2())){
+    		
+    	}
+    	
+    	return false;
+    	
+    }else if (game.getRules().isMoveValid(card, destPile, sourcePile)) {
       game.moveCard(draggedCard, sourcePile, destPile);
       slideToPile(draggedCardView, sourcePileView, destPileView);
       draggedCard = null;
       draggedCardView = null;
       return true;
     } else {
-      String msg = null;
-
-      if (destPile.isEmpty()) {
-        if (destPile.getType().equals(CardPile.Type.Foundation))
-          msg = String.format("%s is not an Ace!", card);
-
-        if (destPile.getType().equals(CardPile.Type.Klondike))
-          msg = String.format("%s is not a King!", card);
-
-      } else {
-        msg = String.format("Cannot place %s to %s.", card, destPile.getTopCard());
-      }
-
       return false;
     }
   }
@@ -379,8 +405,9 @@ public class KlondikeMouseUtil {
           card.getDropShadow().setOffsetX(0);
           card.getDropShadow().setOffsetY(0);
         });
-    
-    
+    System.out.println(card);
+    System.out.println("targetX: " + targetX);
+    System.out.println("targetY: " + targetY);
   }
 
   /**
@@ -424,7 +451,41 @@ public class KlondikeMouseUtil {
             currentCardView.getDropShadow().setOffsetX(0);
             currentCardView.getDropShadow().setOffsetY(0);
           });
+      
+  }
+  
+  /**
+   * Slides the list of dragged cards from the source pile to the destination
+   * pile.
+   *
+   * @param cardsToSlide The list of dragged cards.
+   * @param sourcePile   The source pile.
+   * @param destPile     The destination pile.
+   */
+  private void slideToHand(CardView cardToSlide, CardPileView sourcePile,
+                           CardPileView destPile, double x, double y, int index) {
+    if (cardToSlide == null)
+      return;
     
+    double destHorizontalCardGap = destPile.getcardGapHorizontal();
+
+    double sourceX = cardToSlide.getLayoutX() + cardToSlide.getTranslateX();
+    double sourceY = cardToSlide.getLayoutY() + cardToSlide.getTranslateY();
+    
+    double targetX = x;
+    double targetY = y;
+    
+    System.out.println(cardToSlide);
+    System.out.println("targetX: " + targetX);
+    System.out.println("targetY: " + targetY);
+
+    animateCardMovement(cardToSlide, sourceX, sourceY,
+        targetX, targetY, Duration.millis(150), e -> {
+        	sourcePile.replaceCardViewOnPile(cardToSlide, destPile, targetX, targetY, index);
+        	cardToSlide.getDropShadow().setRadius(2);
+        	cardToSlide.getDropShadow().setOffsetX(0);
+        	cardToSlide.getDropShadow().setOffsetY(0);
+        });
   }
 
   /**

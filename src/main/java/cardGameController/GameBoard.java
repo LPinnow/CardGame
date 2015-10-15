@@ -1,6 +1,8 @@
 package cardGameController;
 
 import javafx.collections.FXCollections;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -23,7 +25,7 @@ import cardGameView.CardView;
 /**
  * This class represents the area where the game is taking place.
  */
-public class KlondikeGameArea extends Pane {
+public class GameBoard extends Pane {
 
   /**
    * The list of {@link CardView} objects that are on the playing area.
@@ -68,46 +70,94 @@ public class KlondikeGameArea extends Pane {
    * The gap (offset) between the cards.
    */
   private double cardGapVertical = 30;
+  
+  /**
+   * Represents string of player 1's name
+   */
+  private Label p1_name;
+  
+  /**
+   * Represents string of player 2's name
+   */
+  private Label p2_name;
+  
+  /**
+   * Ready button for player 1
+   */
+  private Button p1_ready;
+  
+  /**
+   * Ready button for player 2
+   */
+  private Button p2_ready;
 
   /**
-   * Constructs a new {@link KlondikeGameArea} object.
+   * Constructs a new {@link GameBoard} object.
    */
-  public KlondikeGameArea() {
-    this.p1_handPileView = new CardPileView(0, 40, "K");
-    this.p2_handPileView = new CardPileView(0, 40, "K"+1);
+  public GameBoard() {
+    this.p1_handPileView = new CardPileView(0, 40, 0, 0, "K");
+    this.p2_handPileView = new CardPileView(0, 40, 0, 0, "K"+1);
     this.p1_foundationPileViews = FXCollections.observableArrayList();
     this.p2_foundationPileViews = FXCollections.observableArrayList();
-    this.stockView = new CardPileView(1, 0, "S");
-    this.wasteView = new CardPileView(1, 0, "W");
+    this.stockView = new CardPileView(1, 0, 0, 0, "S");
+    this.wasteView = new CardPileView(1, 0, 0, 0, "W");
+    
+    this.p1_ready = new Button("Player 1 Ready?");
+    this.p2_ready = new Button("Player 2 Ready?");
+    
+    this.p1_name = new Label("Player 1");
+    this.p2_name = new Label("Player 2");
+    
     initGameArea();
   }
 
   /**
-   * Constructs a new {@link KlondikeGameArea} object, with the given image
+   * Constructs a new {@link GameBoard} object, with the given image
    * as the background.
    *
    * @param tableauBackground The {@link Image} object for the background.
    */
-  public KlondikeGameArea(Image tableauBackground) {
+  public GameBoard(Image tableBackground) {
     this();
-    setTableauBackground(tableauBackground);
+    setTableBackground(tableBackground);
   }
 
   /**
    * Initializes the game area.
+   * Calls methods to build deck, waste, hand, and card pile views.
    */
   private void initGameArea() {
+	//place player name labels
+	placeLabel(p1_name, 525, 75);
+	placeLabel(p2_name, 525, 600);
+	  
+	//pass in x,y locations for deck and waste piles
     buildStock(500, 275);
     buildWaste(650, 275);
     
-    //pass in x,y locations for player 1
-    buildFoundationPiles(50, 20, p1_foundationPileViews);
+    //pass in x,y locations and number for player 1 card piles
+    int p1_numOfPiles = 3;
+    buildFoundationPiles(50, 20, p1_foundationPileViews, p1_numOfPiles);
     
-    //pass in x,y locations for player 2
-    buildFoundationPiles(50, 550, p2_foundationPileViews);
+    //pass in x,y locations and number for player 2 card piles
+    int p2_numOfPiles = 3;
+    buildFoundationPiles(50, 550, p2_foundationPileViews, p2_numOfPiles);
     
+    //pass in x,y locations for hand piles
     buildHandPiles(650, 20, p1_handPileView);
     buildHandPiles(650, 550, p2_handPileView);
+    
+    //place ready buttons on game board
+    placeReadyButton(p1_ready, 1000, 75);
+    placeReadyButton(p2_ready, 1000, 625);
+    p2_ready.setVisible(false);
+  }
+  
+  private void placeLabel(Label label, int x, int y){
+	  label.setTranslateX(x);
+	  label.setTranslateY(y);
+	  label.setStyle("-fx-font-size: 18pt; -fx-font-weight: bold;");
+	  getChildren().add(label);
   }
 
   /**
@@ -154,7 +204,7 @@ public class KlondikeGameArea extends Pane {
    * Configures the {@link CardPileView} objects that serves as the view
    * of the foundation piles.
    */
-  private void buildFoundationPiles(int x, int y, List<CardPileView> foundationPileViews) {
+  private void buildFoundationPiles(int x, int y, List<CardPileView> foundationPileViews, int numOfPiles) {
 	 BackgroundFill backgroundFill = new BackgroundFill(
         Color.gray(0.0, 0.2), null, null);
 
@@ -162,8 +212,8 @@ public class KlondikeGameArea extends Pane {
 
     GaussianBlur gaussianBlur = new GaussianBlur(10);
 
-    IntStream.range(0, 3).forEach(i -> {
-      foundationPileViews.add(new CardPileView(2, 0, "F" + i));
+    IntStream.range(0, numOfPiles).forEach(i -> {
+      foundationPileViews.add(new CardPileView(2, 0, (x + i * 160), y, "F" + i));
       foundationPileViews.get(i).setPrefSize(130, 180);
       foundationPileViews.get(i).setBackground(background);
       foundationPileViews.get(i).setLayoutX(x + i * 160);
@@ -195,7 +245,19 @@ public class KlondikeGameArea extends Pane {
     p1_handView.setEffect(gaussianBlur);
     getChildren().add(p1_handView);
   }
-
+  
+  /**
+   * Place ready button
+   * @param button
+   * @param x
+   * @param y
+   */
+  private void placeReadyButton(Button button, int x, int y) {
+	  button.setTranslateX(x);
+	  button.setTranslateY(y);
+	  getChildren().add(button);
+  }
+  
   /**
    * Returns the {@link List} of {@link CardPileView} objects that serves
    * as the view of player 1's hand.
@@ -257,12 +319,12 @@ public class KlondikeGameArea extends Pane {
   }
 
   /**
-   * Sets the background image for the tableau.
+   * Sets the background image for the table.
    *
-   * @param tableauBackground The {@link Image} object to set.
+   * @param tableBackground The {@link Image} object to set.
    */
-  public void setTableauBackground(Image tableauBackground) {
-    setBackground(new Background(new BackgroundImage(tableauBackground,
+  public void setTableBackground(Image tableBackground) {
+    setBackground(new Background(new BackgroundImage(tableBackground,
         BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
         BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
   }
@@ -278,5 +340,17 @@ public class KlondikeGameArea extends Pane {
       cardView.setFrontFace(cardTheme.getFrontFace(cardView.getShortID()));
       cardView.setBackFace(cardTheme.getBackFace());
     });
+  }
+
+  public Button getP1_ReadyButton(){
+	  return p1_ready;
+  }
+  
+  public Button getP2_ReadyButton(){
+	  return p2_ready;
+  }
+  
+  public void setButtonVisibility(Button b, boolean visible){
+	  b.setVisible(visible);
   }
 }

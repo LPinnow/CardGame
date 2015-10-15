@@ -11,7 +11,7 @@ import javafx.util.Duration;
 /**
  * This class represents the status bar for the application.
  */
-public class KlondikeStatusBar extends HBox {
+public class StatusBar extends HBox {
 
   /**
    * Label which displays elapsed time.
@@ -29,9 +29,9 @@ public class KlondikeStatusBar extends HBox {
   private int minutes = 0;
 
   /**
-   * Constructs a new {@link KlondikeStatusBar} object.
+   * Constructs a new {@link StatusBar} object.
    */
-  public KlondikeStatusBar() {
+  public StatusBar() {
     this.elapsedTimeText = new Label();
     setPadding(new Insets(2));
 

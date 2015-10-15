@@ -1,4 +1,4 @@
 /**
- * Classes specific to the Klondike implementation.
+ * Classes specific to the HAND implementation.
  */
 package cardGameController;

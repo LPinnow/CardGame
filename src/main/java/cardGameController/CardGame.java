@@ -9,12 +9,13 @@ import java.util.ListIterator;
 import cardGameModel.Card;
 import cardGameModel.CardPile;
 import cardGameModel.FrenchCardDeck;
+import cardGameModel.Player;
 
 /**
  * This class represents the game itself, with methods to manipulate the state
  * of the game.
  */
-public class KlondikeGame {
+public class CardGame {
 
   /**
    * Reference to the {@link FrenchCardDeck} object associated with this game.
@@ -54,39 +55,63 @@ public class KlondikeGame {
   /**
    * The rules for this game.
    */
-  private KlondikeRules rules;
+  private CardGameRules rules;
+  
+  /**
+   * Player 1
+   */
+  private Player p1;
 
   /**
-   * Constructs a new {@link KlondikeGame} object.
+   * Player 2
    */
-  public KlondikeGame() {
+  private Player p2;
+  
+  /**
+   * Status of the game
+   */
+  private boolean gameInProgress;
+  
+  /**
+   * Constructs a new {@link CardGame} object.
+   */
+  public CardGame() {
     // Create deck
     this.deck = FrenchCardDeck.createFrenchCardDeck();
 
     // create stock
-    this.stock = new CardPile(CardPile.Type.Stock, "S");
+    this.stock = new CardPile(CardPile.Type.DECK, "S");
 
     // create waste
-    this.waste = new CardPile(CardPile.Type.Waste, "W");
+    this.waste = new CardPile(CardPile.Type.WASTE, "W");
     
     // create foundations
     this.p1_foundations = FXCollections.observableArrayList();
     this.p2_foundations = FXCollections.observableArrayList();
     
     for (int i = 0; i < 3; i++)
-    	p1_foundations.add(new CardPile(CardPile.Type.Stock, "F" + i));
+    	p1_foundations.add(new CardPile(CardPile.Type.DECK, "F" + i));
     
     for (int i = 3; i < 6; i++)
-    	p2_foundations.add(new CardPile(CardPile.Type.Stock, "F" + i));
+    	p2_foundations.add(new CardPile(CardPile.Type.DECK, "F" + i));
 
     // create standard piles
-    this.p1_handPile = new CardPile(CardPile.Type.Klondike, "K");
+    this.p1_handPile = new CardPile(CardPile.Type.HAND, "K");
     
- // create standard piles
-    this.p2_handPile = new CardPile(CardPile.Type.Klondike, "K" + 1);
+    // create standard piles
+    this.p2_handPile = new CardPile(CardPile.Type.HAND, "K" + 1);
+    
+    //create player 1
+    this.p1 = new Player(1, "Player 1", false, true);
+    
+    //create player 2
+    this.p2 = new Player(2, "Player 2", false, false);
+    
+    //set status of game
+    this.gameInProgress = false;
 
     // load rules
-    this.rules = new KlondikeRules(p1_handPile, p2_handPile, p1_foundations, p2_foundations, waste, stock);
+    this.rules = new CardGameRules(p1_handPile, p2_handPile, p1_foundations, p2_foundations, waste, stock, 3, 3);
   }
 
   /**
@@ -155,14 +180,52 @@ public class KlondikeGame {
   }
   
   /**
-   * Returns the {@link KlondikeRules} object associated with this
-   * {@link KlondikeGame} instance.
+   * Returns the {@link CardGameRules} object associated with this
+   * {@link CardGame} instance.
    *
-   * @return The {@link KlondikeRules} object.
+   * @return The {@link CardGameRules} object.
    */
-  public KlondikeRules getRules() {
+  public CardGameRules getRules() {
     return rules;
   }
+  
+  public Player getPlayer1(){
+	  return p1;
+  }
+  
+  public Player getPlayer2(){
+	  return p2;
+  }
+  
+  public Player getActivePlayer(){
+	  if(p1.isActive()){
+		  return p1;
+	  } else if(p2.isActive()){
+		  return p2;
+	  } else {
+		  return p1;
+	  }
+  }
+  
+  /**
+   * Return status of game
+   * true: game is in progress
+   * false: game is not in progress
+   * @return
+   */
+  public boolean isGameInProgress(){
+	  return gameInProgress;
+  }
+  
+  /**
+   * true: game is in progress
+   * false: game is not in progress
+   * @param gameInProgress
+   */
+  public void setGameInProgress(boolean gameInProgress){
+	  this.gameInProgress = gameInProgress;
+  }
+
 
   /**
    * Starts a new game. Effectively shuffles the deck of cards, and deals them
@@ -306,5 +369,11 @@ public class KlondikeGame {
 
     return null;
   }
+
+public void switchCards(Card draggedCard, Card topCard, CardPile sourcePile,
+		CardPile destPile) {
+	sourcePile.moveCardToPile(topCard, destPile);
+	destPile.moveCardToPile(draggedCard, sourcePile);
+}
 
 }

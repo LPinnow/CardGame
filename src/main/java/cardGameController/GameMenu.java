@@ -11,14 +11,14 @@ import javafx.scene.image.Image;
 /**
  * This class represents the menu bar for the application.
  */
-public class KlondikeMenu extends MenuBar {
+public class GameMenu extends MenuBar {
 
   /**
-   * Constructs a {@link KlondikeMenu} object for the given {@link KlondikeApp}.
+   * Constructs a {@link GameMenu} object for the given {@link CardGameApp}.
    *
-   * @param klondikeApp The {@link KlondikeApp} instance to create the menu for.
+   * @param cardGameApp The {@link CardGameApp} instance to create the menu for.
    */
-  public KlondikeMenu(KlondikeApp klondikeApp) {
+  public GameMenu(CardGameApp cardGameApp) {
     Menu gameMenu = new Menu("Game");
     Menu settingsMenu = new Menu("Settings");
     getMenus().addAll(gameMenu, settingsMenu);
@@ -37,22 +37,22 @@ public class KlondikeMenu extends MenuBar {
     RadioMenuItem classicMenuItem = new RadioMenuItem("Classic");
     classicMenuItem.setToggleGroup(cardThemeToggleGroup);
     classicMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setThemeFile("/cardfaces/classic/theme.json");
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setThemeFile("/cardfaces/classic/theme.json");
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem piatnikImperialMenuItem = new RadioMenuItem("Piatnik Imperial");
     piatnikImperialMenuItem.setToggleGroup(cardThemeToggleGroup);
     piatnikImperialMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setThemeFile("/cardfaces/piatnik_imperial/theme.json");
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setThemeFile("/cardfaces/piatnik_imperial/theme.json");
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem piatnikLuxuryMenuItem = new RadioMenuItem("Piatnik Luxury");
     piatnikLuxuryMenuItem.setToggleGroup(cardThemeToggleGroup);
     piatnikLuxuryMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setThemeFile("/cardfaces/piatnik_luxury/theme.json");
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setThemeFile("/cardfaces/piatnik_luxury/theme.json");
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     cardThemeSettingsMenu.getItems().addAll(classicMenuItem,
@@ -67,64 +67,64 @@ public class KlondikeMenu extends MenuBar {
     RadioMenuItem classicBlueMenuItem = new RadioMenuItem("Classic blue");
     classicBlueMenuItem.setToggleGroup(cardBackToggleGroup);
     classicBlueMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/bb.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/bb.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem classicRedMenuItem = new RadioMenuItem("Classic red");
     classicRedMenuItem.setToggleGroup(cardBackToggleGroup);
     classicRedMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/rb.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/rb.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem fancyBlueMenuItem = new RadioMenuItem("Fancy blue");
     fancyBlueMenuItem.setToggleGroup(cardBackToggleGroup);
     fancyBlueMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/bb_fancy.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/bb_fancy.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem fancyRedMenuItem = new RadioMenuItem("Fancy red");
     fancyRedMenuItem.setToggleGroup(cardBackToggleGroup);
     fancyRedMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/rb_fancy.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/rb_fancy.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem hearthStoneMenuItem = new RadioMenuItem("Hearthstone");
     hearthStoneMenuItem.setToggleGroup(cardBackToggleGroup);
     hearthStoneMenuItem.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/hearthstone.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/hearthstone.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem piatnikImperialBack1 = new RadioMenuItem("Piatnik Imperial 1");
     piatnikImperialBack1.setToggleGroup(cardBackToggleGroup);
     piatnikImperialBack1.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_imperial_1.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_imperial_1.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem piatnikImperialBack2 = new RadioMenuItem("Piatnik Imperial 2");
     piatnikImperialBack2.setToggleGroup(cardBackToggleGroup);
     piatnikImperialBack2.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_imperial_2.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_imperial_2.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem piatnikLuxuryBack1 = new RadioMenuItem("Piatnik Luxury 1");
     piatnikLuxuryBack1.setToggleGroup(cardBackToggleGroup);
     piatnikLuxuryBack1.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_luxury_1.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_luxury_1.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     RadioMenuItem piatnikLuxuryBack2 = new RadioMenuItem("Piatnik Luxury 2");
     piatnikLuxuryBack2.setToggleGroup(cardBackToggleGroup);
     piatnikLuxuryBack2.setOnAction(e -> {
-      klondikeApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_luxury_2.png"));
-      klondikeApp.gameArea.updateCardViews(klondikeApp.cardTheme);
+      cardGameApp.cardTheme.setBackFace(new Image("/backfaces/piatnik_luxury_2.png"));
+      cardGameApp.gameBoard.updateCardViews(cardGameApp.cardTheme);
     });
 
     cardBackSettingsMenu.getItems().addAll(classicBlueMenuItem,
@@ -134,25 +134,25 @@ public class KlondikeMenu extends MenuBar {
 
     cardBackToggleGroup.selectToggle(cardBackToggleGroup.getToggles().get(0));
 
-    // tableaou backgrounds
-    Menu tableaouBackgroundsMenu = new Menu("Select tableaou background");
-    ToggleGroup tableaouToggleGroup = new ToggleGroup();
+    // table backgrounds
+    Menu tableBackgroundsMenu = new Menu("Select table background");
+    ToggleGroup tableToggleGroup = new ToggleGroup();
 
     RadioMenuItem greenFeltBGItem = new RadioMenuItem("Green felt");
-    greenFeltBGItem.setToggleGroup(tableaouToggleGroup);
+    greenFeltBGItem.setToggleGroup(tableToggleGroup);
     greenFeltBGItem.setOnAction(e ->
-        klondikeApp.gameArea.setTableauBackground(new Image("/tableaous/green-felt.png")));
+        cardGameApp.gameBoard.setTableBackground(new Image("/tableaous/green-felt.png")));
 
     RadioMenuItem woodBGItem = new RadioMenuItem("Wood desk");
-    woodBGItem.setToggleGroup(tableaouToggleGroup);
+    woodBGItem.setToggleGroup(tableToggleGroup);
     woodBGItem.setOnAction(e ->
-        klondikeApp.gameArea.setTableauBackground(new Image("/tableaous/wood.jpg")));
+        cardGameApp.gameBoard.setTableBackground(new Image("/tableaous/wood.jpg")));
 
-    tableaouBackgroundsMenu.getItems().addAll(greenFeltBGItem, woodBGItem);
+    tableBackgroundsMenu.getItems().addAll(greenFeltBGItem, woodBGItem);
 
-    tableaouToggleGroup.selectToggle(tableaouToggleGroup.getToggles().get(0));
+    tableToggleGroup.selectToggle(tableToggleGroup.getToggles().get(0));
 
     settingsMenu.getItems().addAll(cardThemeSettingsMenu, cardBackSettingsMenu,
-        tableaouBackgroundsMenu);
+        tableBackgroundsMenu);
   }
 }

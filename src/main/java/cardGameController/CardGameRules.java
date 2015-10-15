@@ -8,9 +8,9 @@ import cardGameModel.FrenchRank;
 import cardGameModel.FrenchSuit;
 
 /**
- * Class representing the rules of the Klondike game.
+ * Class representing the rules of the card game.
  */
-public class KlondikeRules {
+public class CardGameRules {
 
   /**
    * Reference to the list of the standard card piles.
@@ -41,32 +41,47 @@ public class KlondikeRules {
    * Reference to the waste pile.
    */
   private CardPile waste;
-
+  
   /**
-   * Creates an empty {@link KlondikeRules} object.
+   * Number of cards initially dealt to player's hands
    */
-  public KlondikeRules() {
+  private int handCardNum;
+  
+  /**
+   * Number of cards initially dealt to extra piles (not deck or hand)
+   */
+  private int pileCardNum;
+  
+  /**
+   * Creates an empty {@link CardGameRules} object.
+   */
+  public CardGameRules() {
   }
 
   /**
-   * Creates a {@link KlondikeRules} object with the given pile references.
+   * Creates a {@link CardGameRules} object with the given pile references.
    *
    * @param standardPiles Reference to the list of standard card piles.
    * @param foundations   Reference to the list of foundation piles.
    * @param waste         Reference to the waste pile.
    * @param stock         Reference to the stock pile.
+   * @param handCardNum 	Reference to number of cards dealt to player's hand.
+   * @param pileCardNum		Reference to number of cards dealt to piles.
    */
-  public KlondikeRules(CardPile p1_handPile, 
+  public CardGameRules(CardPile p1_handPile, 
 		  				CardPile p2_handPile,
 		  				List<CardPile> p1_foundations,
 		  				List<CardPile> p2_foundations,
-		  				CardPile waste, CardPile stock) {
+		  				CardPile waste, CardPile stock, 
+		  				int handCardNum, int pileCardNum) {
     this.p1_handPile = p1_handPile;
     this.p2_handPile = p2_handPile;
     this.p1_foundations = p1_foundations;
     this.p2_foundations = p2_foundations;
     this.waste = waste;
     this.stock = stock;
+    this.handCardNum = handCardNum;
+    this.pileCardNum = pileCardNum;
   }
 
   /**
@@ -320,8 +335,10 @@ public class KlondikeRules {
    * @return <code>true</code> if the move is valid,
    * <code>false</code> otherwise.
    */
-  public boolean isMoveValid(Card card, CardPile destPile) {
-    if (destPile.getType() == CardPile.Type.Klondike) {
+  public boolean isMoveValid(Card card, CardPile destPile, CardPile sourcePile) {
+	 
+	  
+    if (destPile.getType() == CardPile.Type.HAND) {
       if (destPile.isEmpty())
         return card.getRank() == FrenchRank.King;
       else
@@ -330,7 +347,7 @@ public class KlondikeRules {
             destPile.getTopCard().getRank() != FrenchRank.Two;
     }
 
-    if (destPile.getType() == CardPile.Type.Foundation) {
+    if (destPile.getType() == CardPile.Type.PILE) {
       if (destPile.isEmpty())
         return card.getRank() == FrenchRank.Ace;
       else
@@ -339,5 +356,13 @@ public class KlondikeRules {
 
     return false;
   }
+
+public int getHandCardNum() {
+	return handCardNum;
+}
+
+public int getPileCardNum() {
+	return pileCardNum;
+}
 
 }

@@ -30,6 +30,16 @@ public class CardPileView extends Pane implements Iterable<CardView> {
   private double cardGapHorizontal;
   
   /**
+   * Layout of initial X coordinate
+   */
+  private double initialX;
+  
+  /**
+   * Layout of initial Y coordinate
+   */
+  private double initialY;
+  
+  /**
    * The identifier of the pile.
    */
   private String shortID;
@@ -39,9 +49,11 @@ public class CardPileView extends Pane implements Iterable<CardView> {
    *
    * @param cardGap The vertical gap to lay out the cards.
    */
-  public CardPileView(double cardGapVertical, double cardGapHorizontal) {
+  public CardPileView(double cardGapVertical, double cardGapHorizontal, double initialX, double initialY) {
     this.cardGapVertical = cardGapVertical;
     this.cardGapHorizontal = cardGapHorizontal;
+    this.setInitialX(initialX);
+    this.setInitialY(initialY);
   }
 
   /**
@@ -51,9 +63,12 @@ public class CardPileView extends Pane implements Iterable<CardView> {
    * @param cardGap The vertical gap to lay out the cards.
    * @param shortID The short identifier of the pile.
    */
-  public CardPileView(double cardGapVertical, double cardGapHorizontal, String shortID) {
+  public CardPileView(double cardGapVertical, double cardGapHorizontal, 
+		  double initialX, double initialY, String shortID) {
     this.cardGapVertical = cardGapVertical;
     this.cardGapHorizontal = cardGapHorizontal;
+    this.setInitialX(initialX);
+    this.setInitialY(initialY);
     this.shortID = shortID;
   }
 
@@ -131,6 +146,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 
   /**
    * Adds a {@link CardView} to this pile.
+   *	Also positions the card. 
    *
    * @param cardView The {@link CardView} to be added.
    */
@@ -164,6 +180,10 @@ public class CardPileView extends Pane implements Iterable<CardView> {
   public boolean isEmpty() {
     return cards.isEmpty();
   }
+  
+  public void emptyCardViewPile(){
+	 cards.clear();
+  }
 
   /**
    * Gets the card which lies on top of the pile.
@@ -186,6 +206,18 @@ public class CardPileView extends Pane implements Iterable<CardView> {
     return cards.subList(cards.indexOf(cardView), cards.size());
   }
 
+  public List<CardView> cardViewsBelow(CardView cardView) {
+	    return cards.subList(0 , cards.indexOf(cardView));
+  }
+  
+  public int getCardViewIndex(CardView cardView){
+	  return cards.indexOf(cardView);
+  }
+  
+  public CardView getCardView(int index){
+	  return cards.get(index);
+  }
+  
   /**
    * Moves cards to another pile. Intended to be used in conjunction with
    * <code>cardViewsAbove()</code>.
@@ -208,7 +240,44 @@ public class CardPileView extends Pane implements Iterable<CardView> {
     destPile.addCardView(cardToMove);
     cards.remove(cardToMove);
   }
+  
+  public void replaceCardViewOnPile(CardView cardToMove, CardPileView destPile, double x, double y, int index){
+	  destPile.replaceCardView(cardToMove, x, y,index);
+	  cards.remove(cardToMove);
+  }
+  
+  public void replaceCardView(CardView cardView, double x, double y, int index){
+	    cards.add(index, cardView);
+	    cardView.setContainingPile(this);
+	    cardView.toFront();
+	    layoutReplaceCard(cardView, x, y);
+	  }
 
+	  /**
+	   * Lays out the {@link CardView} object to sit nicely in this pile.
+	   *
+	   * @param cardView The {@link CardView} object to lay out.
+	   */
+	  private void layoutReplaceCard(CardView cardView, double x, double y) {
+	    
+		  cardView.relocate(x,y);
+
+	    cardView.setTranslateX(0);
+	    cardView.setTranslateY(0);
+	    cardView.setLayoutX(x);
+	    cardView.setLayoutY(y);
+	    
+	  }
+  
+  public void removeCardViewFromPile(CardView cardToRemove){
+	  cards.remove(cardToRemove);
+  }
+  
+  public void addCardViewToPile(CardView cardToAdd, CardPileView destPile) {
+	cards.add(cardToAdd);
+	cardToAdd.setContainingPile(destPile);
+  }
+  
   /**
    * Returns an iterator for iterating through the cards.
    *
@@ -227,5 +296,23 @@ public class CardPileView extends Pane implements Iterable<CardView> {
   public void forEach(Consumer<? super CardView> action) {
     cards.forEach(action);
   }
+
+public double getInitialY() {
+	return initialY;
+}
+
+public void setInitialY(double initialY) {
+	this.initialY = initialY;
+}
+
+public double getInitialX() {
+	return initialX;
+}
+
+public void setInitialX(double initialX) {
+	this.initialX = initialX;
+}
+
+
 
 }

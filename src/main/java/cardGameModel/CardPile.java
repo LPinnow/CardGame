@@ -192,21 +192,24 @@ public class CardPile implements Iterable<Card> {
    */
   public enum Type {
     /**
-     * Standard pile for Klondike games.
+     * Standard hand pile for card games.
      */
-    Klondike,
+    HAND,
+    
     /**
      * Remaining cards from the deck.
      */
-    Stock,
+    DECK,
+    
     /**
      * Cards put there from the stock.
      */
-    Waste,
+    WASTE,
+    
     /**
-     * Cards collected here by suits.
+     * Extra piles of cards in play.
      */
-    Foundation
+    PILE
   }
 
 }
