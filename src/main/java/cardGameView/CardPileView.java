@@ -259,8 +259,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 	   * @param cardView The {@link CardView} object to lay out.
 	   */
 	  private void layoutReplaceCard(CardView cardView, double x, double y) {
-	    
-		  cardView.relocate(x,y);
+	    cardView.relocate(x,y);
 
 	    cardView.setTranslateX(0);
 	    cardView.setTranslateY(0);

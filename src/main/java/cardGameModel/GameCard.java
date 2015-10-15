@@ -3,16 +3,16 @@ package cardGameModel;
 /**
  * Class representing a classic French playing card.
  */
-public class FrenchCard extends Card {
+public class GameCard extends Card {
 
   /**
-   * Constructs a {@link FrenchCard} object, with the specified suit and rank.
+   * Constructs a {@link GameCard} object, with the specified suit and rank.
    *
    * @param faceDown Whether the card is facing down.
    * @param suit     Suit of the card.
    * @param rank     Rank of the card.
    */
-  public FrenchCard(boolean faceDown, FrenchSuit suit, FrenchRank rank) {
+  public GameCard(boolean faceDown, GameCardSuit suit, GameCardRank rank) {
     super(faceDown, suit, rank);
   }
 
@@ -28,7 +28,7 @@ public class FrenchCard extends Card {
     String suitChar = null;
     String rankChar = null;
 
-    FrenchRank rank = (FrenchRank) this.getRank();
+    GameCardRank rank = (GameCardRank) this.getRank();
 
     switch (rank) {
       case Ace:
@@ -72,7 +72,7 @@ public class FrenchCard extends Card {
         break;
     }
 
-    FrenchSuit suit = (FrenchSuit) this.getSuit();
+    GameCardSuit suit = (GameCardSuit) this.getSuit();
 
     switch (suit) {
       case Clubs:

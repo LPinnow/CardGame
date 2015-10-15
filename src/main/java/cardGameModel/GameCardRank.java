@@ -3,7 +3,7 @@ package cardGameModel;
 /**
  * Standard French playing card ranks.
  */
-public enum FrenchRank implements Rank {
+public enum GameCardRank implements Rank {
   /**
    * Symbol "A" on the cards.
    */

@@ -6,20 +6,20 @@ import java.util.function.Consumer;
 /**
  * Class representing a deck of French playing cards.
  */
-public class FrenchCardDeck extends CardDeck {
+public class GameCardDeck extends CardDeck {
 
   /**
    * Creates a standard 52-card deck of French playing cards.
    *
-   * @return The FrenchCardDeck object containing the 52 cards.
+   * @return The GameCardDeck object containing the 52 cards.
    */
-  public static FrenchCardDeck createFrenchCardDeck() {
+  public static GameCardDeck createGameCardDeck() {
 
-    FrenchCardDeck result = new FrenchCardDeck();
+    GameCardDeck result = new GameCardDeck();
 
-    for (FrenchSuit suit : FrenchSuit.values()) {
-      for (FrenchRank rank : FrenchRank.values()) {
-        result.addCard(new FrenchCard(true, suit, rank));
+    for (GameCardSuit suit : GameCardSuit.values()) {
+      for (GameCardRank rank : GameCardRank.values()) {
+        result.addCard(new GameCard(true, suit, rank));
       }
     }
 

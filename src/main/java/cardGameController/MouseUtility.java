@@ -117,17 +117,6 @@ public class MouseUtility {
     mousePos.x = e.getSceneX();
     mousePos.y = e.getSceneY();
   };
-
-  EventHandler<MouseEvent> onDragExitedHandler = e -> {
-		// Get the pile that contained the actual card
-	    /** get current pile view. */
-	    CardPileView activePileView = gameBoard.getP1_HandPileView();
-	    
-	  //reorder CardViews
-	    for (CardView cv : activePileView){
-	    	cv.toFront();
-	    }
-	};
 	
 	/**
    * This event handler is attached to all the cards that are not on the stock.
@@ -202,7 +191,9 @@ public class MouseUtility {
     // check if card(s) are intersecting with any of the piles
     if (checkAllPiles(card, cardView, activePile, activePileView)) {
     	System.out.println(activePileView.getCards());
-        
+    	
+        draggedCard = null;
+	    draggedCardView = null;
       /*if (game.isGameWon()) {
 
         // Alert dialog box informing the player that he/she has won.
@@ -228,15 +219,7 @@ public class MouseUtility {
     draggedCard = null;
     draggedCardView = null;
   };
-
-  EventHandler<MouseEvent> onDragDoneProperty = e -> {
-	  Alert alert = new Alert(Alert.AlertType.INFORMATION);
-      alert.setTitle("Game Over");
-      alert.setHeaderText(null);
-      alert.setContentText("Congratulations, you have won the game!");
-      alert.showAndWait();
-  };
-
+  
 
   /**
    * Constructs a {@link MouseUtility} object for the given
@@ -260,7 +243,6 @@ public class MouseUtility {
     card.setOnMousePressed(onMousePressedHandler);
     card.setOnMouseDragged(onMouseDraggedHandler);
     card.setOnMouseReleased(onMouseReleasedHandler);
-    card.setOnMouseDragExited(onDragExitedHandler);
   }
   
   public void removeDraggable(CardView card){
@@ -329,8 +311,9 @@ public class MouseUtility {
 
       // check for intersection
       if (isOverPile(cardView, pileView) &&
-          handleValidMove(card, activePile, activePileView, pileView))
-        result = true;
+          handleValidMove(card, activePile, activePileView, pileView)){
+        return true;
+      }
     }
 
     return result;
@@ -387,8 +370,7 @@ public class MouseUtility {
     		slideToHand(cardViewToSwitch, destPileView, sourcePileView, 
     				draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);    		
     	    
-    		draggedCard = null;
-    	    draggedCardView = null;
+    		
     		return true;
     	} else if(game.getP2_Foundations().contains(destPile) && activePlayer.equals(game.getPlayer2())){
     		

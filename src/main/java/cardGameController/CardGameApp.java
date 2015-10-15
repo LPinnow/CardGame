@@ -99,31 +99,6 @@ public class CardGameApp extends Application {
     int cardsToPiles = game.getRules().getPileCardNum();
     prepareGameBoardForNewGame(cardsToHandPiles, cardsToPiles);
     
-    // auto-flip cards
-/*    for (int i = 0; i < game.getStandardPiles().size(); i++) {
-      CardPileView actPileView = gameBoard.getStandardPileViews().get(i);
-      CardPile actPile = game.getPileById(actPileView.getShortID());
-
-      actPileView.getCards().addListener(
-          (ListChangeListener<CardView>) c -> {
-            while (c.next()) {
-              if (c.wasRemoved()) {
-                if (!actPileView.isEmpty()) {
-                  CardView toFlip = actPileView.getTopCardView();
-                  toFlip.setMouseTransparent(false);
-                  if (toFlip.isFaceDown())
-                    toFlip.flip();
-                }
-
-                if (!actPile.isEmpty() && actPile.getTopCard().isFaceDown()) {
-                  actPile.getTopCard().flip();
-                  LOG.info("Flipped {}", actPile.getTopCard());
-                }
-              }
-            }
-          });
-    }
-*/
     primaryStage.setTitle("Card Game");
     primaryStage.setScene(scene);
     primaryStage.show();

@@ -4,8 +4,8 @@ import java.util.List;
 
 import cardGameModel.Card;
 import cardGameModel.CardPile;
-import cardGameModel.FrenchRank;
-import cardGameModel.FrenchSuit;
+import cardGameModel.GameCardRank;
+import cardGameModel.GameCardSuit;
 
 /**
  * Class representing the rules of the card game.
@@ -233,27 +233,27 @@ public class CardGameRules {
    * <code>false</code> otherwise.
    */
   public boolean isOppositeColor(Card card1, Card card2) {
-    FrenchSuit thisSuit = (FrenchSuit) card1.getSuit();
-    FrenchSuit otherSuit = (FrenchSuit) card2.getSuit();
+    GameCardSuit thisSuit = (GameCardSuit) card1.getSuit();
+    GameCardSuit otherSuit = (GameCardSuit) card2.getSuit();
 
     switch (thisSuit) {
       case Spades:
-        if (otherSuit == FrenchSuit.Hearts || otherSuit == FrenchSuit.Diamonds)
+        if (otherSuit == GameCardSuit.Hearts || otherSuit == GameCardSuit.Diamonds)
           return true;
         break;
 
       case Clubs:
-        if (otherSuit == FrenchSuit.Hearts || otherSuit == FrenchSuit.Diamonds)
+        if (otherSuit == GameCardSuit.Hearts || otherSuit == GameCardSuit.Diamonds)
           return true;
         break;
 
       case Hearts:
-        if (otherSuit == FrenchSuit.Clubs || otherSuit == FrenchSuit.Spades)
+        if (otherSuit == GameCardSuit.Clubs || otherSuit == GameCardSuit.Spades)
           return true;
         break;
 
       case Diamonds:
-        if (otherSuit == FrenchSuit.Clubs || otherSuit == FrenchSuit.Spades)
+        if (otherSuit == GameCardSuit.Clubs || otherSuit == GameCardSuit.Spades)
           return true;
         break;
     }
@@ -283,8 +283,8 @@ public class CardGameRules {
    * the second card, <code>false</code> otherwise.
    */
   public boolean isSmallerByOne(Card card1, Card card2) {
-    return ((FrenchRank) card1.getRank())
-        .compareTo((FrenchRank) card2.getRank()) == -1;
+    return ((GameCardRank) card1.getRank())
+        .compareTo((GameCardRank) card2.getRank()) == -1;
   }
 
   /**
@@ -297,8 +297,8 @@ public class CardGameRules {
    * the second card, <code>false</code> otherwise.
    */
   public boolean isLargerByOne(Card card1, Card card2) {
-    return ((FrenchRank) card1.getRank())
-        .compareTo((FrenchRank) card2.getRank()) == 1;
+    return ((GameCardRank) card1.getRank())
+        .compareTo((GameCardRank) card2.getRank()) == 1;
   }
 
   /**
@@ -340,16 +340,16 @@ public class CardGameRules {
 	  
     if (destPile.getType() == CardPile.Type.HAND) {
       if (destPile.isEmpty())
-        return card.getRank() == FrenchRank.King;
+        return card.getRank() == GameCardRank.King;
       else
         return isSmallerByOneAndOppositeColor(card, destPile.getTopCard()) &&
             !destPile.getTopCard().isFaceDown() &&
-            destPile.getTopCard().getRank() != FrenchRank.Two;
+            destPile.getTopCard().getRank() != GameCardRank.Two;
     }
 
     if (destPile.getType() == CardPile.Type.PILE) {
       if (destPile.isEmpty())
-        return card.getRank() == FrenchRank.Ace;
+        return card.getRank() == GameCardRank.Ace;
       else
         return isLargerByOneAndSameSuit(card, destPile.getTopCard());
     }

@@ -3,7 +3,7 @@ package cardGameModel;
 /**
  * Standard French playing card suits.
  */
-public enum FrenchSuit implements Suit {
+public enum GameCardSuit implements Suit {
   /**
    * Black clover.
    */

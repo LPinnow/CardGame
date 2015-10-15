@@ -8,7 +8,7 @@ import java.util.ListIterator;
 
 import cardGameModel.Card;
 import cardGameModel.CardPile;
-import cardGameModel.FrenchCardDeck;
+import cardGameModel.GameCardDeck;
 import cardGameModel.Player;
 
 /**
@@ -18,9 +18,9 @@ import cardGameModel.Player;
 public class CardGame {
 
   /**
-   * Reference to the {@link FrenchCardDeck} object associated with this game.
+   * Reference to the {@link GameCardDeck} object associated with this game.
    */
-  private FrenchCardDeck deck;
+  private GameCardDeck deck;
 
   /**
    * Reference to the {@link CardPile} object representing the stock.
@@ -77,7 +77,7 @@ public class CardGame {
    */
   public CardGame() {
     // Create deck
-    this.deck = FrenchCardDeck.createFrenchCardDeck();
+    this.deck = GameCardDeck.createGameCardDeck();
 
     // create stock
     this.stock = new CardPile(CardPile.Type.DECK, "S");
@@ -117,9 +117,9 @@ public class CardGame {
   /**
    * Returns the deck of cards that is used in the current game.
    *
-   * @return The {@link FrenchCardDeck} object.
+   * @return The {@link GameCardDeck} object.
    */
-  public FrenchCardDeck getDeck() {
+  public GameCardDeck getDeck() {
     return deck;
   }
 
@@ -238,11 +238,12 @@ public class CardGame {
     // deal to piles
     Iterator<Card> deckIterator = deck.iterator();
 
-    int cardsToPut = 3;
+    int cardsToHandPiles = getRules().getHandCardNum();
+    int cardsToPiles = getRules().getPileCardNum();
     
     //deal to player 1 card piles
     for (CardPile p1_foundationPile : p1_foundations) {
-        for (int i = 0; i < cardsToPut; i++)
+        for (int i = 0; i < cardsToPiles; i++)
         	p1_foundationPile.addCard(deckIterator.next());
 
         p1_foundationPile.getTopCard().flip();
@@ -250,21 +251,21 @@ public class CardGame {
     
     //deal to player 2 card piles
     for (CardPile p2_foundationPile : p2_foundations) {
-    	for (int i = 0; i < cardsToPut; i++)
+    	for (int i = 0; i < cardsToPiles; i++)
         	p2_foundationPile.addCard(deckIterator.next());
 
         p2_foundationPile.getTopCard().flip();
      }
     
     //deal to player 1 hand
-    for (int i = 0; i < cardsToPut; i++)
+    for (int i = 0; i < cardsToHandPiles; i++)
     	p1_handPile.addCard(deckIterator.next());
     
     for (Card card : p1_handPile)
     	card.flip();
     
     //deal to player 2 hand
-    for (int i = 0; i < cardsToPut; i++)
+    for (int i = 0; i < cardsToHandPiles; i++)
     	p2_handPile.addCard(deckIterator.next());
 
     for (Card card : p2_handPile)
