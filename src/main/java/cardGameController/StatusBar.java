@@ -3,7 +3,9 @@ package cardGameController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
@@ -27,16 +29,22 @@ public class StatusBar extends HBox {
    * Same.
    */
   private int minutes = 0;
+  
+  private Label activePlayer;
+  
 
   /**
    * Constructs a new {@link StatusBar} object.
+ * @param cardGameApp 
    */
   public StatusBar() {
     this.elapsedTimeText = new Label();
+    this.activePlayer = new Label("Waiting on Player 1...");
     setPadding(new Insets(2));
-
     getChildren().add(elapsedTimeText);
-
+    getChildren().add(activePlayer);
+    this.setSpacing(400);
+    
     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> updateStatusText()));
     timeline.setCycleCount(Animation.INDEFINITE);
     timeline.play();
@@ -57,6 +65,13 @@ public class StatusBar extends HBox {
       mins = minutes + " minutes ";
 
     elapsedTimeText.setText("Elapsed time: " + mins + (seconds++) + " seconds");
+  }
+  
+  /**
+   * Updates the active player text.
+   */
+  public void setActivePlayerText(String playerName) {
+	  activePlayer.setText("Waiting on " + playerName + "...");
   }
 
 }

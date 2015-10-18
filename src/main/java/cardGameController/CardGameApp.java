@@ -41,6 +41,11 @@ public class CardGameApp extends Application {
    * Reference to a {@link GameBoard} instance.
    */
   GameBoard gameBoard;
+  
+  /**
+   * Reference to a StatusBar
+   */
+  StatusBar statusBar;
 
   /**
    * Reference to a {@link MouseUtility} instance.
@@ -77,7 +82,7 @@ public class CardGameApp extends Application {
     GameMenu menuBar = new GameMenu(this);
 
     // Status bar
-    StatusBar statusBar = new StatusBar();
+    statusBar = new StatusBar();
 
     // Main element
     BorderPane bord = new BorderPane();
@@ -173,6 +178,7 @@ public class CardGameApp extends Application {
 			game.getPlayer1().setReady(true);
 			game.getPlayer1().setActiveTurn(false);
 			game.getPlayer2().setActiveTurn(true);
+			statusBar.setActivePlayerText(game.getPlayer2().getName());
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), true);
 			
 		}});
@@ -191,6 +197,7 @@ public class CardGameApp extends Application {
 				game.setGameInProgress(true);
 				game.getPlayer2().setActiveTurn(false);
 				game.getPlayer1().setActiveTurn(true);
+				statusBar.setActivePlayerText(game.getPlayer1().getName());
 			}
 		}});
   }

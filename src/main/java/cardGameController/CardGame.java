@@ -1,5 +1,7 @@
 package cardGameController;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 
 import java.util.Iterator;
@@ -204,6 +206,20 @@ public class CardGame {
 		  return p2;
 	  } else {
 		  return p1;
+	  }
+  }
+  
+  public ObservableValue<? extends String> getActivePlayerName(){
+	  SimpleStringProperty selectedName = new SimpleStringProperty();
+	  if(p1.isActive()){
+		  selectedName.set(p1.getName());
+		  return selectedName;
+	  } else if(p2.isActive()){
+		  selectedName.set(p2.getName());
+		  return selectedName;
+	  } else {
+		  selectedName.set(p1.getName());
+		  return selectedName;
 	  }
   }
   
