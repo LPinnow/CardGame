@@ -67,7 +67,6 @@ buildNumber.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -76,3 +75,4 @@ hs_err_pid*
 
 # logback message log file
 messages.log
+/bin/
