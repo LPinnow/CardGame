@@ -188,5 +188,17 @@ public abstract class Card {
    * @return The short identifier.
    */
   protected abstract String buildId();
+  
+  @Override
+  public boolean equals(Object obj) {
+	 if (obj instanceof String)
+		 return this.getId() == (String)obj;
+     if (!(obj instanceof Card))
+          return false;
+      if (obj == this)
+          return true;
+
+      return this.getId() == ((Card)obj).getId();
+  }
 
 }

@@ -1,74 +1,50 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Iterator;
+import java.util.function.Consumer;
 
 /**
- * Abstract class representing the concept of a deck of cards.
+ * Class representing a deck of French playing cards.
  */
-public abstract class CardDeck implements Iterable<Card> {
+public class CardDeck extends CardCollection {
 
   /**
-   * A List holding the individual cards of this deck.
-   */
-  protected List<Card> cards;
-
-  /**
-   * Creates an empty {@link CardDeck} object.
-   */
-  public CardDeck() {
-    this.cards = new ArrayList<>();
-  }
-
-  /**
-   * Returns the list of cards of this deck.
+   * Creates a standard 52-card deck of French playing cards.
    *
-   * @return The list of cards
+   * @return The GameCardDeck object containing the 52 cards.
    */
-  public List<Card> getCards() {
-    return cards;
-  }
+  public static CardDeck createGameCardDeck() {
 
-  /**
-   * Adds a Card object to the deck.
-   *
-   * @param card The card to be added to the deck.
-   */
-  public void addCard(Card card) {
-    cards.add(card);
-  }
+    CardDeck result = new CardDeck();
 
-  /**
-   * Removes a card from the deck.
-   *
-   * @param card The card to be removed.
-   * @return true if the card is removed from the deck, false otherwise.
-   */
-  public boolean removeCard(Card card) {
-    return cards.remove(card);
-  }
-
-  /**
-   * Shuffles the deck.
-   */
-  public void shuffle() {
-    // Researches proved that if we want a deck of cards to be well shuffled,
-    // we have to do it about seven times.
-    for (int i = 0; i < 7; i++) {
-      Collections.shuffle(cards);
+    for (GameCardSuit suit : GameCardSuit.values()) {
+      for (GameCardRank rank : GameCardRank.values()) {
+        result.addCard(new GameCard(true, suit, rank));
+      }
     }
+
+    return result;
   }
 
   /**
-   * Finds the card in the deck by its short identifier.
+   * Returns an iterator to iterate through the cards.
    *
-   * @param id The short identifier.
-   * @return The card object if found, null otherwise.
+   * @return The iterator.
    */
-  public Card getById(String id) {
-    return cards.stream()
-        .filter(card -> card.getId().equals(id)).findFirst().orElseGet(() -> null);
+  @Override
+  public Iterator<Card> iterator() {
+    return cards.iterator();
   }
 
+  /**
+   * Performs the given action on all the cards.
+   *
+   * @param action the specified action.
+   */
+  @Override
+  public void forEach(Consumer<? super Card> action) {
+    cards.forEach(action);
+  }
+
+  
 }

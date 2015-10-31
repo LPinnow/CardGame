@@ -2,7 +2,7 @@ package model;
 
 import java.util.List;
 
-public class FaceUpCardStack extends CardCollection {
+public class FaceUpCardStack  {
 
 	/**
 	 *list of cards in the faceup card stack. 

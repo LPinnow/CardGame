@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 import model.Card;
-import model.CardPile;
-import model.GameCardDeck;
+import model.CardCollection;
+import model.CardDeck;
 import model.Player;
 
 /**
@@ -20,39 +20,39 @@ import model.Player;
 public class CardGame {
 
   /**
-   * Reference to the {@link GameCardDeck} object associated with this game.
+   * Reference to the {@link CardDeck} object associated with this game.
    */
-  private GameCardDeck deck;
+  private CardDeck deck;
 
   /**
-   * Reference to the {@link CardPile} object representing the stock.
+   * Reference to the {@link CardCollection} object representing the stock.
    */
-  private CardPile stock;
+  private CardCollection stock;
 
   /**
-   * Reference to the {@link CardPile} object representing the waste.
+   * Reference to the {@link CardCollection} object representing the waste.
    */
-  private CardPile waste;
+  private CardCollection waste;
 
   /**
-   * The list of {@link CardPile} objects representing the foundation piles.
+   * The list of {@link CardCollection} objects representing the foundation piles.
    */
-  private List<CardPile> p1_foundations;
+  private List<CardCollection> p1_foundations;
   
   /**
-   * The list of {@link CardPile} objects representing the foundation piles.
+   * The list of {@link CardCollection} objects representing the foundation piles.
    */
-  private List<CardPile> p2_foundations;
+  private List<CardCollection> p2_foundations;
 
   /**
-   * The list of {@link CardPile} objects representing player 1's hand.
+   * The list of {@link CardCollection} objects representing player 1's hand.
    */
-  private CardPile p1_handPile;
+  private CardCollection p1_handPile;
   
   /**
-   * The list of {@link CardPile} objects representing player 2's hand.
+   * The list of {@link CardCollection} objects representing player 2's hand.
    */
-  private CardPile p2_handPile;
+  private CardCollection p2_handPile;
   
   /**
    * The rules for this game.
@@ -79,29 +79,29 @@ public class CardGame {
    */
   public CardGame() {
     // Create deck
-    this.deck = GameCardDeck.createGameCardDeck();
+    this.deck = CardDeck.createGameCardDeck();
 
     // create stock
-    this.stock = new CardPile(CardPile.Type.DECK, "S");
+    this.stock = new CardCollection(CardCollection.Type.DECK, "S");
 
     // create waste
-    this.waste = new CardPile(CardPile.Type.WASTE, "W");
+    this.waste = new CardCollection(CardCollection.Type.WASTE, "W");
     
     // create foundations
     this.p1_foundations = FXCollections.observableArrayList();
     this.p2_foundations = FXCollections.observableArrayList();
     
     for (int i = 0; i < 3; i++)
-    	p1_foundations.add(new CardPile(CardPile.Type.DECK, "F" + i));
+    	p1_foundations.add(new CardCollection(CardCollection.Type.DECK, "F" + i));
     
     for (int i = 3; i < 6; i++)
-    	p2_foundations.add(new CardPile(CardPile.Type.DECK, "F" + i));
+    	p2_foundations.add(new CardCollection(CardCollection.Type.DECK, "F" + i));
 
     // create standard piles
-    this.p1_handPile = new CardPile(CardPile.Type.HAND, "K");
+    this.p1_handPile = new CardCollection(CardCollection.Type.HAND, "K");
     
     // create standard piles
-    this.p2_handPile = new CardPile(CardPile.Type.HAND, "K" + 1);
+    this.p2_handPile = new CardCollection(CardCollection.Type.HAND, "K" + 1);
     
     //create player 1
     this.p1 = new Player(1, "Player 1", false, true);
@@ -119,65 +119,65 @@ public class CardGame {
   /**
    * Returns the deck of cards that is used in the current game.
    *
-   * @return The {@link GameCardDeck} object.
+   * @return The {@link CardDeck} object.
    */
-  public GameCardDeck getDeck() {
+  public CardDeck getDeck() {
     return deck;
   }
 
   /**
    * Returns the stock pile.
    *
-   * @return The {@link CardPile} object representing the stock.
+   * @return The {@link CardCollection} object representing the stock.
    */
-  public CardPile getStock() {
+  public CardCollection getStock() {
     return stock;
   }
 
   /**
    * Returns the waste pile.
    *
-   * @return The {@link CardPile} object representing the waste.
+   * @return The {@link CardCollection} object representing the waste.
    */
-  public CardPile getWaste() {
+  public CardCollection getWaste() {
     return waste;
   }
 
   /**
    * Returns the list of foundation piles.
    *
-   * @return The {@link List} of {@link CardPile} objects representing
+   * @return The {@link List} of {@link CardCollection} objects representing
    * the foundations.
    */
-  public List<CardPile> getP1_Foundations() {
+  public List<CardCollection> getP1_Foundations() {
     return p1_foundations;
   }
 
   /**
    * Returns the list of foundation piles.
    *
-   * @return The {@link List} of {@link CardPile} objects representing
+   * @return The {@link List} of {@link CardCollection} objects representing
    * the foundations.
    */
-  public List<CardPile> getP2_Foundations() {
+  public List<CardCollection> getP2_Foundations() {
     return p2_foundations;
   }
   
   /**
    * Returns player 1's hand.
    *
-   * @return The {@link CardPile} object representing player 1's hand.
+   * @return The {@link CardCollection} object representing player 1's hand.
    */
-  public CardPile getP1_HandPile() {
+  public CardCollection getP1_HandPile() {
     return p1_handPile;
   }
   
   /**
    * Returns player 1's hand.
    *
-   * @return The {@link CardPile} object representing player 1's hand.
+   * @return The {@link CardCollection} object representing player 1's hand.
    */
-  public CardPile getP2_HandPile() {
+  public CardCollection getP2_HandPile() {
     return p2_handPile;
   }
   
@@ -258,7 +258,7 @@ public class CardGame {
     int cardsToPiles = getRules().getPileCardNum();
     
     //deal to player 1 card piles
-    for (CardPile p1_foundationPile : p1_foundations) {
+    for (CardCollection p1_foundationPile : p1_foundations) {
         for (int i = 0; i < cardsToPiles; i++)
         	p1_foundationPile.addCard(deckIterator.next());
 
@@ -266,7 +266,7 @@ public class CardGame {
      }
     
     //deal to player 2 card piles
-    for (CardPile p2_foundationPile : p2_foundations) {
+    for (CardCollection p2_foundationPile : p2_foundations) {
     	for (int i = 0; i < cardsToPiles; i++)
         	p2_foundationPile.addCard(deckIterator.next());
 
@@ -292,20 +292,20 @@ public class CardGame {
   }
 
   /**
-   * Moves a list of {@link Card} object from a {@link CardPile} to another.
+   * Moves a list of {@link Card} object from a {@link CardCollection} to another.
    *
    * @param cardsToMove The {@link List} of {@link Card}'s to move.
-   * @param from        The source {@link CardPile} object.
-   * @param to          The destination {@link CardPile} object.
+   * @param from        The source {@link CardCollection} object.
+   * @param to          The destination {@link CardCollection} object.
    */
-  public void moveCards(List<Card> cardsToMove, CardPile from, CardPile to) {
+  public void moveCards(List<Card> cardsToMove, CardCollection from, CardCollection to) {
     if (cardsToMove == null)
       return;
 
     from.moveCardsToPile(cardsToMove, to);
   }
   
-  public void moveCard(Card cardsToMove, CardPile from, CardPile to) {
+  public void moveCard(Card cardsToMove, CardCollection from, CardCollection to) {
 	    if (cardsToMove == null)
 	      return;
 
@@ -352,13 +352,13 @@ public class CardGame {
   }
 
   /**
-   * Looks up a {@link CardPile} object by its short identifier.
+   * Looks up a {@link CardCollection} object by its short identifier.
    *
    * @param id The short identifier to look for.
-   * @return The found {@link CardPile} object, or null if no matching pile found.
+   * @return The found {@link CardCollection} object, or null if no matching pile found.
    */
-  public CardPile getPileById(String id) {
-    CardPile result;
+  public CardCollection getPileById(String id) {
+    CardCollection result;
     
     if (p1_handPile.getId().equals(id))
         return p1_handPile;
@@ -387,8 +387,8 @@ public class CardGame {
     return null;
   }
 
-public void switchCards(Card draggedCard, Card topCard, CardPile sourcePile,
-		CardPile destPile) {
+public void switchCards(Card draggedCard, Card topCard, CardCollection sourcePile,
+		CardCollection destPile) {
 	sourcePile.moveCardToPile(topCard, destPile);
 	destPile.moveCardToPile(draggedCard, sourcePile);
 }

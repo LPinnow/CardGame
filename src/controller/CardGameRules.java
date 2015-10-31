@@ -3,7 +3,7 @@ package controller;
 import java.util.List;
 
 import model.Card;
-import model.CardPile;
+import model.CardCollection;
 import model.GameCardRank;
 import model.GameCardSuit;
 
@@ -15,32 +15,32 @@ public class CardGameRules {
   /**
    * Reference to the list of the standard card piles.
    */
-  private CardPile p1_handPile;
+  private CardCollection p1_handPile;
   
   /**
    * Reference to the list of the standard card piles.
    */
-  private CardPile p2_handPile;
+  private CardCollection p2_handPile;
   
   /**
    * Reference to the list of the foundation piles.
    */
-  private List<CardPile> p1_foundations;
+  private List<CardCollection> p1_foundations;
   
   /**
    * Reference to the list of the foundation piles.
    */
-  private List<CardPile> p2_foundations;
+  private List<CardCollection> p2_foundations;
 
   /**
    * Reference to the stock pile.
    */
-  private CardPile stock;
+  private CardCollection stock;
 
   /**
    * Reference to the waste pile.
    */
-  private CardPile waste;
+  private CardCollection waste;
   
   /**
    * Number of cards initially dealt to player's hands
@@ -68,11 +68,11 @@ public class CardGameRules {
    * @param handCardNum 	Reference to number of cards dealt to player's hand.
    * @param pileCardNum		Reference to number of cards dealt to piles.
    */
-  public CardGameRules(CardPile p1_handPile, 
-		  				CardPile p2_handPile,
-		  				List<CardPile> p1_foundations,
-		  				List<CardPile> p2_foundations,
-		  				CardPile waste, CardPile stock, 
+  public CardGameRules(CardCollection p1_handPile, 
+		  				CardCollection p2_handPile,
+		  				List<CardCollection> p1_foundations,
+		  				List<CardCollection> p2_foundations,
+		  				CardCollection waste, CardCollection stock, 
 		  				int handCardNum, int pileCardNum) {
     this.p1_handPile = p1_handPile;
     this.p2_handPile = p2_handPile;
@@ -89,7 +89,7 @@ public class CardGameRules {
    *
    * @return The list of standard piles.
    */
-  public CardPile getP1_HandPile() {
+  public CardCollection getP1_HandPile() {
     return p1_handPile;
   }
   
@@ -98,7 +98,7 @@ public class CardGameRules {
    *
    * @return The list of standard piles.
    */
-  public CardPile getP2_HandPile() {
+  public CardCollection getP2_HandPile() {
     return p2_handPile;
   }
   
@@ -107,7 +107,7 @@ public class CardGameRules {
    *
    * @param standardPiles The new reference to the list of standard piles.
    */
-  public void setP1_HandPile(CardPile p1_handPile) {
+  public void setP1_HandPile(CardCollection p1_handPile) {
     this.p1_handPile = p1_handPile;
   }
   
@@ -116,7 +116,7 @@ public class CardGameRules {
    *
    * @param standardPiles The new reference to the list of standard piles.
    */
-  public void setP2_HandPile(CardPile p2_handPile) {
+  public void setP2_HandPile(CardCollection p2_handPile) {
     this.p2_handPile = p2_handPile;
   }
   
@@ -125,7 +125,7 @@ public class CardGameRules {
    *
    * @return The list of player 1 foundation piles.
    */
-  public List<CardPile> getP1_Foundations() {
+  public List<CardCollection> getP1_Foundations() {
     return p1_foundations;
   }
   
@@ -134,7 +134,7 @@ public class CardGameRules {
    *
    * @return The list of player 2 foundation piles.
    */
-  public List<CardPile> getP2_Foundations() {
+  public List<CardCollection> getP2_Foundations() {
     return p2_foundations;
   }
 
@@ -143,7 +143,7 @@ public class CardGameRules {
    *
    * @param foundations The new reference to the list of player 1 foundation piles.
    */
-  public void setP1_Foundations(List<CardPile> p1_foundations) {
+  public void setP1_Foundations(List<CardCollection> p1_foundations) {
     this.p1_foundations = p1_foundations;
   }
   
@@ -152,7 +152,7 @@ public class CardGameRules {
    *
    * @param foundations The new reference to the list of player 2 foundation piles.
    */
-  public void setP2_Foundations(List<CardPile> p2_foundations) {
+  public void setP2_Foundations(List<CardCollection> p2_foundations) {
     this.p2_foundations = p2_foundations;
   }
 
@@ -161,7 +161,7 @@ public class CardGameRules {
    *
    * @return The stock pile.
    */
-  public CardPile getStock() {
+  public CardCollection getStock() {
     return stock;
   }
 
@@ -170,7 +170,7 @@ public class CardGameRules {
    *
    * @param stock The new reference to the stock pile.
    */
-  public void setStock(CardPile stock) {
+  public void setStock(CardCollection stock) {
     this.stock = stock;
   }
 
@@ -179,7 +179,7 @@ public class CardGameRules {
    *
    * @return The waste pile.
    */
-  public CardPile getWaste() {
+  public CardCollection getWaste() {
     return waste;
   }
 
@@ -188,7 +188,7 @@ public class CardGameRules {
    *
    * @param waste The new reference to the waste pile.
    */
-  public void setWaste(CardPile waste) {
+  public void setWaste(CardCollection waste) {
     this.waste = waste;
   }
 
@@ -196,9 +196,9 @@ public class CardGameRules {
    * Returns the pile which currently contains the given {@link Card} object.
    *
    * @param card The {@link Card} object to check.
-   * @return The {@link CardPile} which contains the card.
+   * @return The {@link CardCollection} which contains the card.
    */
-  public CardPile lookForPile(Card card) {
+  public CardCollection lookForPile(Card card) {
 	if (p1_handPile.getCards().contains(card)) {
 	      return p1_handPile;
 	}
@@ -207,7 +207,7 @@ public class CardGameRules {
 	      return p2_handPile;
 	}
 	
-    for (CardPile foundation : p2_foundations) {
+    for (CardCollection foundation : p2_foundations) {
       if (foundation.getCards().contains(card)) {
         return foundation;
       }
@@ -335,10 +335,10 @@ public class CardGameRules {
    * @return <code>true</code> if the move is valid,
    * <code>false</code> otherwise.
    */
-  public boolean isMoveValid(Card card, CardPile destPile, CardPile sourcePile) {
+  public boolean isMoveValid(Card card, CardCollection destPile, CardCollection sourcePile) {
 	 
 	  
-    if (destPile.getType() == CardPile.Type.HAND) {
+    if (destPile.getType() == CardCollection.Type.HAND) {
       if (destPile.isEmpty())
         return card.getRank() == GameCardRank.King;
       else
@@ -347,7 +347,7 @@ public class CardGameRules {
             destPile.getTopCard().getRank() != GameCardRank.Two;
     }
 
-    if (destPile.getType() == CardPile.Type.PILE) {
+    if (destPile.getType() == CardCollection.Type.PILE) {
       if (destPile.isEmpty())
         return card.getRank() == GameCardRank.Ace;
       else

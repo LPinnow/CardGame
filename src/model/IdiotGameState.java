@@ -7,12 +7,12 @@ public class IdiotGameState {
 	/**
 	 * All possible states of idiot game.
 	 */
-	public enum GamePhases{ready,running,complete}
+	public enum GamePhases{Reset,CardSwapping,GamePlay,GameCompleted}
 	
 	/**
 	 * Current phase of the game
 	 */
-	public GamePhases currentGamePhase;
+	public GamePhases CurrentGamePhase;
 	
 	/**
 	 *Indicates whether it is the current player turn.

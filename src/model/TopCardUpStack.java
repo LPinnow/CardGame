@@ -1,6 +1,6 @@
 package model;
 
-public class TopCardUpStack extends CardCollection {
+public class TopCardUpStack  {
 
 	/**
 	 *Stack with the topcard facing up. 

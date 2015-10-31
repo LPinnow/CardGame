@@ -6,7 +6,7 @@ import java.util.ListIterator;
 import view.CardPileView;
 import view.CardView;
 import model.Card;
-import model.CardPile;
+import model.CardCollection;
 import model.Player;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -139,7 +139,7 @@ public class MouseUtility {
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
-    CardPile activePile = game.getPileById(activePileView.getShortID());
+    CardCollection activePile = game.getPileById(activePileView.getShortID());
 
     // Put this card and all above it to the list of dragged cards
     draggedCardView = cardView;
@@ -179,7 +179,7 @@ public class MouseUtility {
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
-    CardPile activePile = game.getPileById(activePileView.getShortID());
+    CardCollection activePile = game.getPileById(activePileView.getShortID());
     
     System.out.println(activePileView.getCards());
     
@@ -269,7 +269,7 @@ public class MouseUtility {
    * @return true if intersects with any pile, false otherwise.
    */
   private boolean checkAllPiles(
-      Card card, CardView cardView, CardPile activePile,
+      Card card, CardView cardView, CardCollection activePile,
       CardPileView activePileView) {
 
     // check the standard piles
@@ -294,7 +294,7 @@ public class MouseUtility {
    * @return true if intersects with any pile, false otherwise.
    */
   private boolean checkPiles(
-      Card card, CardView cardView, CardPile activePile,
+      Card card, CardView cardView, CardCollection activePile,
       CardPileView activePileView, List<CardPileView> pileViews) {
 
     boolean result = false;
@@ -338,10 +338,10 @@ public class MouseUtility {
    * @param destPileView   The destination pile view.
    * @return true if the move is valid, false otherwise.
    */
-  private boolean handleValidMove(Card card, CardPile sourcePile,
+  private boolean handleValidMove(Card card, CardCollection sourcePile,
                                   CardPileView sourcePileView,
                                   CardPileView destPileView) {
-    CardPile destPile = game.getPileById(destPileView.getShortID());
+    CardCollection destPile = game.getPileById(destPileView.getShortID());
     
     if(!game.isGameInProgress()){
     	Player activePlayer = game.getActivePlayer();
