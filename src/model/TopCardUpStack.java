@@ -1,9 +1,19 @@
 package model;
 
-public class TopCardUpStack  {
+public class TopCardUpStack extends CardCollectionImmutable {
 
 	/**
 	 *Stack with the topcard facing up. 
 	 **/
-	public Card topCard;
+	final protected Card topCard;
+	
+	public TopCardUpStack(Card topCard, int sizeIncludingTopCard) {
+		super(sizeIncludingTopCard);
+		this.topCard = topCard;
+	}
+	
+	public Card getTopCard() 
+	{
+		return (Card)topCard.clone();
+	}
 }

@@ -5,81 +5,6 @@ package model;
  */
 public abstract class Card {
 
-  public enum Ranks{
-	  /**
-	   * Symbol "A" on the cards.
-	   */
-	  Ace,
-	  /**
-	   * Symbol "2" on the cards.
-	   */
-	  Two,
-	  /**
-	   * Symbol "3" on the cards.
-	   */
-	  Three,
-	  /**
-	   * Symbol "4" on the cards.
-	   */
-	  Four,
-	  /**
-	   * Symbol "5" on the cards.
-	   */
-	  Five,
-	  /**
-	   * Symbol "6" on the cards.
-	   */
-	  Six,
-	  /**
-	   * Symbol "7" on the cards.
-	   */
-	  Seven,
-	  /**
-	   * Symbol "8" on the cards.
-	   */
-	  Eight,
-	  /**
-	   * Symbol "9" on the cards.
-	   */
-	  Nine,
-	  /**
-	   * Symbol "10" on the cards.
-	   */
-	  Ten,
-	  /**
-	   * Symbol "J" on the cards.
-	   */
-	  Jack,
-	  /**
-	   * Symbol "Q" on the cards.
-	   */
-	  Queen,
-	  /**
-	   * Symbol "K" on the cards.
-	   */
-	  King
-	}
-  
-  public enum Suits{
-	  /**
-	   * Black clover.
-	   */
-	  Clubs,
-	  /**
-	   * Black "spearhead".
-	   */
-	  Spades,
-	  /**
-	   * Red heart.
-	   */
-	  Hearts,
-	  /**
-	   * Red diamond shape.
-	   */
-	  Diamonds
-	}
-
-	
   /**
    * Whether the card is facing down.
    */
@@ -88,12 +13,12 @@ public abstract class Card {
   /**
    * Suit of the card.
    */
-  private Suit suit;
+  private GameCardSuit suit;
 
   /**
    * Rank of the card.
    */
-  private Rank rank;
+  private GameCardRank rank;
 
   /**
    * Short identifier.
@@ -107,7 +32,7 @@ public abstract class Card {
    * @param suit     The suit of the card.
    * @param rank     The rank of the card.
    */
-  public Card(boolean faceDown, Suit suit, Rank rank) {
+  public Card(boolean faceDown, GameCardSuit suit, GameCardRank rank) {
     this.faceDown = faceDown;
     this.suit = suit;
     this.rank = rank;
@@ -201,4 +126,7 @@ public abstract class Card {
       return this.getId() == ((Card)obj).getId();
   }
 
+  public Card clone() {
+	  return this.clone();
+  }
 }

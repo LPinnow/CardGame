@@ -1,5 +1,8 @@
 package model;
 
+import model.GameCardRank;
+import model.GameCardSuit;
+
 /**
  * Class representing a classic French playing card.
  */

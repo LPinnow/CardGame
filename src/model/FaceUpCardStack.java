@@ -1,12 +1,22 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FaceUpCardStack  {
+public class FaceUpCardStack extends CardCollectionImmutable {
 
 	/**
-	 *list of cards in the faceup card stack. 
+	 *list of cards in the face up card stack. 
 	 */
-	public List<Card> cards;
-
+	final protected List<Card> cards;
+	
+	public FaceUpCardStack(List<Card> cards) {
+		super(cards.size());
+		this.cards = cards;
+	}
+	
+	public List<Card> getCards() 
+	{
+		return new ArrayList<Card>(cards); // return a clone of the list so we don't pass a direct, modifiable reference
+	}
 }

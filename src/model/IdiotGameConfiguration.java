@@ -1,31 +1,29 @@
 package model;
 
-import model.Card.Ranks;
-
 public class IdiotGameConfiguration {
 
 /**
  * Playing card with this rank will be used as the restart card for Idiot game
  */
-public Ranks restartCard;
+public GameCardRank restartCard;
 
 /**
  * Playing card with this rank will be used as the burn card for Idiot game
  */
-public Ranks burnCard;
+public GameCardRank burnCard;
 
 /**
  * Playing card with this rank will be used as the reverse card for Idiot game
  */
-public Ranks reverseCard;
+public GameCardRank reverseCard;
 
 /**
  * @param restartCard
  * @param burnCard
  * @param reverseCard
  */
-public IdiotGameConfiguration(Ranks restartCard, Ranks burnCard,
-		Ranks reverseCard) {
+public IdiotGameConfiguration(GameCardRank restartCard, GameCardRank burnCard,
+		GameCardRank reverseCard) {
 	
 	/**Initialize the game configuration variables with constructor.
 	 * */
