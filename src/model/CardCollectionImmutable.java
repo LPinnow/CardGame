@@ -7,6 +7,10 @@ abstract public class CardCollectionImmutable {
 	public CardCollectionImmutable(int size) {
 		this.size = size;
 	}
+	
+	public int size() {
+		return size;
+	}
 
 	
 }

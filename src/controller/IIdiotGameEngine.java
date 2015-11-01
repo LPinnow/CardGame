@@ -4,6 +4,13 @@ import model.*;
 
 public interface IIdiotGameEngine {
 
+	/***
+	 * Returns an immutable copy of the current game state with the values of face down cards hidden
+	 * @return
+	 */
+	
+	IdiotGameStateFacade getCurrentGameState();
+	
 	/**
 	 * Invoked to request a new game be started, shuffle deck, and distribute cards. 
 	 */

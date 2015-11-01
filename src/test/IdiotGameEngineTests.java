@@ -4,21 +4,29 @@ import controller.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import test.mocks.*;
 
 public class IdiotGameEngineTests {
 
 	@Test
 	public void testInitializeNewGame() {
 
-		IdiotGameEngine classUnderTest = new IdiotGameEngine();
+		int numberOfPlayers = 2;
 		
-		classUnderTest.initializeNewGame(2 /*number of players*/);
+		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(null));
 		
-		//TODO: switch IdiotGameEngine state back to protected and verify the facade state instead 
+		classUnderTest.initializeNewGame(2);
 		
-		assertEquals(34, classUnderTest.state.drawCards.size());
-		
-		System.out.print(classUnderTest.state.toString());
+		assertEquals(34, classUnderTest.getCurrentGameState().GetDeck().size());
+		assertEquals(0, classUnderTest.getCurrentGameState().GetPile().size());
+		assertEquals(3, classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getHand().size());
+		assertEquals(2, classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getTableCards1().size());
+		assertEquals(2, classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getTableCards2().size());
+		assertEquals(2, classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getTableCards3().size());
+		assertEquals(3, classUnderTest.getCurrentGameState().getPlayerPlaces().get(1).getHand().size());
+		assertEquals(2, classUnderTest.getCurrentGameState().getPlayerPlaces().get(1).getTableCards1().size());
+		assertEquals(2, classUnderTest.getCurrentGameState().getPlayerPlaces().get(1).getTableCards2().size());
+		assertEquals(2, classUnderTest.getCurrentGameState().getPlayerPlaces().get(1).getTableCards3().size());
 	}
 
 	@Test

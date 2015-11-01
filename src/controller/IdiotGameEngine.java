@@ -1,13 +1,23 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import model.*;
+import controller.validators.*;
 
 public class IdiotGameEngine implements IIdiotGameEngine {
 
-	public IdiotGameState state = new IdiotGameState();
+	protected IdiotGameState state = new IdiotGameState();
+	protected ITableSwapValidator tableSwapValidator;
+	
+	public IdiotGameEngine(ITableSwapValidator tableSwapValidator) {
+		this.tableSwapValidator = tableSwapValidator;
+	}
+	
+	@Override
+	public IdiotGameStateFacade getCurrentGameState() {
+		return new IdiotGameStateFacade(state);
+	}
 	
 	@Override
 	public void initializeNewGame(int numberOfPlayers) {
@@ -47,19 +57,60 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 
 	@Override
 	public MoveResult requestHandToTableCardSwap(Player playerRequesting, Card handCard, Card tableCard) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if (state.CurrentGamePhase != IdiotGameState.GamePhases.CardSwapping) {
+			return new MoveResult() {{ success = false; message = "Game is currently not in state to swap cards"; }};
+		}
+		
+		TableSwapValidationResult validationResult = tableSwapValidator.isValidSwap(playerRequesting.getNum(), handCard, tableCard);
+		
+		if (validationResult.Success) {
+			
+			updateStateForTableSwap(playerRequesting, handCard, tableCard, validationResult.targetTableStack);
+			
+			return new MoveResult() {{ success = true; }};
+		} 
+		else {
+			return new MoveResult() {{ success = false; message = validationResult.ErrorMessage; }};
+		}
 	}
 
+	private synchronized void updateStateForTableSwap(Player playerRequesting, Card handCard, Card tableCard, int targetTableStack) {
+		
+		int playerPlaceIndex = playerRequesting.getNum()-1;
+		
+		state.PlayerPlaces.get(playerRequesting.getNum()-1).hand.remove(handCard);
+		
+		if (targetTableStack == 1) {
+			state.PlayerPlaces.get(playerPlaceIndex).tableCards1.remove(tableCard);
+			state.PlayerPlaces.get(playerPlaceIndex).tableCards1.add(handCard);
+		}
+		if (targetTableStack == 2) {
+			state.PlayerPlaces.get(playerPlaceIndex).tableCards2.remove(tableCard);
+			state.PlayerPlaces.get(playerPlaceIndex).tableCards2.add(handCard);
+		}
+		if (targetTableStack == 3) {
+			state.PlayerPlaces.get(playerPlaceIndex).tableCards3.remove(tableCard);
+			state.PlayerPlaces.get(playerPlaceIndex).tableCards3.add(handCard);
+		}
+		
+		state.PlayerPlaces.get(playerRequesting.getNum()-1).hand.add(tableCard);
+	}
+	
 	@Override
 	public void beginPlay() {
-		// TODO Auto-generated method stub
-
+		state.CurrentGamePhase = IdiotGameState.GamePhases.GamePlay;
+		state.currentPlayerTurn = 1;
 	}
 
 	@Override
 	public MoveResult submitMove(Player playerRequesting, Move move) {
-		// TODO Auto-generated method stub
+		
+		if (state.CurrentGamePhase != IdiotGameState.GamePhases.GamePlay) {
+			return new MoveResult() {{ success = false; message = "Game play has not yet started"; }};
+		}
+		
+		//TODO: Finish implementing method
 		return null;
 	}
 	
