@@ -8,17 +8,17 @@ public abstract class Card {
   /**
    * Whether the card is facing down.
    */
-  private boolean faceDown;
+  protected boolean faceDown;
 
   /**
    * Suit of the card.
    */
-  private GameCardSuit suit;
+  protected GameCardSuit suit;
 
   /**
    * Rank of the card.
    */
-  private GameCardRank rank;
+  protected GameCardRank rank;
 
   /**
    * Short identifier.
@@ -126,7 +126,5 @@ public abstract class Card {
       return this.getId().equals(((Card)obj).getId());
   }
 
-  public Card clone() {
-	  return this.clone();
-  }
+  public abstract Card clone();
 }

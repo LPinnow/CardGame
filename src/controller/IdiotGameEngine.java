@@ -55,14 +55,18 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	public MoveResult requestHandToTableCardSwap(Player playerRequesting, Card handCard, Card tableCard) {
 		
 		if (state.CurrentGamePhase != IdiotGameState.GamePhases.CardSwapping) {
-			return new MoveResult() {{ success = false; message = "Game is currently not in state to swap cards"; }};
+			return new MoveResult() {{ success = false; message = "Swapping table cards is not valid in this state of the game."; }};
 		}
-		
+
 		TableSwapValidationResult validationResult = tableSwapValidator.isValidSwap(playerRequesting.getNum(), handCard, tableCard);
 		
 		if (validationResult.Success) {
 			
+			//System.out.println(state.toString());
+			
 			updateStateForTableSwap(playerRequesting, handCard, tableCard, validationResult.targetTableStack);
+			
+			//System.out.println(state.toString());
 			
 			return new MoveResult() {{ success = true; }};
 		} 
@@ -75,7 +79,7 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		
 		int playerPlaceIndex = playerRequesting.getNum()-1;
 		
-		state.PlayerPlaces.get(playerRequesting.getNum()-1).hand.remove(handCard);
+		state.PlayerPlaces.get(playerPlaceIndex).hand.remove(handCard);
 		
 		if (targetTableStack == 1) {
 			state.PlayerPlaces.get(playerPlaceIndex).tableCards1.remove(tableCard);
@@ -90,7 +94,7 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			state.PlayerPlaces.get(playerPlaceIndex).tableCards3.add(handCard);
 		}
 		
-		state.PlayerPlaces.get(playerRequesting.getNum()-1).hand.add(tableCard);
+		state.PlayerPlaces.get(playerPlaceIndex).hand.add(tableCard);
 	}
 	
 	@Override

@@ -94,5 +94,10 @@ public class GameCard extends Card {
 
     return rankChar + suitChar;
   }
+  
+  @Override 
+  public Card clone() {
+	  return new GameCard(faceDown, suit, rank);
+  }
 
 }
