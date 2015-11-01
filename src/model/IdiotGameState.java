@@ -17,7 +17,7 @@ public class IdiotGameState {
 		
 		//TODO: Validate numberOfPlayers passed is within valid bounds
 		
-		PlayerPlaces = new ArrayList<PlayerZone>(numberOfPlayers);
+		PlayerPlaces = new ArrayList<PlayerZone>();
 		IntStream.range(1, numberOfPlayers+1).forEach(idx -> PlayerPlaces.add(new PlayerZone(idx)));
 	}
 

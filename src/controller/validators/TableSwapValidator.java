@@ -14,7 +14,7 @@ public class TableSwapValidator implements ITableSwapValidator {
 		
 		TableSwapValidationResult result = new TableSwapValidationResult();
 		
-		if (!playerNumberChecksOut(playerNumber, result)) return result;
+		if (!playerNumberIsValid(playerNumber, result)) return result;
 		
 		int tableStackContainingCard = tableCardStackContainingTableCard(tableCard, playerNumber, result);
 		
@@ -27,7 +27,7 @@ public class TableSwapValidator implements ITableSwapValidator {
 		
 	}
 	
-	private boolean playerNumberChecksOut(int playerNumber, TableSwapValidationResult result) {
+	private boolean playerNumberIsValid(int playerNumber, TableSwapValidationResult result) {
 		
 		if (playerNumber < 1 || playerNumber > state.PlayerPlaces.size()) {
 			result.ErrorMessage = "Invalid Player Number: " + playerNumber;
@@ -43,7 +43,7 @@ public class TableSwapValidator implements ITableSwapValidator {
 		int tableCardStackFoundIn = state.PlayerPlaces.get(playerNumber-1).getMatchingFaceUpTableCard(tableCard);
 		
 		if (tableCardStackFoundIn == 0) {
-			result.ErrorMessage = "Table card requested for swap not among Player " + playerNumber + "'s cards";
+			result.ErrorMessage = "Table card requested for swap not among Player " + playerNumber + "'s face up cards";
 			result.Success = false;
 		}
 		else {

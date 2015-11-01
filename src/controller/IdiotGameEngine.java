@@ -36,10 +36,6 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		state.pile = new ArrayList<Card>();
 		state.discardedCards = new ArrayList<Card>();
 		
-		for (PlayerZone playerPlace : state.PlayerPlaces ) {
-			playerPlace = new PlayerZone(playerPlace.playerNumber);
-		}
-		
 		for (PlayerZone playerPlace: state.PlayerPlaces ) {
 			playerPlace.tableCards1.add(state.drawCards.remove(0));
 			playerPlace.tableCards1.add(state.drawCards.remove(0));

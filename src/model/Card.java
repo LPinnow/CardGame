@@ -117,13 +117,13 @@ public abstract class Card {
   @Override
   public boolean equals(Object obj) {
 	 if (obj instanceof String)
-		 return this.getId() == (String)obj;
+		 return this.getId().equals((String)obj);
      if (!(obj instanceof Card))
           return false;
       if (obj == this)
           return true;
 
-      return this.getId() == ((Card)obj).getId();
+      return this.getId().equals(((Card)obj).getId());
   }
 
   public Card clone() {

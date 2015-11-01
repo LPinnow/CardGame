@@ -11,7 +11,7 @@ public class IdiotGameEngineTests {
 	@Test
 	public void testInitializeNewGame() {
 
-		int numberOfPlayers = 2;
+		int numberOfPlayers = 2; 
 		
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(null));
 		
