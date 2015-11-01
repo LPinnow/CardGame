@@ -88,6 +88,7 @@ public class CardGameMain extends Application {
     bord.setBottom(statusBar);
 
     Scene scene = new Scene(bord, WIDTH, HEIGHT);
+    scene.getStylesheets().add("styles/main.css");
 
     cardTheme = new CardTheme("/cardfaces/classic/theme.json", "/backfaces/bb.png");
     CardViewFactory.setCardTheme(cardTheme);

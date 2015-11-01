@@ -102,7 +102,9 @@ public class GameBoard extends Pane {
     this.wasteView = new CardPileView(1, 0, 0, 0, "W");
     
     this.p1_ready = new Button("Player 1 Ready?");
+    this.p1_ready.setId("default-btn");
     this.p2_ready = new Button("Player 2 Ready?");
+    this.p2_ready.setId("default-btn");
     
     this.p1_name = new Label("Player 1");
     this.p2_name = new Label("Player 2");

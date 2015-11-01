@@ -7,6 +7,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
+import view.AlertBox;
+import view.ConfirmBox;
+import view.InputBox;
 
 /**
  * This class represents the menu bar for the application.
@@ -21,7 +24,8 @@ public class GameMenu extends MenuBar {
   public GameMenu(CardGameMain cardGameApp) {
     Menu gameMenu = new Menu("Game");
     Menu settingsMenu = new Menu("Settings");
-    getMenus().addAll(gameMenu, settingsMenu);
+    Menu testMenu = new Menu("Test");
+    getMenus().addAll(gameMenu, settingsMenu, testMenu);
 
     MenuItem newGameMenuItem = new MenuItem("New Game");
 
@@ -132,5 +136,27 @@ public class GameMenu extends MenuBar {
 
     settingsMenu.getItems().addAll(cardThemeSettingsMenu, cardBackSettingsMenu,
         tableBackgroundsMenu);
+    
+    
+    MenuItem alertBoxTest = new MenuItem("Alert Box Test");
+    alertBoxTest.setOnAction(e -> {
+    	AlertBox.display("Alert Box Test", "Alert Box Test");
+    });
+    
+    MenuItem confirmBoxTest = new MenuItem("Confirm Box Test");
+    confirmBoxTest.setOnAction(e -> {
+    	boolean message = ConfirmBox.display("Confirm Box Test", "Question?");
+    	System.out.println("Confirm Box Return: " + message);
+    });
+
+    
+    MenuItem inputBoxTest = new MenuItem("Input Box Test");
+    inputBoxTest.setOnAction(e -> {
+    	String message = InputBox.display("Input Box Test", "Enter your name:");
+    	System.out.println("Input Box Return: " + message);
+    });
+
+
+    testMenu.getItems().addAll(alertBoxTest, confirmBoxTest, inputBoxTest);
   }
 }
