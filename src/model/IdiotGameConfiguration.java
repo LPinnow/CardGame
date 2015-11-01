@@ -1,5 +1,7 @@
 package model;
 
+import model.card.GameCardRank;
+
 public class IdiotGameConfiguration {
 
 /**

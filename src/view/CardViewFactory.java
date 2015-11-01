@@ -1,6 +1,6 @@
 package view;
 
-import model.Card;
+import model.card.Card;
 
 /**
  * Factory class for creating {@link CardView} objects.

@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.card.Card;
+
 public class PlayerZone {
 
 	/*Player number represents the Id associated to the player.

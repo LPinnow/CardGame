@@ -5,7 +5,7 @@ import java.util.Iterator;
 import view.CardPileView;
 import view.CardTheme;
 import view.CardViewFactory;
-import model.Card;
+import model.card.Card;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -45,9 +45,9 @@ public class CardGameMain extends Application {
   StatusBar statusBar;
 
   /**
-   * Reference to a {@link MouseUtility} instance.
+   * Reference to a {@link InputManager} instance.
    */
-  MouseUtility mouseUtility;
+  InputManager mouseUtility;
 
   /**
    * The current theme of the cards.
@@ -95,7 +95,7 @@ public class CardGameMain extends Application {
 
     game = new CardGame();
     game.startNewGame();
-    mouseUtility = new MouseUtility(game, gameBoard);
+    mouseUtility = new InputManager(game, gameBoard);
     
     //Get number of cards to deal player hands and extra piles
     int cardsToHandPiles = game.getRules().getHandCardNum();
@@ -200,7 +200,7 @@ public class CardGameMain extends Application {
 		}});
   }
   
-  public MouseUtility getMouseUtility(){
+  public InputManager getMouseUtility(){
 	  return mouseUtility;
   }
 

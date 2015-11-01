@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import model.Card;
-import model.CardCollection;
-import model.CardDeck;
 import model.Player;
+import model.card.Card;
+import model.card.CardCollection;
+import model.card.CardDeck;
 
 /**
  * This class represents the game itself, with methods to manipulate the state

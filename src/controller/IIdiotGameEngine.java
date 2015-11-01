@@ -1,6 +1,7 @@
 package controller;
 
 import model.*;
+import model.card.Card;
 
 public interface IIdiotGameEngine {
 

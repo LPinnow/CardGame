@@ -1,6 +1,7 @@
 package controller.validators;
 
 import model.*;
+import model.card.Card;
 
 public interface ITableSwapValidator {
 

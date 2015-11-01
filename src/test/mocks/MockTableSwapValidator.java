@@ -1,7 +1,7 @@
 package test.mocks;
 
 import controller.validators.*;
-import model.Card;
+import model.card.Card;
 
 public class MockTableSwapValidator implements ITableSwapValidator {
 

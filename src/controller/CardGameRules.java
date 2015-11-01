@@ -2,10 +2,10 @@ package controller;
 
 import java.util.List;
 
-import model.Card;
-import model.CardCollection;
-import model.GameCardRank;
-import model.GameCardSuit;
+import model.card.Card;
+import model.card.CardCollection;
+import model.card.GameCardRank;
+import model.card.GameCardSuit;
 
 /**
  * Class representing the rules of the card game.

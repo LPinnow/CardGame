@@ -10,6 +10,11 @@ import org.junit.Test;
 import controller.validators.TableSwapValidationResult;
 import controller.validators.TableSwapValidator;
 import model.*;
+import model.card.Card;
+import model.card.CardDeck;
+import model.card.GameCard;
+import model.card.GameCardRank;
+import model.card.GameCardSuit;
 
 public class TableSwapValidatorTests {
 

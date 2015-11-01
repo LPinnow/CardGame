@@ -3,6 +3,9 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.card.FaceDownCardStack;
+import model.card.FaceUpCardStack;
+
 public class IdiotGameStateFacade {
 
 	final protected IdiotGameState wrappedState;

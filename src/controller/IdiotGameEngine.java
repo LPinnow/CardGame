@@ -3,6 +3,8 @@ package controller;
 import java.util.ArrayList;
 
 import model.*;
+import model.card.Card;
+import model.card.CardDeck;
 import controller.validators.*;
 
 public class IdiotGameEngine implements IIdiotGameEngine {

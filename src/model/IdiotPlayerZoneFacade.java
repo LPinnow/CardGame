@@ -2,6 +2,10 @@ package model;
 
 import java.util.List;
 
+import model.card.Card;
+import model.card.PlayerHand;
+import model.card.TopCardUpStack;
+
 public class IdiotPlayerZoneFacade {
 
 	final protected PlayerZone wrappedPlayerZone;

@@ -2,14 +2,14 @@ package test;
 
 import controller.*;
 import controller.validators.TableSwapValidationResult;
-import model.Card;
 import model.IdiotGameState;
 import model.MoveResult;
 import model.Player;
-
+import model.card.Card;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
 import test.mocks.*;
 
 public class IdiotGameEngineTests {

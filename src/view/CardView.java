@@ -1,6 +1,6 @@
 package view;
 
-import model.Card;
+import model.card.Card;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
