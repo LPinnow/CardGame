@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import model.*;
 import model.card.Card;
 
@@ -39,5 +41,7 @@ public interface IIdiotGameEngine {
 	 */
 	
 	MoveResult submitMove(Player playerRequesting, Move move);
+	
+	List<Card> getPileById(String shortID);
 	
 }

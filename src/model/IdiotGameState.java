@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import model.card.Card;
+import model.card.CardDeck;
 
 public class IdiotGameState {
 	
@@ -40,6 +41,10 @@ public class IdiotGameState {
 	public List<Card> discardedCards = new ArrayList<Card>();
 	public List<Card> drawCards = new ArrayList<Card>();
 	public List<Card> pile = new ArrayList<Card>();
+	public CardDeck fullDeck = new CardDeck();
+	
+	public String idDrawCards;
+	public String idPile;
 	
 	/**
 	 * The collections of cards settings for each player

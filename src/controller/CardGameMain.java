@@ -103,68 +103,16 @@ public class CardGameMain extends Application {
     primaryStage.setTitle("Card Game");
     primaryStage.setScene(scene);
     primaryStage.show();
+    
+    System.out.println();
   }
 
   /**
    * Sets up the {@link GameBoard} object for a new game.
    
   private void prepareGameBoardForNewGame(int numCardsToHand, int numCardsToPile) {
-    // deal to piles
-    Iterator<Card> deckIterator = game.getDeck().iterator();
     
-    //deal to player 1 card piles
-    for (CardPileView p1_foundationPileView : gameBoard.getP1_FoundationPileViews()){
-    	for (int i = 0; i < numCardsToPile; i++) {
-    		p1_foundationPileView.addCardView(CardViewFactory.createCardView(deckIterator.next()));
-            gameBoard.getChildren().add(p1_foundationPileView.getTopCardView());
-            gameBoard.cardViewList.add(p1_foundationPileView.getTopCardView());
-            p1_foundationPileView.getTopCardView().setMouseTransparent(true);
-    	}
-    	
-    	p1_foundationPileView.getTopCardView().setMouseTransparent(false);
-    }
-    
-    //deal to player 2 card piles
-    for (CardPileView p2_foundationPileView : gameBoard.getP2_FoundationPileViews()){
-    	for (int i = 0; i < numCardsToPile; i++) {
-    		p2_foundationPileView.addCardView(CardViewFactory.createCardView(deckIterator.next()));
-            gameBoard.getChildren().add(p2_foundationPileView.getTopCardView());
-            gameBoard.cardViewList.add(p2_foundationPileView.getTopCardView());
-            p2_foundationPileView.getTopCardView().setMouseTransparent(true);
-    	}
-    	
-    	p2_foundationPileView.getTopCardView().setMouseTransparent(false);
-    }
-    
-    //deal to player 1 hand
-    for (int i = 0; i < numCardsToHand; i++) {
-    	gameBoard.getP1_HandPileView().addCardView(CardViewFactory.createCardView(deckIterator.next()));
-        mouseUtility.makeClickable(gameBoard.getP1_HandPileView().getTopCardView());
-        gameBoard.cardViewList.add(gameBoard.getP1_HandPileView().getTopCardView());
-        mouseUtility.makeDraggable(gameBoard.getP1_HandPileView().getTopCardView());
-        gameBoard.getChildren().add(gameBoard.getP1_HandPileView().getTopCardView());
-	}
-    
-    //deal to player 2 hand
-    for (int i = 0; i < numCardsToHand; i++) {
-    	gameBoard.getP2_HandPileView().addCardView(CardViewFactory.createCardView(deckIterator.next()));
-        mouseUtility.makeClickable(gameBoard.getP2_HandPileView().getTopCardView());
-        gameBoard.cardViewList.add(gameBoard.getP2_HandPileView().getTopCardView());
-        mouseUtility.makeDraggable(gameBoard.getP2_HandPileView().getTopCardView());
-        gameBoard.getChildren().add(gameBoard.getP2_HandPileView().getTopCardView());
-	}
-    
-    //put the rest of the cards in the deck
-    deckIterator.forEachRemaining(card -> {
-      gameBoard.getStockView().addCardView(CardViewFactory.createCardView(card));
-      //mouseUtility.makeClickable(gameBoard.getStockView().getTopCardView());
-      gameBoard.cardViewList.add(gameBoard.getStockView().getTopCardView());
-      gameBoard.getChildren().add(gameBoard.getStockView().getTopCardView());
-    });
-
-    gameBoard.getStockView().setOnMouseClicked(mouseUtility.stockReverseCardsHandler);
-    
-    /**
+   /**
      * Hide ready button when clicked and start game if other player is ready
      
     gameBoard.getP1_ReadyButton().setOnMouseClicked(new EventHandler<Event>(){

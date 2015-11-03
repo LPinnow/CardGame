@@ -63,12 +63,12 @@ public class GameBoard extends Pane {
   /**
    * The {@link CardPileView} object that serves as the view for the stock.
    */
-  private CardPileView stockView;
+  private CardPileView drawCardsView;
 
   /**
-   * The {@link CardPileView} object that serves as the view for the waste.
+   * The {@link CardPileView} object that serves as the view for the pile.
    */
-  private CardPileView wasteView;
+  private CardPileView pileView;
 
   /**
    * The gap (offset) between the cards.
@@ -101,12 +101,12 @@ public class GameBoard extends Pane {
    * Constructs a new {@link GameBoard} object.
    */
   public GameBoard() {
-    this.p1_handPileView = new CardPileView(0, 40, 0, 0, "K");
-    this.p2_handPileView = new CardPileView(0, 40, 0, 0, "K"+1);
+    this.p1_handPileView = new CardPileView(0, 40, 0, 0, "1hand");
+    this.p2_handPileView = new CardPileView(0, 40, 0, 0, "2hand");
     this.p1_foundationPileViews = FXCollections.observableArrayList();
     this.p2_foundationPileViews = FXCollections.observableArrayList();
-    this.stockView = new CardPileView(1, 0, 0, 0, "S");
-    this.wasteView = new CardPileView(1, 0, 0, 0, "W");
+    this.drawCardsView = new CardPileView(1, 0, 0, 0, "drawCards");
+    this.pileView = new CardPileView(1, 0, 0, 0, "pile");
     
     this.p1_ready = new Button("Player 1 Ready?");
     this.p1_ready.setId("default-btn");
@@ -146,11 +146,11 @@ public class GameBoard extends Pane {
     
     //pass in x,y locations and number for player 1 card piles
     int p1_numOfPiles = 3;
-    buildFoundationPiles(50, 20, p1_foundationPileViews, p1_numOfPiles);
+    buildFoundationPiles(50, 20, 1, p1_foundationPileViews, p1_numOfPiles);
     
     //pass in x,y locations and number for player 2 card piles
     int p2_numOfPiles = 3;
-    buildFoundationPiles(50, 550, p2_foundationPileViews, p2_numOfPiles);
+    buildFoundationPiles(50, 550, 2, p2_foundationPileViews, p2_numOfPiles);
     
     //pass in x,y locations for hand piles
     buildHandPiles(650, 20, p1_handPileView);
@@ -181,12 +181,12 @@ public class GameBoard extends Pane {
 
     GaussianBlur gaussianBlur = new GaussianBlur(10);
 
-    stockView.setPrefSize(130, 180);
-    stockView.setBackground(background);
-    stockView.setLayoutX(x);
-    stockView.setLayoutY(y);
-    stockView.setEffect(gaussianBlur);
-    getChildren().add(stockView);
+    drawCardsView.setPrefSize(130, 180);
+    drawCardsView.setBackground(background);
+    drawCardsView.setLayoutX(x);
+    drawCardsView.setLayoutY(y);
+    drawCardsView.setEffect(gaussianBlur);
+    getChildren().add(drawCardsView);
   }
 
   /**
@@ -201,19 +201,19 @@ public class GameBoard extends Pane {
 
     GaussianBlur gaussianBlur = new GaussianBlur(10);
 
-    wasteView.setPrefSize(130, 180);
-    wasteView.setBackground(background);
-    wasteView.setLayoutX(x);
-    wasteView.setLayoutY(y);
-    wasteView.setEffect(gaussianBlur);
-    getChildren().add(wasteView);
+    pileView.setPrefSize(130, 180);
+    pileView.setBackground(background);
+    pileView.setLayoutX(x);
+    pileView.setLayoutY(y);
+    pileView.setEffect(gaussianBlur);
+    getChildren().add(pileView);
   }
 
   /**
    * Configures the {@link CardPileView} objects that serves as the view
    * of the foundation piles.
    */
-  private void buildFoundationPiles(int x, int y, List<CardPileView> foundationPileViews, int numOfPiles) {
+  private void buildFoundationPiles(int x, int y, int playerNumber, List<CardPileView> foundationPileViews, int numOfPiles) {
 	 BackgroundFill backgroundFill = new BackgroundFill(
         Color.gray(0.0, 0.2), null, null);
 
@@ -222,7 +222,7 @@ public class GameBoard extends Pane {
     GaussianBlur gaussianBlur = new GaussianBlur(10);
 
     IntStream.range(0, numOfPiles).forEach(i -> {
-      foundationPileViews.add(new CardPileView(2, 0, (x + i * 160), y, "F" + i));
+      foundationPileViews.add(new CardPileView(2, 0, (x + i * 160), y, playerNumber+"tableCards"+i));
       foundationPileViews.get(i).setPrefSize(130, 180);
       foundationPileViews.get(i).setBackground(background);
       foundationPileViews.get(i).setLayoutX(x + i * 160);
@@ -289,7 +289,7 @@ public class GameBoard extends Pane {
   
   /**
    * Returns the {@link List} of {@link CardPileView} objects that serves
-   * as the view of the foundation piles.
+   * as the view of the player card piles.
    *
    * @return The {@link List} of {@link CardPileView} objects.
    */
@@ -299,7 +299,7 @@ public class GameBoard extends Pane {
   
   /**
    * Returns the {@link List} of {@link CardPileView} objects that serves
-   * as the view of the foundation piles.
+   * as the view of the player card piles.
    *
    * @return The {@link List} of {@link CardPileView} objects.
    */
@@ -309,12 +309,12 @@ public class GameBoard extends Pane {
 
   /**
    * Returns the {@link CardPileView} object that serves as the view
-   * of the stock.
+   * of the draw cards pile.
    *
    * @return The {@link CardPileView} object.
    */
-  public CardPileView getStockView() {
-    return stockView;
+  public CardPileView getDrawCardsView() {
+    return drawCardsView;
   }
 
   /**
@@ -323,8 +323,8 @@ public class GameBoard extends Pane {
    *
    * @return The {@link CardPileView} object.
    */
-  public CardPileView getWasteView() {
-    return wasteView;
+  public CardPileView getPileView() {
+    return pileView;
   }
 
   /**
@@ -370,11 +370,10 @@ public class GameBoard extends Pane {
   public void drawDeck(List<Card> drawCards){
 	  Iterator<Card> deckIterator = drawCards.iterator();
 		
-		//put the rest of the cards in the deck
 	    deckIterator.forEachRemaining(card -> {
-	      getStockView().addCardView(CardViewFactory.createCardView(card));
-	      cardViewList.add(getStockView().getTopCardView());
-	      getChildren().add(getStockView().getTopCardView());
+	      getDrawCardsView().addCardView(CardViewFactory.createCardView(card));
+	      cardViewList.add(getDrawCardsView().getTopCardView());
+	      getChildren().add(getDrawCardsView().getTopCardView());
 	    });
   }
 

@@ -5,9 +5,7 @@ import java.util.ListIterator;
 
 import view.CardPileView;
 import view.CardView;
-import model.Player;
 import model.card.Card;
-import model.card.CardCollection;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -66,10 +64,10 @@ public class InputManager {
     /** get current cardView. */
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
-    //Card card = game.getDeck().getById(cardView.getShortID());
+    Card card = game.getCurrentGameState().GetFullDeck().getById(cardView.getShortID());
 
     //game.drawFromStock(card);
-    gameBoard.getStockView().moveCardViewToPile(cardView, gameBoard.getWasteView());
+    gameBoard.getDrawCardsView().moveCardViewToPile(cardView, gameBoard.getPileView());
     cardView.flip();
     cardView.setMouseTransparent(false);
     makeDraggable(cardView);
@@ -84,10 +82,10 @@ public class InputManager {
     //game.refillStockFromWaste();
 
     /** get view for waste. */
-    CardPileView wasteView = gameBoard.getWasteView();
+    CardPileView wasteView = gameBoard.getPileView();
 
     /** get view for stock. */
-    CardPileView stockView = gameBoard.getStockView();
+    CardPileView stockView = gameBoard.getDrawCardsView();
 
     /** reverse iterator for list. */
     ListIterator<CardView> revIt = wasteView.getCards().listIterator(wasteView.numOfCards());
@@ -128,7 +126,7 @@ public class InputManager {
     /** get current cardView. */
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
-    //Card card = game.getDeck().getById(cardView.getShortID());
+    Card card = game.getCurrentGameState().GetFullDeck().getById(cardView.getShortID());
 
     // Setup drop shadow
     cardView.getDropShadow().setRadius(20);
@@ -139,12 +137,12 @@ public class InputManager {
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
-    //CardCollection activePile = game.getPileById(activePileView.getShortID());
+    List<Card> activePile = game.getPileById(activePileView.getShortID());
 
     // Put this card and all above it to the list of dragged cards
     draggedCardView = cardView;
     draggedCardViewIndex = activePileView.getCardViewIndex(cardView);
-    //draggedCard = card;
+    draggedCard = card;
     
     // Handles dragging coordinates
     draggedCardView.toFront();
@@ -152,11 +150,11 @@ public class InputManager {
     draggedCardView.setTranslateY(offsetY);
     
     // Bring them to front & apply difference vector to dragged cards
- /*   draggedCardView.forEach(cw -> {
-      cw.toFront();
-      cw.setTranslateX(offsetX);
-      cw.setTranslateY(offsetY);
-    });
+  /*  draggedCardView.forEach(cw -> {
+        cw.toFront();
+        cw.setTranslateX(offsetX);
+        cw.setTranslateY(offsetY);
+      });
 */
   };
 
@@ -173,34 +171,23 @@ public class InputManager {
     /** get current card view. */
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
-    //Card card = game.getDeck().getById(cardView.getShortID());
+    Card card = game.getCurrentGameState().GetFullDeck().getById(cardView.getShortID());
+    System.out.println("CardView ID: " + cardView.getShortID());
 
     // Get the pile that contained the actual card
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
-    //CardCollection activePile = game.getPileById(activePileView.getShortID());
-    
-    System.out.println(activePileView.getCards());
+    List<Card> activePile = game.getPileById(activePileView.getShortID());
+    System.out.println("CardPileView ID: " + activePileView.getShortID());
     
     // check if card(s) are intersecting with any of the piles
-//    if (checkAllPiles(card, cardView, activePile, activePileView)) {
-//    	System.out.println(activePileView.getCards());
-    	
- //       draggedCard = null;
-//	    draggedCardView = null;
-      /*if (game.isGameWon()) {
-
-        // Alert dialog box informing the player that he/she has won.
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game Over");
-        alert.setHeaderText(null);
-        alert.setContentText("Congratulations, you have won the game!");
-        alert.showAndWait();
-      }
-    */
-//      return;
- //   }
+    if (checkAllPiles(card, cardView, activePile, activePileView)) {    	
+        draggedCard = null;
+	    draggedCardView = null;
+     
+	    return;
+    }
 
     // if not intersecting with any valid pile, slide them back
     slideBack(draggedCardView);
@@ -269,7 +256,7 @@ public class InputManager {
    * @return true if intersects with any pile, false otherwise.
    */
   private boolean checkAllPiles(
-      Card card, CardView cardView, CardCollection activePile,
+      Card card, CardView cardView, List<Card> activePile,
       CardPileView activePileView) {
 
     // check the standard piles
@@ -294,7 +281,7 @@ public class InputManager {
    * @return true if intersects with any pile, false otherwise.
    */
   private boolean checkPiles(
-      Card card, CardView cardView, CardCollection activePile,
+      Card card, CardView cardView, List<Card> activePile,
       CardPileView activePileView, List<CardPileView> pileViews) {
 
     boolean result = false;
@@ -305,10 +292,10 @@ public class InputManager {
         continue;
 
       // check for intersection
- //     if (isOverPile(cardView, pileView) &&
- //         handleValidMove(card, activePile, activePileView, pileView)){
-//        return true;
- //     }
+      if (isOverPile(cardView, pileView) &&
+          handleValidMove(card, activePile, activePileView, pileView)){
+        return true;
+      }
     }
 
     return result;
@@ -333,16 +320,16 @@ public class InputManager {
    * as well as their views.
    *
    * @param card           The card to move.
-   * @param sourcePile     The view of the moved card.
+   * @param activePile     The view of the moved card.
    * @param sourcePileView The source pile view.
    * @param destPileView   The destination pile view.
    * @return true if the move is valid, false otherwise.
-  
-  private boolean handleValidMove(Card card, CardCollection sourcePile,
+  */
+  private boolean handleValidMove(Card card, List<Card> activePile,
                                   CardPileView sourcePileView,
                                   CardPileView destPileView) {
-    CardCollection destPile = game.getPileById(destPileView.getShortID());
-    
+    List<Card> destPile = game.getPileById(destPileView.getShortID());
+/**    
     if(!game.isGameInProgress()){
     	Player activePlayer = game.getActivePlayer();
     	
@@ -379,11 +366,11 @@ public class InputManager {
       draggedCard = null;
       draggedCardView = null;
       return true;
-    } else {
-      return false;
-    }
-  }
- */
+    } 
+    
+*/    return false;
+ }
+ 
   /**
    * Slide back card to its original position if the move was not valid.
    *
@@ -402,9 +389,6 @@ public class InputManager {
           card.getDropShadow().setOffsetX(0);
           card.getDropShadow().setOffsetY(0);
         });
-    System.out.println(card);
-    System.out.println("targetX: " + targetX);
-    System.out.println("targetY: " + targetY);
   }
 
   /**
@@ -472,10 +456,6 @@ public class InputManager {
     double targetX = x;
     double targetY = y;
     
-    System.out.println(cardToSlide);
-    System.out.println("targetX: " + targetX);
-    System.out.println("targetY: " + targetY);
-
     animateCardMovement(cardToSlide, sourceX, sourceY,
         targetX, targetY, Duration.millis(150), e -> {
         	sourcePile.replaceCardViewOnPile(cardToSlide, destPile, targetX, targetY, index);

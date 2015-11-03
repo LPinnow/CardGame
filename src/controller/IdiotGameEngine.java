@@ -1,9 +1,8 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
-import view.CardViewFactory;
 import model.*;
 import model.card.Card;
 import model.card.CardDeck;
@@ -33,11 +32,17 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		
 		CardDeck deck = CardDeck.createGameCardDeck();
 		
+		// create original deck of cards to be used by the InputManager
+		state.fullDeck = deck;
+		
 		deck.shuffle();
 
 		state.drawCards = deck.getCards();
+		state.idDrawCards = "drawCards";
 		
 		state.pile = new ArrayList<Card>();
+		state.idPile = "pile";
+		
 		state.discardedCards = new ArrayList<Card>();
 		
 		for (PlayerZone playerPlace: state.PlayerPlaces ) {
@@ -59,6 +64,9 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			for (Card card : playerPlace.hand){
 				card.flip();
 			}
+			
+			//set pile ids for InputManager. Ids must match corresponding CardPileView ids.
+			playerPlace.initializePileIDs();
 			
 			//draw the cards in the PlayerZone
 			gameBoard.drawPlayerPlace(playerPlace);
@@ -133,5 +141,33 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		return null;
 	}
 	
-
+	/**
+	 * Looks up a List<Card> by its id
+	 * Returns the List<Card> with a matching id
+	 * 
+	 * @param shortID
+	 * @return
+	 */
+	@Override
+	public List<Card> getPileById(String shortID) {
+		
+		if(state.idDrawCards.equalsIgnoreCase(shortID)){
+			return state.drawCards;
+		} else if (state.idPile.equalsIgnoreCase(shortID)){
+			return state.pile;
+		}
+		
+		for (PlayerZone playerPlace: state.PlayerPlaces ) {
+			if(playerPlace.idHand.equals(shortID))
+				return playerPlace.hand;
+			else if (playerPlace.idTableCards1.equals(shortID))
+				return playerPlace.tableCards1;
+			else if (playerPlace.idTableCards2.equals(shortID))
+				return playerPlace.tableCards2;
+			else if (playerPlace.idTableCards3.equals(shortID))
+				return playerPlace.tableCards3;
+		}
+		
+		return null;
+	}
 }

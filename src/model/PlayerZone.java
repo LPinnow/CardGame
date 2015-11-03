@@ -15,6 +15,11 @@ public class PlayerZone {
 	public List<Card> tableCards2;
 	public List<Card> tableCards3;
 	
+	public String idTableCards1;
+	public String idTableCards2;
+	public String idTableCards3;
+	public String idHand;
+	
 	public PlayerZone(int playerNumber) {
 		this.playerNumber = playerNumber;
 		hand = new ArrayList<Card>();
@@ -56,6 +61,15 @@ public class PlayerZone {
 		
 		return 0;
 	}
-
-
+	
+	/**
+	 * Sets the ids of the piles in the zone.
+	 * Ids must match corresponding CardPileView ids.
+	 */
+	public void initializePileIDs(){
+		this.idHand = this.playerNumber + "hand";
+		this.idTableCards1 = this.playerNumber + "tableCards1";
+		this.idTableCards2 = this.playerNumber + "tableCards2";
+		this.idTableCards3 = this.playerNumber + "tableCards3";
+	}
 }

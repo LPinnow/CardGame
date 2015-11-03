@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.card.CardDeck;
 import model.card.FaceDownCardStack;
 import model.card.FaceUpCardStack;
 
@@ -30,9 +31,14 @@ public class IdiotGameStateFacade {
 		return new FaceUpCardStack(wrappedState.pile);
 	}
 	
+	public CardDeck GetFullDeck() {
+		return wrappedState.fullDeck;
+	}
+	
 	public List<IdiotPlayerZoneFacade> getPlayerPlaces() {
 		List<IdiotPlayerZoneFacade> playerPlaces = new ArrayList<IdiotPlayerZoneFacade>();
 		wrappedState.PlayerPlaces.forEach(place -> playerPlaces.add(new IdiotPlayerZoneFacade(place)));
 		return playerPlaces;
 	}
+
 }
