@@ -48,9 +48,9 @@ public class InputManager {
   private int draggedCardIndex;
   
   /**
-   * The {@link CardGame} object to manipulate.
+   * The {@link IIdiotGameEngine} object to manipulate.
    */
-  private CardGame game;
+  private IIdiotGameEngine game;
 
   /**
    * The {@link GameBoard} object to manipulate.
@@ -66,9 +66,9 @@ public class InputManager {
     /** get current cardView. */
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
-    Card card = game.getDeck().getById(cardView.getShortID());
+    //Card card = game.getDeck().getById(cardView.getShortID());
 
-    game.drawFromStock(card);
+    //game.drawFromStock(card);
     gameBoard.getStockView().moveCardViewToPile(cardView, gameBoard.getWasteView());
     cardView.flip();
     cardView.setMouseTransparent(false);
@@ -81,7 +81,7 @@ public class InputManager {
    */
   EventHandler<MouseEvent> stockReverseCardsHandler = e -> {
     // put all cards on waste back to stock and flip them
-    game.refillStockFromWaste();
+    //game.refillStockFromWaste();
 
     /** get view for waste. */
     CardPileView wasteView = gameBoard.getWasteView();
@@ -128,7 +128,7 @@ public class InputManager {
     /** get current cardView. */
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
-    Card card = game.getDeck().getById(cardView.getShortID());
+    //Card card = game.getDeck().getById(cardView.getShortID());
 
     // Setup drop shadow
     cardView.getDropShadow().setRadius(20);
@@ -139,12 +139,12 @@ public class InputManager {
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
-    CardCollection activePile = game.getPileById(activePileView.getShortID());
+    //CardCollection activePile = game.getPileById(activePileView.getShortID());
 
     // Put this card and all above it to the list of dragged cards
     draggedCardView = cardView;
     draggedCardViewIndex = activePileView.getCardViewIndex(cardView);
-    draggedCard = card;
+    //draggedCard = card;
     
     // Handles dragging coordinates
     draggedCardView.toFront();
@@ -173,22 +173,22 @@ public class InputManager {
     /** get current card view. */
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
-    Card card = game.getDeck().getById(cardView.getShortID());
+    //Card card = game.getDeck().getById(cardView.getShortID());
 
     // Get the pile that contained the actual card
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
-    CardCollection activePile = game.getPileById(activePileView.getShortID());
+    //CardCollection activePile = game.getPileById(activePileView.getShortID());
     
     System.out.println(activePileView.getCards());
     
     // check if card(s) are intersecting with any of the piles
-    if (checkAllPiles(card, cardView, activePile, activePileView)) {
-    	System.out.println(activePileView.getCards());
+//    if (checkAllPiles(card, cardView, activePile, activePileView)) {
+//    	System.out.println(activePileView.getCards());
     	
-        draggedCard = null;
-	    draggedCardView = null;
+ //       draggedCard = null;
+//	    draggedCardView = null;
       /*if (game.isGameWon()) {
 
         // Alert dialog box informing the player that he/she has won.
@@ -199,8 +199,8 @@ public class InputManager {
         alert.showAndWait();
       }
     */
-      return;
-    }
+//      return;
+ //   }
 
     // if not intersecting with any valid pile, slide them back
     slideBack(draggedCardView);
@@ -223,7 +223,7 @@ public class InputManager {
    * @param game     The {@link CardGame object}.
    * @param gameBoard The {@link GameBoard} object.
    */
-  public InputManager(CardGame game, GameBoard gameBoard) {
+  public InputManager(IIdiotGameEngine game, GameBoard gameBoard) {
     this.game = game;
     this.gameBoard = gameBoard;
   }
@@ -305,10 +305,10 @@ public class InputManager {
         continue;
 
       // check for intersection
-      if (isOverPile(cardView, pileView) &&
-          handleValidMove(card, activePile, activePileView, pileView)){
-        return true;
-      }
+ //     if (isOverPile(cardView, pileView) &&
+ //         handleValidMove(card, activePile, activePileView, pileView)){
+//        return true;
+ //     }
     }
 
     return result;
@@ -337,7 +337,7 @@ public class InputManager {
    * @param sourcePileView The source pile view.
    * @param destPileView   The destination pile view.
    * @return true if the move is valid, false otherwise.
-   */
+  
   private boolean handleValidMove(Card card, CardCollection sourcePile,
                                   CardPileView sourcePileView,
                                   CardPileView destPileView) {
@@ -383,7 +383,7 @@ public class InputManager {
       return false;
     }
   }
-
+ */
   /**
    * Slide back card to its original position if the move was not valid.
    *

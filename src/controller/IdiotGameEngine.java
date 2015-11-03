@@ -1,7 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import view.CardViewFactory;
 import model.*;
 import model.card.Card;
 import model.card.CardDeck;
@@ -22,7 +24,7 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	}
 	
 	@Override
-	public void initializeNewGame(int numberOfPlayers) {
+	public void initializeNewGame(GameBoard gameBoard, int numberOfPlayers) {
 		
 		state = new IdiotGameState(numberOfPlayers);
 		
@@ -48,7 +50,22 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			playerPlace.hand.add(state.drawCards.remove(0));
 			playerPlace.hand.add(state.drawCards.remove(0));
 			playerPlace.hand.add(state.drawCards.remove(0));
+			
+			//flip the top card in each pile and in the hands
+			playerPlace.tableCards1.get(playerPlace.tableCards1.size()-1).flip();
+			playerPlace.tableCards2.get(playerPlace.tableCards2.size()-1).flip();
+			playerPlace.tableCards3.get(playerPlace.tableCards3.size()-1).flip();
+			
+			for (Card card : playerPlace.hand){
+				card.flip();
+			}
+			
+			//draw the cards in the PlayerZone
+			gameBoard.drawPlayerPlace(playerPlace);
 		}
+		
+		//draw the deck
+		gameBoard.drawDeck(state.drawCards);
 		
 		state.CurrentGamePhase = IdiotGameState.GamePhases.CardSwapping;
 	}

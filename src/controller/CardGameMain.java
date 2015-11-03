@@ -30,9 +30,9 @@ public class CardGameMain extends Application {
   private static final double HEIGHT = 800;
 
   /**
-   * Reference to a {@link CardGame} instance.
+   * Reference to a {@link IIdiotGameEngine} instance.
    */
-  CardGame game;
+  IIdiotGameEngine game;
 
   /**
    * Reference to a {@link GameBoard} instance.
@@ -93,14 +93,12 @@ public class CardGameMain extends Application {
     cardTheme = new CardTheme("/cardfaces/classic/theme.json", "/backfaces/bb.png");
     CardViewFactory.setCardTheme(cardTheme);
 
-    game = new CardGame();
-    game.startNewGame();
-    mouseUtility = new InputManager(game, gameBoard);
+    game = new IdiotGameEngine(null);
     
-    //Get number of cards to deal player hands and extra piles
-    int cardsToHandPiles = game.getRules().getHandCardNum();
-    int cardsToPiles = game.getRules().getPileCardNum();
-    prepareGameBoardForNewGame(cardsToHandPiles, cardsToPiles);
+    mouseUtility = new InputManager(game, gameBoard);
+    gameBoard.setInputManager(mouseUtility);
+    game.initializeNewGame(gameBoard, 2);
+    //prepareGameBoardForNewGame(cardsToHandPiles, cardsToPiles);
     
     primaryStage.setTitle("Card Game");
     primaryStage.setScene(scene);
@@ -109,7 +107,7 @@ public class CardGameMain extends Application {
 
   /**
    * Sets up the {@link GameBoard} object for a new game.
-   */
+   
   private void prepareGameBoardForNewGame(int numCardsToHand, int numCardsToPile) {
     // deal to piles
     Iterator<Card> deckIterator = game.getDeck().iterator();
@@ -168,7 +166,7 @@ public class CardGameMain extends Application {
     
     /**
      * Hide ready button when clicked and start game if other player is ready
-     */
+     
     gameBoard.getP1_ReadyButton().setOnMouseClicked(new EventHandler<Event>(){
     	@Override
 		public void handle(Event e) {
@@ -183,7 +181,7 @@ public class CardGameMain extends Application {
     
     /**
      * Hide ready button when clicked and start game if other player is ready
-     */
+      
     gameBoard.getP2_ReadyButton().setOnMouseClicked(new EventHandler<Event>(){
     	@Override
 		public void handle(Event e) {
@@ -199,7 +197,7 @@ public class CardGameMain extends Application {
 			}
 		}});
   }
-  
+  */
   public InputManager getMouseUtility(){
 	  return mouseUtility;
   }

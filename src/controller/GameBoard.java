@@ -1,12 +1,17 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import model.PlayerZone;
+import model.card.Card;
+import model.card.CardDeck;
 import view.CardPileView;
 import view.CardTheme;
 import view.CardView;
+import view.CardViewFactory;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -89,6 +94,8 @@ public class GameBoard extends Pane {
    * Ready button for player 2
    */
   private Button p2_ready;
+  
+  private InputManager mouseUtility;
 
   /**
    * Constructs a new {@link GameBoard} object.
@@ -108,6 +115,7 @@ public class GameBoard extends Pane {
     
     this.p1_name = new Label("Player 1");
     this.p2_name = new Label("Player 2");
+    
     
     initGameArea();
   }
@@ -354,4 +362,79 @@ public class GameBoard extends Pane {
   public void setButtonVisibility(Button b, boolean visible){
 	  b.setVisible(visible);
   }
+  
+  public void setInputManager(InputManager mouseUtility){
+	  this.mouseUtility = mouseUtility;
+  }
+  
+  public void drawDeck(List<Card> drawCards){
+	  Iterator<Card> deckIterator = drawCards.iterator();
+		
+		//put the rest of the cards in the deck
+	    deckIterator.forEachRemaining(card -> {
+	      getStockView().addCardView(CardViewFactory.createCardView(card));
+	      cardViewList.add(getStockView().getTopCardView());
+	      getChildren().add(getStockView().getTopCardView());
+	    });
+  }
+
+	public void drawPlayerPlace(PlayerZone playerPlace) {
+		CardPileView foundationPileView_1;
+		CardPileView foundationPileView_2;
+		CardPileView foundationPileView_3;
+		CardPileView handPileView;
+		
+		if(playerPlace.playerNumber == 1){
+			foundationPileView_1 = getP1_FoundationPileViews().get(0);
+			foundationPileView_2 = getP1_FoundationPileViews().get(1);
+			foundationPileView_3 = getP1_FoundationPileViews().get(2);
+			handPileView = getP1_HandPileView();
+		} else {
+			foundationPileView_1 = getP2_FoundationPileViews().get(0);
+			foundationPileView_2 = getP2_FoundationPileViews().get(1);
+			foundationPileView_3 = getP2_FoundationPileViews().get(2);
+			handPileView = getP2_HandPileView();
+		}
+		
+		//draw card pile 1
+		Iterator<Card> deckIterator = playerPlace.tableCards1.iterator();
+		
+		deckIterator.forEachRemaining(card -> {
+			foundationPileView_1.addCardView(CardViewFactory.createCardView(card));
+            getChildren().add(foundationPileView_1.getTopCardView());
+            cardViewList.add(foundationPileView_1.getTopCardView());
+            foundationPileView_1.getTopCardView().setMouseTransparent(true);
+		});
+		foundationPileView_1.getTopCardView().setMouseTransparent(false);	
+		
+		//draw card pile 2
+		deckIterator = playerPlace.tableCards2.iterator();
+		deckIterator.forEachRemaining(card -> {
+			foundationPileView_2.addCardView(CardViewFactory.createCardView(card));
+            getChildren().add(foundationPileView_2.getTopCardView());
+            cardViewList.add(foundationPileView_2.getTopCardView());
+            foundationPileView_2.getTopCardView().setMouseTransparent(true);
+		});
+		foundationPileView_2.getTopCardView().setMouseTransparent(false);
+		
+		//draw card pile 3
+		deckIterator = playerPlace.tableCards3.iterator();
+		deckIterator.forEachRemaining(card -> {
+			foundationPileView_3.addCardView(CardViewFactory.createCardView(card));
+            getChildren().add(foundationPileView_3.getTopCardView());
+            cardViewList.add(foundationPileView_3.getTopCardView());
+            foundationPileView_3.getTopCardView().setMouseTransparent(true);
+		});
+		foundationPileView_3.getTopCardView().setMouseTransparent(false);
+		
+		//draw hand
+		deckIterator = playerPlace.hand.iterator();
+		deckIterator.forEachRemaining(card -> {
+			handPileView.addCardView(CardViewFactory.createCardView(card));
+	        mouseUtility.makeClickable(handPileView.getTopCardView());
+	        cardViewList.add(handPileView.getTopCardView());
+	        mouseUtility.makeDraggable(handPileView.getTopCardView());
+	        getChildren().add(handPileView.getTopCardView());
+		});
+	}
 }
