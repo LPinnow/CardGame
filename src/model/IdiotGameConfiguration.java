@@ -34,6 +34,15 @@ public IdiotGameConfiguration(GameCardRank restartCard, GameCardRank burnCard,
 	this.reverseCard = reverseCard;
 }
 
+public IdiotGameConfiguration() {
+}
+
+@Override
+public String toString(){
+	return "Rules: Burn card(" + burnCard.toString() + "), " +
+					"Restart card(" + restartCard.toString() + "), " +
+					"Reverse card(" + reverseCard.toString() + ")";
+}
 
 	
 }

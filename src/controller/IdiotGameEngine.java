@@ -12,6 +12,8 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 
 	protected IdiotGameState state = new IdiotGameState();
 	protected ITableSwapValidator tableSwapValidator;
+	protected RuleConfigurationLoader ruleConfigLoader;
+	protected IdiotGameConfiguration gameConfig;
 	
 	public IdiotGameEngine(ITableSwapValidator tableSwapValidator) {
 		this.tableSwapValidator = tableSwapValidator;
@@ -24,6 +26,12 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	
 	@Override
 	public void initializeNewGame(GameBoard gameBoard, int numberOfPlayers) {
+		
+		//Load Rules
+		//TODO Prompt user for configuration file location?
+		ruleConfigLoader = new ConfigurationLoader("/configuration/cardTypes.json");
+		gameConfig = ruleConfigLoader.loadRules();
+		System.out.println(gameConfig.toString());
 		
 		state = new IdiotGameState(numberOfPlayers);
 		
@@ -170,4 +178,5 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		
 		return null;
 	}
+	
 }
