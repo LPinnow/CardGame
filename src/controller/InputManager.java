@@ -172,23 +172,23 @@ public class InputManager {
     CardView cardView = (CardView) e.getSource();
     /** get current card. */
     Card card = game.getCurrentGameState().GetFullDeck().getById(cardView.getShortID());
-    System.out.println("CardView ID: " + cardView.getShortID());
 
     // Get the pile that contained the actual card
     /** get current pile view. */
     CardPileView activePileView = cardView.getContainingPile();
     /** get current pile. */
     List<Card> activePile = game.getPileById(activePileView.getShortID());
-    System.out.println("CardPileView ID: " + activePileView.getShortID());
+    
+    System.out.println("CardView ID: " + cardView.getShortID() + " in pile: " + activePileView.getShortID());
     
     // check if card(s) are intersecting with any of the piles
+    
     if (checkAllPiles(card, cardView, activePile, activePileView)) {    	
         draggedCard = null;
 	    draggedCardView = null;
-     
 	    return;
     }
-
+    
     // if not intersecting with any valid pile, slide them back
     slideBack(draggedCardView);
     
@@ -258,15 +258,38 @@ public class InputManager {
   private boolean checkAllPiles(
       Card card, CardView cardView, List<Card> activePile,
       CardPileView activePileView) {
-
-    // check the standard piles
-/*    if (checkPiles(card, cardView, activePile,
-        activePileView, gameBoard.getStandardPileViews()))
+	  
+	// check player 1 table piles
+    if(checkPiles(card, cardView, activePile,
+        activePileView, gameBoard.getP1_FoundationPileViews()))
+    	return true;
+    
+    // check player 1 hand pile
+    if(checkPiles(card, cardView, activePile,
+        activePileView, gameBoard.getP1_HandPileView()))
+    	return true;
+    
+    // check player 2 table piles
+    if (checkPiles(card, cardView, activePile,
+        activePileView, gameBoard.getP2_FoundationPileViews()))
       return true;
-*/
-    // check player foundation piles
-    return checkPiles(card, cardView, activePile,
-        activePileView, gameBoard.getP1_FoundationPileViews());
+    
+    // check player 2 hand pile
+    if(checkPiles(card, cardView, activePile,
+        activePileView, gameBoard.getP2_HandPileView()))
+    	return true;
+
+    // check draw pile
+    if (checkPiles(card, cardView, activePile,
+        activePileView, gameBoard.getDrawCardsView()))
+      return true;
+    
+    // check pile
+    if (checkPiles(card, cardView, activePile,
+        activePileView, gameBoard.getPileView()))
+      return true;
+    
+    return false;
     
   }
 
@@ -292,14 +315,50 @@ public class InputManager {
         continue;
 
       // check for intersection
-      if (isOverPile(cardView, pileView) &&
-          handleValidMove(card, activePile, activePileView, pileView)){
-        return true;
+//      if (isOverPile(cardView, pileView) &&
+//          handleValidMove(card, activePile, activePileView, pileView)){
+//          return true;
+//      }
+      
+      if(isOverPile(cardView, pileView)){
+    	  System.out.println("Dropped on pile: " + pileView.getShortID());
       }
     }
 
     return result;
   }
+  
+  /**
+   * Check a single pile for intersection
+   * @param card
+   * @param cardView
+   * @param activePile
+   * @param activePileView
+   * @param pileView
+   * @return
+   */
+  private boolean checkPiles(
+	      Card card, CardView cardView, List<Card> activePile,
+	      CardPileView activePileView, CardPileView pileView) {
+
+	    boolean result = false;
+
+	    // skip checking the same pile
+	      if (pileView.equals(activePileView))
+	        return result;
+
+	      // check for intersection
+//	      if (isOverPile(cardView, pileView) &&
+//	          handleValidMove(card, activePile, activePileView, pileView)){
+//	          return true;
+//	      }
+	      
+	      if(isOverPile(cardView, pileView)){
+	    	  System.out.println("Dropped on pile: " + pileView.getShortID());
+	      }
+	    
+	    return result;
+}
 
   /**
    * Checks if a cardView is over a pile.

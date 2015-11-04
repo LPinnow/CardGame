@@ -222,7 +222,7 @@ public class GameBoard extends Pane {
     GaussianBlur gaussianBlur = new GaussianBlur(10);
 
     IntStream.range(0, numOfPiles).forEach(i -> {
-      foundationPileViews.add(new CardPileView(2, 0, (x + i * 160), y, playerNumber+"tableCards"+i));
+      foundationPileViews.add(new CardPileView(2, 0, (x + i * 160), y, playerNumber+"tableCards"+(i+1)));
       foundationPileViews.get(i).setPrefSize(130, 180);
       foundationPileViews.get(i).setBackground(background);
       foundationPileViews.get(i).setLayoutX(x + i * 160);
@@ -375,6 +375,8 @@ public class GameBoard extends Pane {
 	      cardViewList.add(getDrawCardsView().getTopCardView());
 	      getChildren().add(getDrawCardsView().getTopCardView());
 	    });
+	    drawCardsView.getTopCardView().setMouseTransparent(false);
+	    
   }
 
 	public void drawPlayerPlace(PlayerZone playerPlace) {
@@ -422,6 +424,8 @@ public class GameBoard extends Pane {
 			foundationPileView_3.addCardView(CardViewFactory.createCardView(card));
             getChildren().add(foundationPileView_3.getTopCardView());
             cardViewList.add(foundationPileView_3.getTopCardView());
+            //mouseUtility.makeClickable(foundationPileView_3.getTopCardView());
+            //mouseUtility.makeDraggable(foundationPileView_3.getTopCardView());
             foundationPileView_3.getTopCardView().setMouseTransparent(true);
 		});
 		foundationPileView_3.getTopCardView().setMouseTransparent(false);

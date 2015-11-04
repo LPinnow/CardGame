@@ -3,6 +3,8 @@ package controller;
 import view.CardTheme;
 import view.CardViewFactory;
 import javafx.application.Application;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -92,54 +94,42 @@ public class CardGameMain extends Application {
     mouseUtility = new InputManager(game, gameBoard);
     gameBoard.setInputManager(mouseUtility);
     game.initializeNewGame(gameBoard, 2);
-    //prepareGameBoardForNewGame(cardsToHandPiles, cardsToPiles);
+    prepareGameBoardForNewGame();
     
     primaryStage.setTitle("Card Game");
     primaryStage.setScene(scene);
     primaryStage.show();
-    
-    System.out.println();
   }
 
   /**
    * Sets up the {@link GameBoard} object for a new game.
-   
-  private void prepareGameBoardForNewGame(int numCardsToHand, int numCardsToPile) {
+   */
+  private void prepareGameBoardForNewGame() {
     
    /**
-     * Hide ready button when clicked and start game if other player is ready
-     
+    * Hide ready button when clicked and start game if other player is ready
+    */  
     gameBoard.getP1_ReadyButton().setOnMouseClicked(new EventHandler<Event>(){
     	@Override
 		public void handle(Event e) {
 			gameBoard.setButtonVisibility(gameBoard.getP1_ReadyButton(), false);
-			game.getPlayer1().setReady(true);
-			game.getPlayer1().setActiveTurn(false);
-			game.getPlayer2().setActiveTurn(true);
-			statusBar.setActivePlayerText(game.getPlayer2().getName());
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), true);
 			
 		}});
     
     /**
      * Hide ready button when clicked and start game if other player is ready
-      
+    */  
     gameBoard.getP2_ReadyButton().setOnMouseClicked(new EventHandler<Event>(){
     	@Override
 		public void handle(Event e) {
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), false);
-			game.getPlayer2().setReady(true);
 			
-			if(game.getPlayer1().isReady()){
-				mouseUtility.makeClickable(gameBoard.getStockView().getTopCardView());
-				game.setGameInProgress(true);
-				game.getPlayer2().setActiveTurn(false);
-				game.getPlayer1().setActiveTurn(true);
-				statusBar.setActivePlayerText(game.getPlayer1().getName());
-			}
+			mouseUtility.makeClickable(gameBoard.getDrawCardsView().getTopCardView());
+			
 		}});
   }
-  */
+  
   public InputManager getMouseUtility(){
 	  return mouseUtility;
   }
