@@ -115,6 +115,7 @@ public class CardGameMain extends Application {
 			gameBoard.setButtonVisibility(gameBoard.getP1_ReadyButton(), false);
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), true);
 			
+			gameBoard.switchActivePlayer(1);
 		}});
     
     /**
@@ -124,6 +125,8 @@ public class CardGameMain extends Application {
     	@Override
 		public void handle(Event e) {
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), false);
+			
+			gameBoard.switchActivePlayer(2);
 			
 			mouseUtility.makeClickable(gameBoard.getDrawCardsView().getTopCardView());
 			

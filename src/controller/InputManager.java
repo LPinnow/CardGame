@@ -245,6 +245,18 @@ public class InputManager {
     card.setOnMouseReleased(null);
     card.setOnMouseClicked(onMouseClickedHandler);
   }
+  
+  /**
+   * Applies the appropriate event handlers for cards on the stock.
+   *
+   * @param card The {@link CardView} to apply event listeners for.
+   */
+  public void removeClickable(CardView card) {
+    card.setOnMousePressed(null);
+    card.setOnMouseDragged(null);
+    card.setOnMouseReleased(null);
+    card.setOnMouseClicked(null);
+  }
 
   /**
    * Check if the actual card is intersecting with any of the piles.
@@ -603,5 +615,6 @@ public class InputManager {
      */
     double x, y;
   }
+  
 
 }

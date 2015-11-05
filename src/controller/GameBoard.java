@@ -367,6 +367,10 @@ public class GameBoard extends Pane {
 	  this.mouseUtility = mouseUtility;
   }
   
+  /**
+   * Draws the deck of cards
+   * @param drawCards
+   */
   public void drawDeck(List<Card> drawCards){
 	  Iterator<Card> deckIterator = drawCards.iterator();
 		
@@ -378,7 +382,11 @@ public class GameBoard extends Pane {
 	    drawCardsView.getTopCardView().setMouseTransparent(false);
 	    
   }
-
+  
+  	/**
+  	 * Called at the start of the game to draw initialized board state
+  	 * @param playerPlace
+  	 */
 	public void drawPlayerPlace(PlayerZone playerPlace) {
 		CardPileView foundationPileView_1;
 		CardPileView foundationPileView_2;
@@ -434,10 +442,39 @@ public class GameBoard extends Pane {
 		deckIterator = playerPlace.hand.iterator();
 		deckIterator.forEachRemaining(card -> {
 			handPileView.addCardView(CardViewFactory.createCardView(card));
-	        mouseUtility.makeClickable(handPileView.getTopCardView());
 	        cardViewList.add(handPileView.getTopCardView());
-	        mouseUtility.makeDraggable(handPileView.getTopCardView());
+	        
+	        if(playerPlace.playerNumber == 1){
+	        	mouseUtility.makeClickable(handPileView.getTopCardView());
+	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
+	        }
+	        
 	        getChildren().add(handPileView.getTopCardView());
 		});
 	}
+	
+	  /**
+	   * Deactivates current player's cards and activates the other player's cards.
+	   * Changes drag event status.
+	   */
+	  public void switchActivePlayer(int activePlayerNumber) {
+		  if(activePlayerNumber == 1){
+			  for(CardView cardView : getP1_HandPileView()){
+					mouseUtility.removeDraggable(cardView);
+				}
+				
+				for(CardView cardView : getP2_HandPileView()){
+					mouseUtility.makeDraggable(cardView);
+				}
+			  
+		  } else if (activePlayerNumber == 2){
+			  for(CardView cardView : getP2_HandPileView()){
+					mouseUtility.removeDraggable(cardView);
+				}
+				
+				for(CardView cardView : getP1_HandPileView()){
+					mouseUtility.makeDraggable(cardView);
+				}
+		  }
+	  }
 }

@@ -83,6 +83,8 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		//draw the deck
 		gameBoard.drawDeck(state.drawCards);
 		
+		System.out.println(state.toString());
+		
 		state.CurrentGamePhase = IdiotGameState.GamePhases.CardSwapping;
 	}
 
