@@ -94,17 +94,19 @@ public class CardGameMain extends Application {
     mouseUtility = new InputManager(game, gameBoard);
     gameBoard.setInputManager(mouseUtility);
     game.initializeNewGame(gameBoard, 2);
-    prepareGameBoardForNewGame();
+    setReadyButtonEventHandlers();
     
     primaryStage.setTitle("Card Game");
     primaryStage.setScene(scene);
     primaryStage.show();
+    
+    
   }
 
   /**
    * Sets up the {@link GameBoard} object for a new game.
    */
-  private void prepareGameBoardForNewGame() {
+  private void setReadyButtonEventHandlers() {
     
    /**
     * Hide ready button when clicked and start game if other player is ready
@@ -129,7 +131,7 @@ public class CardGameMain extends Application {
 			gameBoard.switchActivePlayer(2);
 			
 			mouseUtility.makeClickable(gameBoard.getDrawCardsView().getTopCardView());
-			
+			game.beginPlay();
 		}});
   }
   

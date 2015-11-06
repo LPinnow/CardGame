@@ -448,6 +448,10 @@ public class GameBoard extends Pane {
 	        	mouseUtility.makeClickable(handPileView.getTopCardView());
 	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
 	        }
+	        else{
+	        	handPileView.getTopCardView().flip();
+	        }
+	        	
 	        
 	        getChildren().add(handPileView.getTopCardView());
 		});
@@ -461,19 +465,23 @@ public class GameBoard extends Pane {
 		  if(activePlayerNumber == 1){
 			  for(CardView cardView : getP1_HandPileView()){
 					mouseUtility.removeDraggable(cardView);
+					cardView.flip();
 				}
 				
 				for(CardView cardView : getP2_HandPileView()){
 					mouseUtility.makeDraggable(cardView);
+					cardView.flip();
 				}
 			  
 		  } else if (activePlayerNumber == 2){
 			  for(CardView cardView : getP2_HandPileView()){
 					mouseUtility.removeDraggable(cardView);
+					cardView.flip();
 				}
 				
 				for(CardView cardView : getP1_HandPileView()){
 					mouseUtility.makeDraggable(cardView);
+					cardView.flip();
 				}
 		  }
 	  }

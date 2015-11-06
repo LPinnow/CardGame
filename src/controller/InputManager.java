@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import view.CardPileView;
 import view.CardView;
+import model.IdiotGameState;
 import model.card.Card;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -334,6 +335,12 @@ public class InputManager {
       
       if(isOverPile(cardView, pileView)){
     	  System.out.println("Dropped on pile: " + pileView.getShortID());
+    	  
+    	  if(game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.CardSwapping)){
+    		  //TODO Validate if pile the card is dropped on is a valid move during the CardSwapping phase
+    	  } else if (game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.GamePlay)){
+    		//TODO Validate if pile the card is dropped on is a valid move during the GamePlay phase
+    	  }
       }
     }
 
