@@ -6,13 +6,14 @@ import java.util.List;
 import model.*;
 import model.card.Card;
 import model.card.CardDeck;
+import view.GameBoard;
 import controller.validators.*;
 
 public class IdiotGameEngine implements IIdiotGameEngine {
 
 	protected IdiotGameState state = new IdiotGameState();
 	protected ITableSwapValidator tableSwapValidator;
-	protected RuleConfigurationLoader ruleConfigLoader;
+	protected IRuleConfigurationLoader ruleConfigLoader;
 	protected IdiotGameConfiguration gameConfig;
 	
 	public IdiotGameEngine(ITableSwapValidator tableSwapValidator) {
@@ -25,15 +26,16 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	}
 	
 	@Override
-	public void initializeNewGame(GameBoard gameBoard, int numberOfPlayers) {
+	public void initializeNewGame(int numberOfPlayers) {
 		
 		//Load Rules
 		//TODO Prompt user for configuration file location?
-		ruleConfigLoader = new ConfigurationLoader("/configuration/idiotRules.json");
+		ruleConfigLoader = new RuleConfigurationLoader("/configuration/idiotRules.json");
 		gameConfig = ruleConfigLoader.loadRules();
 		System.out.println(gameConfig.toString());
 		
 		state = new IdiotGameState(numberOfPlayers);
+		tableSwapValidator.setState(state);
 		
 		state.CurrentGamePhase = IdiotGameState.GamePhases.ResettingGame;
 		state.discardedCards = new ArrayList<Card>();
@@ -76,12 +78,14 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			//set pile ids for InputManager. Ids must match corresponding CardPileView ids.
 			playerPlace.initializePileIDs();
 			
+			// Removed:  the controller does not call the view, the view calls the controller and redraws/updates itself
 			//draw the cards in the PlayerZone
-			gameBoard.drawPlayerPlace(playerPlace);
+			//gameBoard.drawPlayerPlace(playerPlace);
 		}
 		
+		// Removed:  the controller does not call the view, the view calls the controller and redraws/updates itself
 		//draw the deck
-		gameBoard.drawDeck(state.drawCards);
+		//gameBoard.drawDeck(state.drawCards);
 		
 		System.out.println(state.toString());
 		

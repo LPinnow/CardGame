@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 import view.CardPileView;
 import view.CardView;
+import view.GameBoard;
 import model.IdiotGameState;
 import model.card.Card;
 import javafx.animation.Interpolator;
@@ -69,7 +70,7 @@ public class InputManager {
 
     //game.drawFromStock(card);
     gameBoard.getDrawCardsView().moveCardViewToPile(cardView, gameBoard.getPileView());
-    cardView.flip();
+    cardView.setToFaceUp();
     cardView.setMouseTransparent(false);
     makeDraggable(cardView);
   };
@@ -94,7 +95,7 @@ public class InputManager {
     while (revIt.hasPrevious()) {
       /** get current card view. */
       CardView currentCardView = revIt.previous();
-      currentCardView.flip();
+      currentCardView.setToFaceDown();
       makeClickable(currentCardView);
       stockView.addCardView(currentCardView);
       revIt.remove();

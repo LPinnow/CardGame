@@ -2,6 +2,9 @@ package controller;
 
 import view.CardTheme;
 import view.CardViewFactory;
+import view.GameBoard;
+import view.GameMenu;
+import controller.validators.TableSwapValidator;
 import javafx.application.Application;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -28,12 +31,12 @@ public class CardGameMain extends Application {
   /**
    * Reference to a {@link IIdiotGameEngine} instance.
    */
-  IIdiotGameEngine game;
+  IIdiotGameEngine gameEngine;
 
   /**
    * Reference to a {@link GameBoard} instance.
    */
-  GameBoard gameBoard;
+  public GameBoard gameBoard;
   
   /**
    * Reference to a StatusBar
@@ -48,7 +51,7 @@ public class CardGameMain extends Application {
   /**
    * The current theme of the cards.
    */
-  CardTheme cardTheme;
+  public CardTheme cardTheme;
 
   /**
    * Main function of the application.
@@ -89,18 +92,21 @@ public class CardGameMain extends Application {
     cardTheme = new CardTheme("/cardfaces/classic/theme.json", "/backfaces/bb.png");
     CardViewFactory.setCardTheme(cardTheme);
 
-    game = new IdiotGameEngine(null);
+    gameEngine = new IdiotGameEngine(new TableSwapValidator());
     
-    mouseUtility = new InputManager(game, gameBoard);
+    mouseUtility = new InputManager(gameEngine, gameBoard);
     gameBoard.setInputManager(mouseUtility);
-    game.initializeNewGame(gameBoard, 2);
+    gameEngine.initializeNewGame(2);
+    gameBoard.updateCurrentState(gameEngine.getCurrentGameState());
+    gameBoard.drawDeck();
+    gameBoard.drawBothPlayerPlaces();
+    gameBoard.setActivePlayer(1);
     setReadyButtonEventHandlers();
     
     primaryStage.setTitle("Card Game");
     primaryStage.setScene(scene);
     primaryStage.show();
-    
-    
+
   }
 
   /**
@@ -117,7 +123,8 @@ public class CardGameMain extends Application {
 			gameBoard.setButtonVisibility(gameBoard.getP1_ReadyButton(), false);
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), true);
 			
-			gameBoard.switchActivePlayer(1);
+			gameBoard.setActivePlayer(2);
+			
 		}});
     
     /**
@@ -127,11 +134,10 @@ public class CardGameMain extends Application {
     	@Override
 		public void handle(Event e) {
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), false);
-			
-			gameBoard.switchActivePlayer(2);
+			gameBoard.setActivePlayer(1);
 			
 			mouseUtility.makeClickable(gameBoard.getDrawCardsView().getTopCardView());
-			game.beginPlay();
+			gameEngine.beginPlay();
 		}});
   }
   

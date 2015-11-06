@@ -1,5 +1,6 @@
-package controller;
+package view;
 
+import controller.CardGameMain;
 import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -7,9 +8,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
-import view.AlertBox;
-import view.ConfirmBox;
-import view.InputBox;
 
 /**
  * This class represents the menu bar for the application.

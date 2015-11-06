@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import test.mocks.*;
+import view.GameBoard;
 
 public class IdiotGameEngineTests {
 
@@ -18,11 +19,10 @@ public class IdiotGameEngineTests {
 	public void initializeNewGame_Invoked_ResetsStateProperly() {
 
 		int numberOfPlayers = 2; 
-		GameBoard board = null;
 		
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(null));
 		
-		classUnderTest.initializeNewGame(board, numberOfPlayers);
+		classUnderTest.initializeNewGame(numberOfPlayers);
 		
 		assertEquals(34, classUnderTest.getCurrentGameState().GetDeck().size());
 		assertEquals(0, classUnderTest.getCurrentGameState().GetPile().size());
@@ -42,7 +42,7 @@ public class IdiotGameEngineTests {
 		int numberOfPlayers = 2; 
 		GameBoard board = null;
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(null));
-		classUnderTest.initializeNewGame(null, numberOfPlayers);
+		classUnderTest.initializeNewGame(numberOfPlayers);
 		classUnderTest.beginPlay();
 		
 		MoveResult result = classUnderTest.requestHandToTableCardSwap(new Player(1, "Gary", false, false), null, null);
@@ -61,7 +61,7 @@ public class IdiotGameEngineTests {
 		int numberOfPlayers = 2; 
 		GameBoard board = null;
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(validatorResultToReturn));
-		classUnderTest.initializeNewGame(board, numberOfPlayers);
+		classUnderTest.initializeNewGame(numberOfPlayers);
 		
 		MoveResult result = classUnderTest.requestHandToTableCardSwap(new Player(1, "Gary", false, false), null, null);
 		
@@ -79,7 +79,7 @@ public class IdiotGameEngineTests {
 		int numberOfPlayers = 2; 
 		GameBoard board = null;
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(validatorResultToReturn));
-		classUnderTest.initializeNewGame(board, numberOfPlayers);
+		classUnderTest.initializeNewGame(numberOfPlayers);
 		
 		Card validTableSwapCardForPlayer1 = classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getTableCards1().getTopCard();
 		Card validHandCardForPlayer1 = classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getHand().getCards().get(0);
@@ -94,7 +94,7 @@ public class IdiotGameEngineTests {
 	@Test
 	public void beginPlay_Invoked_SetsGamePhaseToGamePlayAndSetsTurnToFirstPlayer() {
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(null));
-		classUnderTest.initializeNewGame(null, 2);
+		classUnderTest.initializeNewGame(2);
 		classUnderTest.beginPlay();
 		
 		assertEquals(IdiotGameState.GamePhases.GamePlay, classUnderTest.getCurrentGameState().CurrentGamePhase());

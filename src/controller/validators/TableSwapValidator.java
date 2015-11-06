@@ -7,7 +7,10 @@ public class TableSwapValidator implements ITableSwapValidator {
 
 	protected IdiotGameState state;
 	
-	public TableSwapValidator(IdiotGameState state) {
+	public TableSwapValidator() {
+	}
+	
+	public void setState(IdiotGameState state) {
 		this.state = state;
 	}
 	

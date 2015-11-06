@@ -1,17 +1,16 @@
-package controller;
+package view;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import controller.InputManager;
+import model.IdiotGameStateFacade;
 import model.PlayerZone;
 import model.card.Card;
 import model.card.CardDeck;
-import view.CardPileView;
-import view.CardTheme;
-import view.CardView;
-import view.CardViewFactory;
+import model.card.TopCardUpStack;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -96,6 +95,8 @@ public class GameBoard extends Pane {
   private Button p2_ready;
   
   private InputManager mouseUtility;
+  
+  private IdiotGameStateFacade currentGameState;
 
   /**
    * Constructs a new {@link GameBoard} object.
@@ -367,12 +368,16 @@ public class GameBoard extends Pane {
 	  this.mouseUtility = mouseUtility;
   }
   
+  public void updateCurrentState(IdiotGameStateFacade currentGameState) {
+	  this.currentGameState = currentGameState;
+  }
+  
   /**
    * Draws the deck of cards
    * @param drawCards
    */
-  public void drawDeck(List<Card> drawCards){
-	  Iterator<Card> deckIterator = drawCards.iterator();
+  public void drawDeck(){
+	  Iterator<Card> deckIterator = currentGameState.GetFullDeck().iterator();
 		
 	    deckIterator.forEachRemaining(card -> {
 	      getDrawCardsView().addCardView(CardViewFactory.createCardView(card));
@@ -380,20 +385,24 @@ public class GameBoard extends Pane {
 	      getChildren().add(getDrawCardsView().getTopCardView());
 	    });
 	    drawCardsView.getTopCardView().setMouseTransparent(false);
-	    
+  }
+  
+  public void drawBothPlayerPlaces() {
+	  drawPlayerPlace(1);
+	  drawPlayerPlace(2);
   }
   
   	/**
   	 * Called at the start of the game to draw initialized board state
   	 * @param playerPlace
   	 */
-	public void drawPlayerPlace(PlayerZone playerPlace) {
+	public void drawPlayerPlace(int playerNumber) {
 		CardPileView foundationPileView_1;
 		CardPileView foundationPileView_2;
 		CardPileView foundationPileView_3;
 		CardPileView handPileView;
 		
-		if(playerPlace.playerNumber == 1){
+		if(playerNumber == 1){
 			foundationPileView_1 = getP1_FoundationPileViews().get(0);
 			foundationPileView_2 = getP1_FoundationPileViews().get(1);
 			foundationPileView_3 = getP1_FoundationPileViews().get(2);
@@ -406,50 +415,64 @@ public class GameBoard extends Pane {
 		}
 		
 		//draw card pile 1
-		Iterator<Card> deckIterator = playerPlace.tableCards1.iterator();
+
+		TopCardUpStack tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards1();
 		
-		deckIterator.forEachRemaining(card -> {
-			foundationPileView_1.addCardView(CardViewFactory.createCardView(card));
-            getChildren().add(foundationPileView_1.getTopCardView());
-            cardViewList.add(foundationPileView_1.getTopCardView());
-            foundationPileView_1.getTopCardView().setMouseTransparent(true);
-		});
-		foundationPileView_1.getTopCardView().setMouseTransparent(false);	
-		
+		if (tableCards1.getTopCard() != null) {
+			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
+	        getChildren().add(foundationPileView_1.getTopCardView());
+	        cardViewList.add(foundationPileView_1.getTopCardView());
+	        foundationPileView_1.getTopCardView().setMouseTransparent(true);
+			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
+		}
+		else {
+			//TODO: insert code to remove rendering of table cards1 if none are remaining for a given stack
+		}
+			
 		//draw card pile 2
-		deckIterator = playerPlace.tableCards2.iterator();
-		deckIterator.forEachRemaining(card -> {
-			foundationPileView_2.addCardView(CardViewFactory.createCardView(card));
-            getChildren().add(foundationPileView_2.getTopCardView());
-            cardViewList.add(foundationPileView_2.getTopCardView());
-            foundationPileView_2.getTopCardView().setMouseTransparent(true);
-		});
-		foundationPileView_2.getTopCardView().setMouseTransparent(false);
+		
+	    TopCardUpStack tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards2();
+		
+		if (tableCards2.getTopCard() != null) {
+			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
+	        getChildren().add(foundationPileView_2.getTopCardView());
+	        cardViewList.add(foundationPileView_2.getTopCardView());
+	        foundationPileView_2.getTopCardView().setMouseTransparent(true);
+			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
+		}
+		else {
+			//TODO: insert code to remove rendering of table cards2 if none are remaining for a given stack
+		}
 		
 		//draw card pile 3
-		deckIterator = playerPlace.tableCards3.iterator();
-		deckIterator.forEachRemaining(card -> {
-			foundationPileView_3.addCardView(CardViewFactory.createCardView(card));
-            getChildren().add(foundationPileView_3.getTopCardView());
-            cardViewList.add(foundationPileView_3.getTopCardView());
-            //mouseUtility.makeClickable(foundationPileView_3.getTopCardView());
-            //mouseUtility.makeDraggable(foundationPileView_3.getTopCardView());
-            foundationPileView_3.getTopCardView().setMouseTransparent(true);
-		});
-		foundationPileView_3.getTopCardView().setMouseTransparent(false);
 		
+	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
+		
+		if (tableCards3.getTopCard() != null) {
+			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
+	        getChildren().add(foundationPileView_3.getTopCardView());
+	        cardViewList.add(foundationPileView_3.getTopCardView());
+	        foundationPileView_3.getTopCardView().setMouseTransparent(true);
+			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
+		}
+		else {
+			//TODO: insert code to remove rendering of table cards2 if none are remaining for a given stack
+		}
+
 		//draw hand
-		deckIterator = playerPlace.hand.iterator();
+		Iterator<Card> deckIterator = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards().iterator();
 		deckIterator.forEachRemaining(card -> {
 			handPileView.addCardView(CardViewFactory.createCardView(card));
 	        cardViewList.add(handPileView.getTopCardView());
 	        
-	        if(playerPlace.playerNumber == 1){
+	        if(playerNumber == 1){
 	        	mouseUtility.makeClickable(handPileView.getTopCardView());
 	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
 	        }
 	        else{
-	        	handPileView.getTopCardView().flip();
+	        	mouseUtility.makeClickable(handPileView.getTopCardView());
+	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
+	        	//handPileView.getTopCardView().flip();
 	        }
 	        	
 	        
@@ -461,27 +484,27 @@ public class GameBoard extends Pane {
 	   * Deactivates current player's cards and activates the other player's cards.
 	   * Changes drag event status.
 	   */
-	  public void switchActivePlayer(int activePlayerNumber) {
+	  public void setActivePlayer(int activePlayerNumber) {
 		  if(activePlayerNumber == 1){
 			  for(CardView cardView : getP1_HandPileView()){
 					mouseUtility.removeDraggable(cardView);
-					cardView.flip();
+					cardView.setToFaceUp();
 				}
 				
 				for(CardView cardView : getP2_HandPileView()){
 					mouseUtility.makeDraggable(cardView);
-					cardView.flip();
+					cardView.setToFaceDown();
 				}
 			  
 		  } else if (activePlayerNumber == 2){
 			  for(CardView cardView : getP2_HandPileView()){
 					mouseUtility.removeDraggable(cardView);
-					cardView.flip();
+					cardView.setToFaceUp();
 				}
 				
 				for(CardView cardView : getP1_HandPileView()){
 					mouseUtility.makeDraggable(cardView);
-					cardView.flip();
+					cardView.setToFaceDown();
 				}
 		  }
 	  }

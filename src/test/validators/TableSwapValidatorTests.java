@@ -63,7 +63,8 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_ToLowAPlayerNumber_FailsValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
 	
 		TableSwapValidationResult result = classUnderTest.isValidSwap(0, playerOneHandCard, playerOneFaceUpTableCard);
 		
@@ -74,8 +75,9 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_ToHighAPlayerNumber_FailsValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
-	
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
+		
 		TableSwapValidationResult result = classUnderTest.isValidSwap(3, playerOneHandCard, playerOneFaceUpTableCard);
 		
 		assertFalse(result.Success);
@@ -85,8 +87,9 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_ValidPlayerNumber_PassesValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
-	
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
+		
 		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneFaceUpTableCard);
 		
 		assertTrue(result.Success);
@@ -95,8 +98,9 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_TableCardIsOneFaceUpForAndHandCardBelongsToPlayer_PassesValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
-	
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
+		
 		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneFaceUpTableCard);
 		
 		assertTrue(result.Success);
@@ -105,7 +109,8 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_TableCardIsOneFaceDownForPlayer_FailsValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
 	
 		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneFaceDownTableCard);
 		
@@ -116,7 +121,8 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_TableCardIsNotOnTableForPlayer_FailsValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
 	
 		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneNonTableCard);
 		
@@ -127,7 +133,8 @@ public class TableSwapValidatorTests {
 	@Test
 	public void IsValidSwap_HandCardDoesNotBelongToPlayer_FailsValidation() {
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator(state);
+		TableSwapValidator classUnderTest = new TableSwapValidator();
+		classUnderTest.setState(state);
 	
 		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneNonHandCard, playerOneFaceUpTableCard);
 		

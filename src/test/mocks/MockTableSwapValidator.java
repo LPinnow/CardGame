@@ -1,6 +1,7 @@
 package test.mocks;
 
 import controller.validators.*;
+import model.IdiotGameState;
 import model.card.Card;
 
 public class MockTableSwapValidator implements ITableSwapValidator {
@@ -14,6 +15,9 @@ public class MockTableSwapValidator implements ITableSwapValidator {
 	@Override
 	public TableSwapValidationResult isValidSwap(int playerNumber, Card handCard, Card tableCard) {
 		return resultToReturn;
+	}
+	
+	public void setState(IdiotGameState state) {
 	}
 	
 }

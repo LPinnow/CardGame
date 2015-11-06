@@ -172,9 +172,14 @@ public class CardView extends ImageView {
    * Swaps the displayed image of the card
    * and negates the field <code>faceDown</code>.
    */
-  public void flip() {
-    faceDown = !faceDown;
-    setImage(faceDown ? backFace : frontFace);
+  public void setToFaceUp() {
+	  faceDown = false;
+	  setImage(frontFace);
+  }
+  
+  public void setToFaceDown() {
+    faceDown = true;
+    setImage(backFace);
   }
 
 }
