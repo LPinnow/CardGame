@@ -29,7 +29,7 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		
 		//Load Rules
 		//TODO Prompt user for configuration file location?
-		ruleConfigLoader = new ConfigurationLoader("/configuration/cardTypes.json");
+		ruleConfigLoader = new ConfigurationLoader("/configuration/idiotRules.json");
 		gameConfig = ruleConfigLoader.loadRules();
 		System.out.println(gameConfig.toString());
 		
