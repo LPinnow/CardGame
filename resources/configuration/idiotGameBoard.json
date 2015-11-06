@@ -1,0 +1,73 @@
+{
+ "deck" : {
+ 			"initialX" : 500,
+ 			"initialY" : 550,
+ 			"cardGapVertical": 1,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "deck"
+ 		},
+ "waste" : {
+  			"initialX" : 650,
+  			"initialY" : 550,
+  			"cardGapVertical": 1,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "waste"
+  		},
+ "p2Foundation1" : {
+ 			"initialX" : 50,
+ 			"initialY" : 20,
+ 			"cardGapVertical": 2,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "p2Foundation1"
+ 		},
+ "p2Foundation2" : {
+ 			"initialX" : 210,
+ 			"initialY" : 20,
+ 			"cardGapVertical": 2,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "p2Foundation2"
+ 		},
+ "p2Foundation3" : {
+ 			"initialX" : 370,
+ 			"initialY" : 20,
+ 			"cardGapVertical": 2,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "p2Foundation3"
+ 		},
+ "p2Hand" : {
+ 			"initialX" : 650,
+ 			"initialY" : 20,
+ 			"cardGapVertical" : 0,
+ 			"cardGapHorizontal" : 40,
+ 			"id" : "p2Hand"
+ 		},
+ "p1Foundation1" : {
+ 			"initialX" : 50,
+ 			"initialY" : 550,
+ 			"cardGapVertical": 2,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "p1Foundation1"
+ 		},
+ "p1Foundation2" : {
+ 			"initialX" : 210,
+ 			"initialY" : 550,
+ 			"cardGapVertical": 2,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "p1Foundation2"
+ 		},
+ "p1Foundation3" : {
+ 			"initialX" : 370,
+ 			"initialY" : 550,
+ 			"cardGapVertical": 2,
+ 			"cardGapHorizontal" : 0,
+ 			"id" : "p1Foundation3"
+ 		},	
+ "p1Hand" : {
+ 			"initialX" : 650,
+ 			"initialY" : 550,
+ 			"cardGapVertical": 0,
+ 			"cardGapHorizontal" : 40,
+ 			"id" : "p1Hand"		
+ 		}
+}
+

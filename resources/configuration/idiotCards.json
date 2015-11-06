@@ -1,0 +1,210 @@
+{
+ "2C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 2 	
+ 	},
+ "2D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 2 	
+ 	},
+ "2H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 2 	
+ 	},
+ "2S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 2 	
+ 	},
+ "3C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 3 	
+ 	},
+ "3D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 3 	
+ 	},
+ "3H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 3 	
+ 	},
+ "3S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 3 	
+ 	},
+ "4C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 4 	
+ 	},
+ "4D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 4 	
+ 	},
+ "4H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 4 	
+ 	},
+ "4S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 4	
+ 	},
+ "5C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 5 	
+ 	},
+ "5D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 5 	
+ 	},
+ "5H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 5 	
+ 	},
+ "5S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 5	
+ 	},
+ "6C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 6 	
+ 	},
+ "6D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 6 	
+ 	},
+ "6H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 6 	
+ 	},
+ "6S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 6	
+ 	},
+ "7C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 7 	
+ 	},
+ "7D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 7 	
+ 	},
+ "7H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 7 	
+ 	},
+ "7S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 7	
+ 	},
+ "8C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 8	
+ 	},
+ "8D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 8 	
+ 	},
+ "8H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 8 	
+ 	},
+ "8S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 8	
+ 	},
+ "9C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 9 	
+ 	},
+ "9D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 9 	
+ 	},
+ "9H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 9	
+ 	},
+ "9S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 9	
+ 	},
+ "10C" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 10 	
+ 	},
+ "10D" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 10 	
+ 	},
+ "10H" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 10 	
+ 	},
+ "10S" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 10	
+ 	},
+ "JC" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 11	
+ 	},
+ "JD" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 11	
+ 	},
+ "JH" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 11
+ 	},
+ "JS" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 11	
+ 	},
+ "QC" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 12 	
+ 	},
+ "QD" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 12 	
+ 	},
+ "QH" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 12 	
+ 	},
+ "QS" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 12	
+ 	},
+ "KC" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 13 	
+ 	},
+ "KD" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 13	
+ 	},
+ "KH" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 13 	
+ 	},
+ "KS" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 13	
+ 	},
+ "AC" : {
+ 			"GameCardSuit" : "Clubs" ,
+			"GameCardRank" : 14 	
+ 	},
+ "AD" : {
+ 			"GameCardSuit" : "Diamonds" ,
+			"GameCardRank" : 14 	
+ 	},
+ "AH" : {
+ 			"GameCardSuit" : "Hearts" ,
+			"GameCardRank" : 14 	
+ 	},
+ "AS" : {
+ 			"GameCardSuit" : "Spades" ,
+			"GameCardRank" : 14	
+ 	}
+ }

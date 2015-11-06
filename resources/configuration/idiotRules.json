@@ -1,0 +1,61 @@
+{
+ "ActiveZones": {
+ 				"deck",
+ 				"waste",
+			 	"p2Foundation1",
+ 				"p2Foundation2",
+ 				"p2Foundation3",
+ 				"p2Hand",
+ 				"p1Foundation1",
+ 				"p1Foundation2",
+ 				"p1Foundation3"	,
+ 				"p1Hand"	
+ 			},
+ "restart" : "2",
+ "burn" : "10",
+ "reverse" : "5",
+ "p1Legal" : {
+ 			"deck" : "p1Hand",
+ 			"waste" : "p1Hand",
+ 			"p1Hand" : "waste",
+ 			"p1Foundation1" : "waste",
+ 			"p1Foundation2" : "waste",
+ 			"p1Foundation3" : "waste",
+ 			"deck" : "waste"
+ 			},
+ "p2Legal" : {
+ 			"deck" : "p2Hand",
+ 			"waste" : "p2Hand",
+ 			"p2Hand" : "waste",
+ 			"p2Foundation1" : "waste",
+ 			"p2Foundation2" : "waste",
+ 			"p2Foundation3" : "waste",
+ 			"deck" : "waste"
+ 			},
+ "cardPlacement" : {
+ 			"any" : "greaterThanOrEqual",
+ 			"multipleAny" : "greaterThanOrEqual",
+ 			"restart" : "any",
+ 			"any" : "restart",
+ 			"reverse" : "any",
+ 			"lessThanOrEqual" : "reverse",
+ 			"burn" : "any"
+ 			},
+ "draw" : {
+ 			"handMinimum" : 3,
+ 			"deckEmpty" : 0
+ 		},
+ "exchange" : {
+ 			"turn" : 1
+ 		},
+ "removal" : {
+ 			"4Any" : "remove",
+ 			"burn" : "remove"
+ 		}
+ "win" : {
+ 			"p1Hand" : 0,
+ 			"p2Hand" : 0
+ 		} 			
+}
+
+   
