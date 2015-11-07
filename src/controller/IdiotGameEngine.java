@@ -13,6 +13,7 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 
 	protected IdiotGameState state = new IdiotGameState();
 	protected ITableSwapValidator tableSwapValidator;
+	protected IMoveValidator moveValidator;
 	protected IRuleConfigurationLoader ruleConfigLoader;
 	protected IdiotGameConfiguration gameConfig;
 	
@@ -150,9 +151,14 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		if (state.CurrentGamePhase != IdiotGameState.GamePhases.GamePlay) {
 			return new MoveResult() {{ success = false; message = "Game play has not yet started"; }};
 		}
-		
+			
 		//TODO: Finish implementing method
-		return null;
+		else{
+			//Invoke the move validator
+			moveValidator = new MoveValidator();
+			moveValidator.setState(state);
+			return moveValidator.isValidMove(playerRequesting.getNum(), move);
+		}
 	}
 	
 	/**

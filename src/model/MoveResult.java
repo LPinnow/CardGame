@@ -55,4 +55,24 @@ public class MoveResult {
 		this.gameEnded = gameEnded;
 	}
 	
+	/**
+	 * default constructor
+	 */
+	public MoveResult(){
+		
+	}
+	
+	/**
+	 * @param success
+	 * @param message
+	 * @param stateChanged
+	 * @param gameEnded
+	 */
+	public MoveResult(boolean success, String message, boolean stateChanged, boolean gameEnded) {
+		this.success = success;
+		this.message = message;
+		this.stateChanged = stateChanged;
+		this.gameEnded = gameEnded;
+	}
+	
 }
