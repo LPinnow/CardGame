@@ -16,11 +16,13 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	protected IRuleConfigurationLoader ruleConfigLoader;
 	protected IdiotGameConfiguration gameConfig;
 	protected IEndGameChecker gameEndedChecker;
+	protected IMoveExecutor moveExecutor;
 	
-	public IdiotGameEngine(ITableSwapValidator tableSwapValidator, IMoveValidator moveValidator, IEndGameChecker gameEndedChecker) {
+	public IdiotGameEngine(ITableSwapValidator tableSwapValidator, IMoveValidator moveValidator, IEndGameChecker gameEndedChecker, IMoveExecutor executor) {
 		this.tableSwapValidator = tableSwapValidator;
 		this.moveValidator = moveValidator;
 		this.gameEndedChecker = gameEndedChecker;
+		this.moveExecutor = executor;
 	}
 	
 	@Override
@@ -42,6 +44,8 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		moveValidator.setState(state);
 		moveValidator.setConfig(gameConfig);
 		gameEndedChecker.setState(state);
+		moveExecutor.setState(state);
+		moveExecutor.setConfig(gameConfig);
 		
 		state.CurrentGamePhase = IdiotGameState.GamePhases.ResettingGame;
 		state.discardedCards = new ArrayList<Card>();
@@ -165,11 +169,8 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		
 		if (! moveValidationResult.Success) return new MoveResult() {{ success = false; message = moveValidationResult.ErrorMessage; }}; 
 		
-		//TODO: Execute move on state
-		
-		if (gameEndedChecker.endGameConditionReached()) return new MoveResult() {{ success = true; gameEnded = true; message = "Player " + state.currentPlayerTurn + " has won"; }};
-		
-		return new MoveResult() {{ success = true; }};
+		return moveExecutor.executeMove(move);
+
 	}
 	
 	/**

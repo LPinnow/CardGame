@@ -93,7 +93,9 @@ public class CardGameMain extends Application {
     cardTheme = new CardTheme("/cardfaces/classic/theme.json", "/backfaces/bb.png");
     CardViewFactory.setCardTheme(cardTheme);
 
-    gameEngine = new IdiotGameEngine(new TableSwapValidator(), new MoveValidator(), new EndGameChecker());
+    EndGameChecker endGameChecker = new EndGameChecker();
+    
+    gameEngine = new IdiotGameEngine(new TableSwapValidator(), new MoveValidator(), endGameChecker, new MoveExecutor(endGameChecker));
     
     mouseUtility = new InputManager(gameEngine, gameBoard);
     gameBoard.setInputManager(mouseUtility);
