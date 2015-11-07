@@ -18,7 +18,7 @@ public interface IIdiotGameEngine {
 	 * Invoked to request a new game be started, shuffle deck, and distribute cards. 
 	 */
 	
-	void initializeNewGame(int numberOfPlayers);
+	void initializeNewGame(int numberOfPlayers, IRuleConfigurationLoader configLoader);
 	
 	/**
 	 * Before play begins, called to request a swap of a hand card with a table card

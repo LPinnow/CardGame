@@ -31,7 +31,7 @@ public class InputManager {
   /**
    * Helper inner class for determining the position of the mouse.
    */
-  private final MousePos mousePos = new MousePos();
+  private final MousePos mousePos = new MousePos(); 
 
   /**
    * Dragged cards will be put into this list.
@@ -69,6 +69,10 @@ public class InputManager {
     Card card = game.getCurrentGameState().GetFullDeck().getById(cardView.getShortID());
 
     //game.drawFromStock(card);
+    
+    //TODO: The mouse click listener should not be moving the cards to the pile directly.. It should be submitting 
+    //      the move to the controller and redrawing the updated the state from the controller if the move is successful.  
+    
     gameBoard.getDrawCardsView().moveCardViewToPile(cardView, gameBoard.getPileView());
     cardView.setToFaceUp();
     cardView.setMouseTransparent(false);

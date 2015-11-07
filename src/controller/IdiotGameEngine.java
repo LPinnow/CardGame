@@ -15,9 +15,13 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	protected ITableSwapValidator tableSwapValidator;
 	protected IRuleConfigurationLoader ruleConfigLoader;
 	protected IdiotGameConfiguration gameConfig;
+	protected IMoveValidator moveValidator;
+	protected IEndGameChecker gameEndedChecker;
 	
-	public IdiotGameEngine(ITableSwapValidator tableSwapValidator) {
+	public IdiotGameEngine(ITableSwapValidator tableSwapValidator, IMoveValidator moveValidator, IEndGameChecker gameEndedChecker) {
 		this.tableSwapValidator = tableSwapValidator;
+		this.moveValidator = moveValidator;
+		this.gameEndedChecker = gameEndedChecker;
 	}
 	
 	@Override
@@ -26,16 +30,19 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	}
 	
 	@Override
-	public void initializeNewGame(int numberOfPlayers) {
+	public void initializeNewGame(int numberOfPlayers, IRuleConfigurationLoader configLoader) {
 		
 		//Load Rules
 		//TODO Prompt user for configuration file location?
-		ruleConfigLoader = new RuleConfigurationLoader("/configuration/idiotRules.json");
+		ruleConfigLoader = configLoader; //new RuleConfigurationLoader("/configuration/idiotRules.json");
 		gameConfig = ruleConfigLoader.loadRules();
 		System.out.println(gameConfig.toString());
 		
 		state = new IdiotGameState(numberOfPlayers);
 		tableSwapValidator.setState(state);
+		moveValidator.setState(state);
+		moveValidator.setConfig(gameConfig);
+		gameEndedChecker.setState(state);
 		
 		state.CurrentGamePhase = IdiotGameState.GamePhases.ResettingGame;
 		state.discardedCards = new ArrayList<Card>();
@@ -151,8 +158,19 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			return new MoveResult() {{ success = false; message = "Game play has not yet started"; }};
 		}
 		
-		//TODO: Finish implementing method
-		return null;
+		if (state.currentPlayerTurn != playerRequesting.getNum()) {
+			return new MoveResult() {{ success = false; message = "It is not the turn of the player requesting move"; }};
+		}
+		
+		ValidationResult moveValidationResult = moveValidator.IsValidMove(move);
+		
+		if (! moveValidationResult.Success) return new MoveResult() {{ success = false; message = moveValidationResult.ErrorMessage; }}; 
+		
+		//TODO: Execute move on state
+		
+		if (gameEndedChecker.endGameConditionReached()) return new MoveResult() {{ success = true; gameEnded = true; message = "Player " + state.currentPlayerTurn + " has won"; }};
+		
+		return new MoveResult() {{ success = true; }};
 	}
 	
 	/**

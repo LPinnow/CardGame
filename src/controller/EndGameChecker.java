@@ -6,7 +6,7 @@ public class EndGameChecker implements IEndGameChecker {
 
 protected IdiotGameState state;
 	
-	public EndGameChecker(IdiotGameState state) {
+	public void setState(IdiotGameState state) {
 		this.state = state;
 	}
 

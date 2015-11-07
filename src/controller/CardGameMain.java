@@ -4,6 +4,7 @@ import view.CardTheme;
 import view.CardViewFactory;
 import view.GameBoard;
 import view.GameMenu;
+import controller.validators.MoveValidator;
 import controller.validators.TableSwapValidator;
 import javafx.application.Application;
 import javafx.event.Event;
@@ -92,11 +93,11 @@ public class CardGameMain extends Application {
     cardTheme = new CardTheme("/cardfaces/classic/theme.json", "/backfaces/bb.png");
     CardViewFactory.setCardTheme(cardTheme);
 
-    gameEngine = new IdiotGameEngine(new TableSwapValidator());
+    gameEngine = new IdiotGameEngine(new TableSwapValidator(), new MoveValidator(), new EndGameChecker());
     
     mouseUtility = new InputManager(gameEngine, gameBoard);
     gameBoard.setInputManager(mouseUtility);
-    gameEngine.initializeNewGame(2);
+    gameEngine.initializeNewGame(2, new RuleConfigurationLoader("/configuration/idiotRules.json"));
     gameBoard.updateCurrentState(gameEngine.getCurrentGameState());
     gameBoard.drawDeck();
     gameBoard.drawBothPlayerPlaces();
