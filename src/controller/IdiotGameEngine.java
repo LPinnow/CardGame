@@ -6,16 +6,15 @@ import java.util.List;
 import model.*;
 import model.card.Card;
 import model.card.CardDeck;
-import view.GameBoard;
 import controller.validators.*;
 
 public class IdiotGameEngine implements IIdiotGameEngine {
 
 	protected IdiotGameState state = new IdiotGameState();
 	protected ITableSwapValidator tableSwapValidator;
+	protected IMoveValidator moveValidator;
 	protected IRuleConfigurationLoader ruleConfigLoader;
 	protected IdiotGameConfiguration gameConfig;
-	protected IMoveValidator moveValidator;
 	protected IEndGameChecker gameEndedChecker;
 	
 	public IdiotGameEngine(ITableSwapValidator tableSwapValidator, IMoveValidator moveValidator, IEndGameChecker gameEndedChecker) {
