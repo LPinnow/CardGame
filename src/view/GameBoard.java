@@ -139,8 +139,8 @@ public class GameBoard extends Pane {
 			}
 		}
 	  
-	    placeReadyButton(p1_ready, 1000, 75);
-	    placeReadyButton(p2_ready, 1000, 625);
+	    placeReadyButton(p1_ready, 1000, 625);
+	    placeReadyButton(p2_ready, 1000, 75);
 	    p2_ready.setVisible(false);
  
 		placeLabel(messageLabel, 50, 500, 14);
