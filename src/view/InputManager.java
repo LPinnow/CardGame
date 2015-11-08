@@ -298,7 +298,7 @@ public class InputManager {
 			return true;
 
 		// check player 1 hand pile
-		if (checkPiles(card, cardView, activePile,
+		if (checkPile(card, cardView, activePile,
 				activePileView, gameBoard.getPlayerHandView(1)))
 			return true;
 
@@ -308,17 +308,17 @@ public class InputManager {
 			return true;
 
 		// check player 2 hand pile
-		if (checkPiles(card, cardView, activePile,
+		if (checkPile(card, cardView, activePile,
 				activePileView, gameBoard.getPlayerHandView(2)))
 			return true;
 
 		// check draw pile
-		if (checkPiles(card, cardView, activePile,
+		if (checkPile(card, cardView, activePile,
 				activePileView, gameBoard.getDeckView()))
 			return true;
 
 		// check pile
-		if (checkPiles(card, cardView, activePile,
+		if (checkPile(card, cardView, activePile,
 				activePileView, gameBoard.getWasteView()))
 			return true;
 
@@ -344,7 +344,7 @@ public class InputManager {
 
 	// TODO: Not sure why there's to almost identical variations of the
 	// checkPiles.. Need to be merged into one.
-
+	
 	private boolean checkPiles(
 			Card card, CardView cardView, List<Card> activePile,
 			CardPileView activePileView, List<CardPileView> pileViews) {
@@ -352,46 +352,7 @@ public class InputManager {
 		boolean result = false;
 
 		for (CardPileView pileView : pileViews) {
-			// skip checking the same pile
-			if (pileView.equals(activePileView))
-				continue;
-
-			// check for intersection
-			// if (isOverPile(cardView, pileView) &&
-			// handleValidMove(card, activePile, activePileView, pileView)){
-			// return true;
-			// }
-
-			if (isOverPile(cardView, pileView)) {
-				System.out.println("Dropped on pile: " + pileView.getShortID());
-
-				if (game.getCurrentGameState().CurrentGamePhase()
-						.equals(IdiotGameState.GamePhases.CardSwapping))
-				{
-					MoveResult swapResult = game.requestHandToTableCardSwap(
-							game.getCurrentGameState().CurrentPlayerTurn(),
-							cardView.asGameCard(),
-							pileView.getCards()
-									.get(pileView.getCards().size() - 1)
-									.asGameCard());
-					if (swapResult.success) {
-						gameBoard
-								.updateCurrentState(game.getCurrentGameState());
-						gameBoard.drawPlayerPlace(game.getCurrentGameState()
-								.CurrentPlayerTurn());
-						gameBoard.setMessageLabelText("");
-					}
-					else {
-						gameBoard.setMessageLabelText(swapResult.message);
-					}
-				}
-				else if (game.getCurrentGameState().CurrentGamePhase()
-						.equals(IdiotGameState.GamePhases.GamePlay))
-				{
-					// TODO Validate if pile the card is dropped on is a valid
-					// move during the GamePlay phase
-				}
-			}
+			result = checkPile(card, cardView, activePile, activePileView, pileView);
 		}
 
 		return result;
@@ -407,7 +368,7 @@ public class InputManager {
 	 * @param pileView
 	 * @return
 	 */
-	private boolean checkPiles(
+	private boolean checkPile(
 			Card card, CardView cardView, List<Card> activePile,
 			CardPileView activePileView, CardPileView pileView) {
 
@@ -417,15 +378,10 @@ public class InputManager {
 		if (pileView.equals(activePileView))
 			return result;
 
-		// check for intersection
-		// if (isOverPile(cardView, pileView) &&
-		// handleValidMove(card, activePile, activePileView, pileView)){
-		// return true;
-		// }
-
 		if (isOverPile(cardView, pileView)) {
 			System.out.println("Dropped on pile: " + pileView.getShortID());
-
+			result = true;
+			
 			if (game.getCurrentGameState().CurrentGamePhase()
 					.equals(IdiotGameState.GamePhases.CardSwapping))
 			{
@@ -439,6 +395,8 @@ public class InputManager {
 					gameBoard.drawPlayerPlace(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 					gameBoard.setMessageLabelText("");
+					result = true;
+
 				}
 				else {
 					gameBoard.setMessageLabelText(swapResult.message);
