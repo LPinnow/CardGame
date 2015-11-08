@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Pane;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,7 +18,8 @@ public class CardPileView extends Pane implements Iterable<CardView> {
    * The {@link List} containing the {@link CardView} objects,
    * which are lying on this pile.
    */
-  private ObservableList<CardView> cards = FXCollections.observableArrayList();
+  //private ObservableList<CardView> cards = FXCollections.observableArrayList();
+	private List<CardView> cards = new ArrayList<CardView>();
 
   /**
    * Vertical gap to lay out the cards.
@@ -131,7 +133,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
    *
    * @return The {@link List} of cards.
    */
-  public ObservableList<CardView> getCards() {
+  public List<CardView> getCards() {
     return cards;
   }
 
@@ -231,7 +233,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
   }
 
   public void clearContents() {
-	  cards.removeAll();
+	  cards.clear();
   }
   
   /**

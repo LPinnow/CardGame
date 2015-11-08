@@ -309,6 +309,7 @@ public class GameBoard extends Pane {
 		TopCardUpStack tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards1();
 		System.out.println(tableCards1.getTopCard().toString());
 		if (tableCards1.getTopCard() != null) {
+			foundationPileView_1.clearContents();
 			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
 	        getChildren().add(foundationPileView_1.getTopCardView());
 			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
@@ -322,6 +323,7 @@ public class GameBoard extends Pane {
 	    TopCardUpStack tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards2();
 	    System.out.println(tableCards2.getTopCard().toString());
 		if (tableCards2.getTopCard() != null) {
+			foundationPileView_2.clearContents();
 			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
 	        getChildren().add(foundationPileView_2.getTopCardView());
 			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
@@ -335,6 +337,7 @@ public class GameBoard extends Pane {
 	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
 	    System.out.println(tableCards3.getTopCard().toString());
 		if (tableCards3.getTopCard() != null) {
+			foundationPileView_3.clearContents();
 			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
 	        getChildren().add(foundationPileView_3.getTopCardView());
 			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
@@ -344,9 +347,11 @@ public class GameBoard extends Pane {
 		}
 
 		//draw hand
+		
+		handPileView.clearContents();
+		
 		Iterator<Card> deckIterator = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards().iterator();
 		deckIterator.forEachRemaining(card -> {
-			handPileView.clearContents();
 			handPileView.addCardView(CardViewFactory.createCardView(card));
 	        //cardViewList.add(handPileView.getTopCardView());
 	        
