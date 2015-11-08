@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import controller.InputManager;
 import model.IdiotGameStateFacade;
 import model.PlayerZone;
 import model.card.Card;
@@ -84,6 +83,8 @@ public class GameBoard extends Pane {
    */
   private Label p2_name;
   
+  private Label messageLabel;
+  
   /**
    * Ready button for player 1
    */
@@ -93,6 +94,8 @@ public class GameBoard extends Pane {
    * Ready button for player 2
    */
   private Button p2_ready;
+  
+  
   
   private InputManager mouseUtility;
   
@@ -116,7 +119,8 @@ public class GameBoard extends Pane {
     
     this.p1_name = new Label("Player 1");
     this.p2_name = new Label("Player 2");
-    
+    this.messageLabel = new Label("");
+    this.messageLabel.setTextFill(Color.RED);
     
     initGameArea();
   }
@@ -138,8 +142,9 @@ public class GameBoard extends Pane {
    */
   private void initGameArea() {
 	//place player name labels
-	placeLabel(p1_name, 525, 75);
-	placeLabel(p2_name, 525, 600);
+	placeLabel(p1_name, 525, 75, 18);
+	placeLabel(p2_name, 525, 600, 18);
+	placeLabel(messageLabel, 50, 500, 14);
 	  
 	//pass in x,y locations for deck and waste piles
     buildStock(500, 275);
@@ -163,10 +168,10 @@ public class GameBoard extends Pane {
     p2_ready.setVisible(false);
   }
   
-  private void placeLabel(Label label, int x, int y){
+  private void placeLabel(Label label, int x, int y, int fontSize){
 	  label.setTranslateX(x);
 	  label.setTranslateY(y);
-	  label.setStyle("-fx-font-size: 18pt; -fx-font-weight: bold;");
+	  label.setStyle("-fx-font-size: " + fontSize + "pt; -fx-font-weight: bold;");
 	  getChildren().add(label);
   }
 
@@ -372,6 +377,10 @@ public class GameBoard extends Pane {
 	  this.currentGameState = currentGameState;
   }
   
+  public void setMessageLabelText(String text){
+	  messageLabel.setText(text);
+  }
+  
   /**
    * Draws the deck of cards
    * @param drawCards
@@ -421,8 +430,6 @@ public class GameBoard extends Pane {
 		if (tableCards1.getTopCard() != null) {
 			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
 	        getChildren().add(foundationPileView_1.getTopCardView());
-	        cardViewList.add(foundationPileView_1.getTopCardView());
-	        //foundationPileView_1.getTopCardView().setMouseTransparent(true);
 			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
 		}
 		else {
@@ -436,8 +443,6 @@ public class GameBoard extends Pane {
 		if (tableCards2.getTopCard() != null) {
 			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
 	        getChildren().add(foundationPileView_2.getTopCardView());
-	        cardViewList.add(foundationPileView_2.getTopCardView());
-	        //foundationPileView_2.getTopCardView().setMouseTransparent(true);
 			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
 		}
 		else {
@@ -449,10 +454,8 @@ public class GameBoard extends Pane {
 	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
 		
 		if (tableCards3.getTopCard() != null) {
-			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
+			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
 	        getChildren().add(foundationPileView_3.getTopCardView());
-	        cardViewList.add(foundationPileView_3.getTopCardView());
-	        //foundationPileView_3.getTopCardView().setMouseTransparent(true);
 			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
 		}
 		else {
@@ -464,7 +467,7 @@ public class GameBoard extends Pane {
 		deckIterator.forEachRemaining(card -> {
 			handPileView.clearContents();
 			handPileView.addCardView(CardViewFactory.createCardView(card));
-	        cardViewList.add(handPileView.getTopCardView());
+	        //cardViewList.add(handPileView.getTopCardView());
 	        
 	        if(playerNumber == 1){
 	        	mouseUtility.makeClickable(handPileView.getTopCardView());
@@ -475,8 +478,7 @@ public class GameBoard extends Pane {
 	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
 	        	//handPileView.getTopCardView().flip();
 	        }
-	        	
-	        
+
 	        getChildren().add(handPileView.getTopCardView());
 		});
 	}

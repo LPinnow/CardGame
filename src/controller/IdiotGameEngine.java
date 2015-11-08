@@ -87,15 +87,7 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			
 			//set pile ids for InputManager. Ids must match corresponding CardPileView ids.
 			playerPlace.initializePileIDs();
-			
-			// Removed:  the controller does not call the view, the view calls the controller and redraws/updates itself
-			//draw the cards in the PlayerZone
-			//gameBoard.drawPlayerPlace(playerPlace);
 		}
-		
-		// Removed:  the controller does not call the view, the view calls the controller and redraws/updates itself
-		//draw the deck
-		//gameBoard.drawDeck(state.drawCards);
 		
 		System.out.println(state.toString());
 		
@@ -117,7 +109,9 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 			
 			updateStateForTableSwap(playerRequesting, handCard, tableCard, validationResult.targetTableStack);
 			
-			//System.out.println(state.toString());
+			
+			System.out.println("Game engine state after successful table card swap: -----");
+			System.out.println(state.toString());
 			
 			return new MoveResult() {{ success = true; }};
 		} 
@@ -201,6 +195,11 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void playerOneDoneSwapping() {
+		state.currentPlayerTurn = 2;
 	}
 	
 }

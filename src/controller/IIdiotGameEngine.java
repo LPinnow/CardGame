@@ -27,6 +27,12 @@ public interface IIdiotGameEngine {
 	MoveResult requestHandToTableCardSwap(int playerRequesting, Card handCard, Card tableCard);
 	
 	/**
+	 * Report to the game engine that player one is done swapping
+	 */
+	
+	void playerOneDoneSwapping();
+	
+	/**
 	 * Invoked by the UI when both players have finished swapping hand cards with table cards and are
 	 * ready to start the game
 	 */
@@ -43,5 +49,4 @@ public interface IIdiotGameEngine {
 	MoveResult submitMove(Player playerRequesting, Move move);
 	
 	List<Card> getPileById(String shortID);
-	
 }

@@ -4,6 +4,7 @@ import view.CardTheme;
 import view.CardViewFactory;
 import view.GameBoard;
 import view.GameMenu;
+import view.InputManager;
 import controller.validators.MoveValidator;
 import controller.validators.TableSwapValidator;
 import javafx.application.Application;
@@ -125,7 +126,7 @@ public class CardGameMain extends Application {
 		public void handle(Event e) {
 			gameBoard.setButtonVisibility(gameBoard.getP1_ReadyButton(), false);
 			gameBoard.setButtonVisibility(gameBoard.getP2_ReadyButton(), true);
-			
+			gameEngine.playerOneDoneSwapping();
 			gameBoard.setActivePlayer(2);
 			
 		}});

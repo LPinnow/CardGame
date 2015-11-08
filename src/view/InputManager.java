@@ -1,13 +1,12 @@
-package controller;
+package view;
 
 import java.util.List;
 import java.util.ListIterator;
 
-import view.CardPileView;
-import view.CardView;
-import view.GameBoard;
 import model.IdiotGameState;
 import model.MoveResult;
+import controller.CardGame;
+import controller.IIdiotGameEngine;
 import controller.validators.TableSwapValidationResult;
 import model.card.Card;
 import javafx.animation.Interpolator;
@@ -323,6 +322,9 @@ public class InputManager {
    * @param pileViews      The list of piles to check.
    * @return true if intersects with any pile, false otherwise.
    */
+  
+  //TODO: Not sure why there's to almost identical variations of the checkPiles.. Need to be merged into one.
+  
   private boolean checkPiles(
       Card card, CardView cardView, List<Card> activePile,
       CardPileView activePileView, List<CardPileView> pileViews) {
@@ -346,8 +348,14 @@ public class InputManager {
     	  if(game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.CardSwapping))
     	  {
     		  MoveResult swapResult = game.requestHandToTableCardSwap(game.getCurrentGameState().CurrentPlayerTurn(), cardView.asGameCard(), pileView.getCards().get(pileView.getCards().size()-1).asGameCard());
-    		  if (swapResult.success) gameBoard.updateCurrentState(game.getCurrentGameState());
-    		  gameBoard.drawBothPlayerPlaces();
+    		  if (swapResult.success) { 
+    			  gameBoard.updateCurrentState(game.getCurrentGameState());
+    			  gameBoard.drawPlayerPlace(game.getCurrentGameState().CurrentPlayerTurn());
+    			  gameBoard.setMessageLabelText("");
+    		  }
+    		  else {
+    			  gameBoard.setMessageLabelText(swapResult.message);
+    		  }
     	  } 	
     	  else if (game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.GamePlay))
     	  {
@@ -385,15 +393,26 @@ public class InputManager {
 //	      }
 	      
 	      if(isOverPile(cardView, pileView)){
+	    	  System.out.println("Dropped on pile: " + pileView.getShortID());
+	    	  
 	    	  if(game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.CardSwapping))
 	    	  {
-		    	  MoveResult swapResult = game.requestHandToTableCardSwap(game.getCurrentGameState().CurrentPlayerTurn(), cardView.asGameCard(), pileView.getCards().get(pileView.getCards().size()-1).asGameCard());
-	    		  if (swapResult.success) gameBoard.updateCurrentState(game.getCurrentGameState());
-	    		  	gameBoard.drawBothPlayerPlaces();
+	    		  MoveResult swapResult = game.requestHandToTableCardSwap(game.getCurrentGameState().CurrentPlayerTurn(), cardView.asGameCard(), pileView.getCards().get(pileView.getCards().size()-1).asGameCard());
+	    		  if (swapResult.success) { 
+	    			  gameBoard.updateCurrentState(game.getCurrentGameState());
+	    			  gameBoard.drawPlayerPlace(game.getCurrentGameState().CurrentPlayerTurn());
+	    			  gameBoard.setMessageLabelText("");
+	    		  }
+	    		  else {
+	    			  gameBoard.setMessageLabelText(swapResult.message);
+	    		  }
+	    	  } 	
+	    	  else if (game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.GamePlay))
+	    	  {
+	    		//TODO Validate if pile the card is dropped on is a valid move during the GamePlay phase
 	    	  }
-	    	  System.out.println("Dropped on pile: " + pileView.getShortID());
 	      }
-	    
+	      
 	    return result;
 }
 
@@ -410,62 +429,6 @@ public class InputManager {
     else
       return cardView.getBoundsInParent().intersects(pileView.getTopCardView().getBoundsInParent());
   }
-
-  /**
-   * Handles a move. If valid, move the model cards to the destination pile,
-   * as well as their views.
-   *
-   * @param card           The card to move.
-   * @param activePile     The view of the moved card.
-   * @param sourcePileView The source pile view.
-   * @param destPileView   The destination pile view.
-   * @return true if the move is valid, false otherwise.
-  */
-  private boolean handleValidMove(Card card, List<Card> activePile,
-                                  CardPileView sourcePileView,
-                                  CardPileView destPileView) {
-    List<Card> destPile = game.getPileById(destPileView.getShortID());
-/**    
-    if(!game.isGameInProgress()){
-    	Player activePlayer = game.getActivePlayer();
-    	
-    	if(game.getP1_Foundations().contains(destPile) && sourcePile.equals(game.getP1_HandPile()) 
-    			&& activePlayer.equals(game.getPlayer1())){
-    		Card cardToSwitch = destPile.getTopCard();
-    		CardView cardViewToSwitch = destPileView.getTopCardView();
-    		
-    		//switch cards in piles
-    		game.switchCards(draggedCard, cardToSwitch, sourcePile, destPile);
-    		
-    		//change draggable status
-    		removeDraggable(draggedCardView);
-    		makeDraggable(cardViewToSwitch);
-    		
-    		//slide dragged card to player pile
-    		slideToPile(draggedCardView, sourcePileView, destPileView);
-    		
-    		//slide pile card to hand
-    		slideToHand(cardViewToSwitch, destPileView, sourcePileView, 
-    				draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);    		
-    	    
-    		
-    		return true;
-    	} else if(game.getP2_Foundations().contains(destPile) && activePlayer.equals(game.getPlayer2())){
-    		
-    	}
-    	
-    	return false;
-    	
-    }else if (game.getRules().isMoveValid(card, destPile, sourcePile)) {
-      game.moveCard(draggedCard, sourcePile, destPile);
-      slideToPile(draggedCardView, sourcePileView, destPileView);
-      draggedCard = null;
-      draggedCardView = null;
-      return true;
-    } 
-    
-*/    return false;
- }
  
   /**
    * Slide back card to its original position if the move was not valid.
