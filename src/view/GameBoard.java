@@ -1,15 +1,11 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Map;
 
-import model.IdiotGameStateFacade;
-import model.PlayerZone;
-import model.card.Card;
-import model.card.CardDeck;
-import model.card.TopCardUpStack;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,6 +19,9 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import model.IdiotGameStateFacade;
+import model.card.Card;
+import model.card.TopCardUpStack;
 
 /**
  * This class represents the area where the game is taking place.
@@ -32,46 +31,23 @@ public class GameBoard extends Pane {
   /**
    * The list of {@link CardView} objects that are on the playing area.
    */
-  List<CardView> cardViewList = new ArrayList<>();
+  List<CardView> cardViewList = new ArrayList<>(); 
 
-  /**
-   * The list of {@link CardPileView} objects that serves as the view for
-   * player 1's hand pile.
-   */
-  private CardPileView p1_handPileView;
+  private List<List<CardPileView>> playerHands;
   
-  /**
-   * The list of {@link CardPileView} objects that serves as the view for
-   * player 2's hand pile.
-   */
-  private CardPileView p2_handPileView;
+  private Map<Integer, List<CardPileView>> foundationPiles;
   
-  /**
-   * The list of {@link CardPileView} objects that serves as the view for
-   * the foundation piles.
-   */
-  private List<CardPileView> p1_foundationPileViews;
-  
-  /**
-   * The list of {@link CardPileView} objects that serves as the view for
-   * the foundation piles.
-   */
-  private List<CardPileView> p2_foundationPileViews;
 
   /**
    * The {@link CardPileView} object that serves as the view for the stock.
    */
-  private CardPileView drawCardsView;
+  private CardPileView deckView;
 
   /**
    * The {@link CardPileView} object that serves as the view for the pile.
    */
-  private CardPileView pileView;
+  private CardPileView wasteView;
 
-  /**
-   * The gap (offset) between the cards.
-   */
-  private double cardGapVertical = 30;
   
   /**
    * Represents string of player 1's name
@@ -102,37 +78,37 @@ public class GameBoard extends Pane {
   private IdiotGameStateFacade currentGameState;
 
   /**
-   * Constructs a new {@link GameBoard} object.
+   * Constructs a new {@link DeCoupGameBoard} object.
    */
-  public GameBoard() {
-    this.p1_handPileView = new CardPileView(0, 40, 0, 0, "1hand");
-    this.p2_handPileView = new CardPileView(0, 40, 0, 0, "2hand");
-    this.p1_foundationPileViews = FXCollections.observableArrayList();
-    this.p2_foundationPileViews = FXCollections.observableArrayList();
-    this.drawCardsView = new CardPileView(1, 0, 0, 0, "drawCards");
-    this.pileView = new CardPileView(1, 0, 0, 0, "pile");
-    
-    this.p1_ready = new Button("Player 1 Ready?");
+  public GameBoard(ArrayList<CardPileView> piles) {
+	playerHands = new ArrayList<List<CardPileView>>();
+	foundationPiles = new HashMap<Integer, List<CardPileView>>();
+	int TOTAL_NUM_OF_PLAYERS = 2;
+	//feed game rules # of players in
+	playerHands.add(0, new ArrayList<CardPileView>());
+	for (int i = 1; i < TOTAL_NUM_OF_PLAYERS + 1; i++) {
+		foundationPiles.put(i, FXCollections.observableArrayList());
+		playerHands.add(i, new ArrayList<CardPileView>());
+	}
+	this.p1_ready = new Button("Player 1 Ready?");
     this.p1_ready.setId("default-btn");
     this.p2_ready = new Button("Player 2 Ready?");
     this.p2_ready.setId("default-btn");
     
-    this.p1_name = new Label("Player 1");
-    this.p2_name = new Label("Player 2");
     this.messageLabel = new Label("");
     this.messageLabel.setTextFill(Color.RED);
-    
-    initGameArea();
+	
+	initGameArea(piles);
   }
 
   /**
-   * Constructs a new {@link GameBoard} object, with the given image
+   * Constructs a new {@link DeCoupGameBoard} object, with the given image
    * as the background.
    *
    * @param tableauBackground The {@link Image} object for the background.
    */
-  public GameBoard(Image tableBackground) {
-    this();
+  public GameBoard(ArrayList<CardPileView> piles, Image tableBackground) {
+    this(piles);
     setTableBackground(tableBackground);
   }
 
@@ -140,32 +116,50 @@ public class GameBoard extends Pane {
    * Initializes the game area.
    * Calls methods to build deck, waste, hand, and card pile views.
    */
-  private void initGameArea() {
-	//place player name labels
-	placeLabel(p1_name, 525, 75, 18);
-	placeLabel(p2_name, 525, 600, 18);
-	placeLabel(messageLabel, 50, 500, 14);
+  private void initGameArea(ArrayList<CardPileView> piles) {
+	  this.p1_name = new Label("Player 1");
+	  this.p2_name = new Label("Player 2");
 	  
-	//pass in x,y locations for deck and waste piles
-    buildStock(500, 275);
-    buildWaste(650, 275);
-    
-    //pass in x,y locations and number for player 1 card piles
-    int p1_numOfPiles = 3;
-    buildFoundationPiles(50, 20, 1, p1_foundationPileViews, p1_numOfPiles);
-    
-    //pass in x,y locations and number for player 2 card piles
-    int p2_numOfPiles = 3;
-    buildFoundationPiles(50, 550, 2, p2_foundationPileViews, p2_numOfPiles);
-    
-    //pass in x,y locations for hand piles
-    buildHandPiles(650, 20, p1_handPileView);
-    buildHandPiles(650, 550, p2_handPileView);
-    
-    //place ready buttons on game board
-    placeReadyButton(p1_ready, 1000, 75);
-    placeReadyButton(p2_ready, 1000, 625);
-    p2_ready.setVisible(false);
+	  placeLabel(p1_name, 525, 600, 18);
+	  placeLabel(p2_name, 525, 75, 18);
+	  
+	  for (CardPileView pileView : piles) {
+			if (pileView.getShortID().toLowerCase().contains("hand")) {
+				playerHands.get(Integer.parseInt(pileView.getShortID().toLowerCase().substring(1, 2))).add(pileView);
+				buildPile(pileView);
+			} else if (pileView.getShortID().toLowerCase().contains("foundation")) {
+				foundationPiles.get(Integer.parseInt(pileView.getShortID().toLowerCase().substring(1, 2))).add(pileView);
+				buildPile(pileView);
+			} else if (pileView.getShortID().toLowerCase().contains("deck")) {
+				this.deckView = pileView;
+				buildPile(deckView);
+			} else if (pileView.getShortID().toLowerCase().contains("waste")){
+				this.wasteView = pileView;
+				buildPile(wasteView);
+			}
+		}
+	  
+	    placeReadyButton(p1_ready, 1000, 75);
+	    placeReadyButton(p2_ready, 1000, 625);
+	    p2_ready.setVisible(false);
+ 
+		placeLabel(messageLabel, 50, 500, 14);
+  }
+  
+  private void buildPile(CardPileView cardView) {
+	  BackgroundFill backgroundFill = new BackgroundFill(
+		        Color.gray(0.0, 0.2), null, null);
+
+		    Background background = new Background(backgroundFill);
+
+		    GaussianBlur gaussianBlur = new GaussianBlur(10);
+
+		    cardView.setPrefSize(130, 180);
+		    cardView.setBackground(background);
+		    cardView.setLayoutX(cardView.getInitialX());
+		    cardView.setLayoutY(cardView.getInitialY());
+		    cardView.setEffect(gaussianBlur);
+		    getChildren().add(cardView);
   }
   
   private void placeLabel(Label label, int x, int y, int fontSize){
@@ -173,92 +167,6 @@ public class GameBoard extends Pane {
 	  label.setTranslateY(y);
 	  label.setStyle("-fx-font-size: " + fontSize + "pt; -fx-font-weight: bold;");
 	  getChildren().add(label);
-  }
-
-  /**
-   * Configures the {@link CardPileView} object that serves as the view
-   * of the stock.
-   */
-  private void buildStock(int x, int y) {
-    BackgroundFill backgroundFill = new BackgroundFill(
-        Color.gray(0.0, 0.2), null, null);
-
-    Background background = new Background(backgroundFill);
-
-    GaussianBlur gaussianBlur = new GaussianBlur(10);
-
-    drawCardsView.setPrefSize(130, 180);
-    drawCardsView.setBackground(background);
-    drawCardsView.setLayoutX(x);
-    drawCardsView.setLayoutY(y);
-    drawCardsView.setEffect(gaussianBlur);
-    getChildren().add(drawCardsView);
-  }
-
-  /**
-   * Configures the {@link CardPileView} object that serves as the view
-   * of the waste.
-   */
-  private void buildWaste(int x, int y) {
-    BackgroundFill backgroundFill = new BackgroundFill(
-        Color.gray(0.0, 0.2), null, null);
-
-    Background background = new Background(backgroundFill);
-
-    GaussianBlur gaussianBlur = new GaussianBlur(10);
-
-    pileView.setPrefSize(130, 180);
-    pileView.setBackground(background);
-    pileView.setLayoutX(x);
-    pileView.setLayoutY(y);
-    pileView.setEffect(gaussianBlur);
-    getChildren().add(pileView);
-  }
-
-  /**
-   * Configures the {@link CardPileView} objects that serves as the view
-   * of the foundation piles.
-   */
-  private void buildFoundationPiles(int x, int y, int playerNumber, List<CardPileView> foundationPileViews, int numOfPiles) {
-	 BackgroundFill backgroundFill = new BackgroundFill(
-        Color.gray(0.0, 0.2), null, null);
-
-    Background background = new Background(backgroundFill);
-
-    GaussianBlur gaussianBlur = new GaussianBlur(10);
-
-    IntStream.range(0, numOfPiles).forEach(i -> {
-      foundationPileViews.add(new CardPileView(2, 0, (x + i * 160), y, playerNumber+"tableCards"+(i+1)));
-      foundationPileViews.get(i).setPrefSize(130, 180);
-      foundationPileViews.get(i).setBackground(background);
-      foundationPileViews.get(i).setLayoutX(x + i * 160);
-      foundationPileViews.get(i).setLayoutY(y);
-      foundationPileViews.get(i).setEffect(gaussianBlur);
-      getChildren().add(foundationPileViews.get(i));
-    });
-  }
-
-  /**
-   * Configures the {@link CardPileView} objects that serves as the view
-   * of the standard piles.
- * @param p1_handView 
- * @param y 
- * @param x 
-   */
-  private void buildHandPiles(int x, int y, CardPileView p1_handView) {
-    BackgroundFill backgroundFill = new BackgroundFill(
-        Color.gray(0.0, 0.2), null, null);
-
-    Background background = new Background(backgroundFill);
-
-    GaussianBlur gaussianBlur = new GaussianBlur(10);
-
-    p1_handView.setPrefSize(130, 180);
-    p1_handView.setBackground(background);
-    p1_handView.setLayoutX(x);
-    p1_handView.setLayoutY(y);
-    p1_handView.setEffect(gaussianBlur);
-    getChildren().add(p1_handView);
   }
   
   /**
@@ -273,45 +181,16 @@ public class GameBoard extends Pane {
 	  getChildren().add(button);
   }
   
-  /**
-   * Returns the {@link List} of {@link CardPileView} objects that serves
-   * as the view of player 1's hand.
-   *
-   * @return The {@link List} of {@link CardPileView} objects.
-   */
-  public CardPileView getP1_HandPileView() {
-    return p1_handPileView;
+  
+  public CardPileView getPlayerHandView(int playerNumber) {
+	 return playerHands.get(playerNumber).get(0);
   }
 
-  /**
-   * Returns the {@link List} of {@link CardPileView} objects that serves
-   * as the view of player 1's hand.
-   *
-   * @return The {@link List} of {@link CardPileView} objects.
-   */
-  public CardPileView getP2_HandPileView() {
-    return p2_handPileView;
+  
+  public List<CardPileView> getFoundationPileViews(int playerNumber) {
+	  return foundationPiles.get(playerNumber);
   }
   
-  /**
-   * Returns the {@link List} of {@link CardPileView} objects that serves
-   * as the view of the player card piles.
-   *
-   * @return The {@link List} of {@link CardPileView} objects.
-   */
-  public List<CardPileView> getP1_FoundationPileViews() {
-	return p1_foundationPileViews;
-  }
-  
-  /**
-   * Returns the {@link List} of {@link CardPileView} objects that serves
-   * as the view of the player card piles.
-   *
-   * @return The {@link List} of {@link CardPileView} objects.
-   */
-  public List<CardPileView> getP2_FoundationPileViews() {
-    return p2_foundationPileViews;
-  }
 
   /**
    * Returns the {@link CardPileView} object that serves as the view
@@ -319,8 +198,8 @@ public class GameBoard extends Pane {
    *
    * @return The {@link CardPileView} object.
    */
-  public CardPileView getDrawCardsView() {
-    return drawCardsView;
+  public CardPileView getDeckView() {
+    return deckView;
   }
 
   /**
@@ -329,8 +208,8 @@ public class GameBoard extends Pane {
    *
    * @return The {@link CardPileView} object.
    */
-  public CardPileView getPileView() {
-    return pileView;
+  public CardPileView getWasteView() {
+    return wasteView;
   }
 
   /**
@@ -387,13 +266,13 @@ public class GameBoard extends Pane {
    */
   public void drawDeck(){
 	  Iterator<Card> deckIterator = currentGameState.GetFullDeck().iterator();
-		
+	  
 	    deckIterator.forEachRemaining(card -> {
-	      getDrawCardsView().addCardView(CardViewFactory.createCardView(card));
-	      cardViewList.add(getDrawCardsView().getTopCardView());
-	      getChildren().add(getDrawCardsView().getTopCardView());
+	      getDeckView().addCardView(CardViewFactory.createCardView(card));
+	      cardViewList.add(getDeckView().getTopCardView());
+	      getChildren().add(getDeckView().getTopCardView());
 	    });
-	    drawCardsView.getTopCardView().setMouseTransparent(false);
+	    deckView.getTopCardView().setMouseTransparent(false);
   }
   
   public void drawBothPlayerPlaces() {
@@ -412,21 +291,21 @@ public class GameBoard extends Pane {
 		CardPileView handPileView;
 		
 		if(playerNumber == 1){
-			foundationPileView_1 = getP1_FoundationPileViews().get(0);
-			foundationPileView_2 = getP1_FoundationPileViews().get(1);
-			foundationPileView_3 = getP1_FoundationPileViews().get(2);
-			handPileView = getP1_HandPileView();
+			foundationPileView_1 = foundationPiles.get(1).get(0);
+			foundationPileView_2 =  foundationPiles.get(1).get(1);
+			foundationPileView_3 =  foundationPiles.get(1).get(2);
+			handPileView = playerHands.get(1).get(0);
 		} else {
-			foundationPileView_1 = getP2_FoundationPileViews().get(0);
-			foundationPileView_2 = getP2_FoundationPileViews().get(1);
-			foundationPileView_3 = getP2_FoundationPileViews().get(2);
-			handPileView = getP2_HandPileView();
+			foundationPileView_1 = foundationPiles.get(2).get(0);
+			foundationPileView_2 = foundationPiles.get(2).get(1);
+			foundationPileView_3 = foundationPiles.get(2).get(2);
+			handPileView = playerHands.get(2).get(0);
 		}
 		
 		//draw card pile 1
 
 		TopCardUpStack tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards1();
-		
+		System.out.println(tableCards1.getTopCard().toString());
 		if (tableCards1.getTopCard() != null) {
 			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
 	        getChildren().add(foundationPileView_1.getTopCardView());
@@ -439,7 +318,7 @@ public class GameBoard extends Pane {
 		//draw card pile 2
 		
 	    TopCardUpStack tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards2();
-		
+	    System.out.println(tableCards2.getTopCard().toString());
 		if (tableCards2.getTopCard() != null) {
 			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
 	        getChildren().add(foundationPileView_2.getTopCardView());
@@ -452,7 +331,7 @@ public class GameBoard extends Pane {
 		//draw card pile 3
 		
 	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
-		
+	    System.out.println(tableCards3.getTopCard().toString());
 		if (tableCards3.getTopCard() != null) {
 			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
 	        getChildren().add(foundationPileView_3.getTopCardView());
@@ -489,23 +368,23 @@ public class GameBoard extends Pane {
 	   */
 	  public void setActivePlayer(int activePlayerNumber) {
 		  if(activePlayerNumber == 1){
-			  for(CardView cardView : getP1_HandPileView()){
+			  for(CardView cardView : playerHands.get(1).get(0)){
 					mouseUtility.makeDraggable(cardView);
 					cardView.setToFaceUp();
 				}
 				
-				for(CardView cardView : getP2_HandPileView()){
+				for(CardView cardView : playerHands.get(2).get(0)){
 					mouseUtility.removeDraggable(cardView);
 					cardView.setToFaceDown();
 				}
 			  
 		  } else if (activePlayerNumber == 2){
-			  for(CardView cardView : getP2_HandPileView()){
+			  for(CardView cardView : playerHands.get(2).get(0)){
 					mouseUtility.makeDraggable(cardView);
 					cardView.setToFaceUp();
 				}
 				
-				for(CardView cardView : getP1_HandPileView()){
+				for(CardView cardView : playerHands.get(1).get(0)){
 					mouseUtility.removeDraggable(cardView);
 					cardView.setToFaceDown();
 				}

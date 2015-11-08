@@ -1,0 +1,48 @@
+.root {
+	-fx-accent: #268C4C;
+	-fx-focus-color: #246279;
+}
+
+#popup {
+	-fx-background-color: linear-gradient(to bottom,  #FFFFFF, #D5DBCC);
+	-fx-background-radius: .5em;
+	-fx-background-insets: 12;
+	-fx-effect: dropshadow(three-pass-box, #000000, 4, 0, 4, 4); 
+	-fx-font-family: "Segoe UI Semibold";
+	-fx-font-size: 1.25em;
+	-fx-padding: 1.5em;
+}
+
+#popup .label {
+	-fx-padding: 1em 1em .5em 1em;
+}
+
+#default-btn {
+	
+}
+
+#default-btn: hover {
+	
+}
+
+#yes-btn {
+	
+}
+
+#no-btn: hover {
+	
+}
+
+#submit-btn {
+	
+}
+
+#submit-btn: hover {
+	
+}
+
+
+
+
+
+

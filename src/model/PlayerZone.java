@@ -67,7 +67,7 @@ public class PlayerZone {
 	 * Ids must match corresponding CardPileView ids.
 	 */
 	public void initializePileIDs(){
-		this.idHand = this.playerNumber + "hand";
+		this.idHand = "p" + this.playerNumber + "Hand";
 		this.idTableCards1 = this.playerNumber + "tableCards1";
 		this.idTableCards2 = this.playerNumber + "tableCards2";
 		this.idTableCards3 = this.playerNumber + "tableCards3";

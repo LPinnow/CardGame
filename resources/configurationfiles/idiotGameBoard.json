@@ -1,14 +1,14 @@
 {
  "deck" : {
  			"initialX" : 500,
- 			"initialY" : 550,
+ 			"initialY" : 275,
  			"cardGapVertical": 1,
  			"cardGapHorizontal" : 0,
  			"id" : "deck"
  		},
  "waste" : {
   			"initialX" : 650,
-  			"initialY" : 550,
+  			"initialY" : 275,
   			"cardGapVertical": 1,
  			"cardGapHorizontal" : 0,
  			"id" : "waste"
