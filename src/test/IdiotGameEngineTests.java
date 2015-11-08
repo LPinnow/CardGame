@@ -3,9 +3,10 @@ package test;
 import controller.*;
 import controller.validators.TableSwapValidationResult;
 import model.IdiotGameState;
-import model.MoveResult;
 import model.Player;
 import model.card.Card;
+import model.move.MoveResult;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;

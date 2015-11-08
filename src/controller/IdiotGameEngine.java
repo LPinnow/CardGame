@@ -6,6 +6,8 @@ import java.util.List;
 import model.*;
 import model.card.Card;
 import model.card.CardDeck;
+import model.move.Move;
+import model.move.MoveResult;
 import controller.validators.*;
 
 public class IdiotGameEngine implements IIdiotGameEngine {

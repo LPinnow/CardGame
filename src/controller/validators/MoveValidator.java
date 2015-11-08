@@ -6,6 +6,11 @@ import java.util.List;
 
 import model.*;
 import model.card.*;
+import model.move.Move;
+import model.move.PlayMultipleCardsMove;
+import model.move.PlayOneCardMove;
+import model.move.PlayTopOfDeck;
+import model.move.TakePileMove;
 
 public class MoveValidator implements IMoveValidator {
 

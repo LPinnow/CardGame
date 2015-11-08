@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.ListIterator;
 
 import model.IdiotGameState;
-import model.MoveResult;
 import controller.CardGame;
 import controller.IIdiotGameEngine;
 import controller.validators.TableSwapValidationResult;
 import model.card.Card;
+import model.move.MoveResult;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

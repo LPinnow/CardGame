@@ -3,8 +3,8 @@ package test.mocks;
 import controller.IMoveExecutor;
 import model.IdiotGameConfiguration;
 import model.IdiotGameState;
-import model.Move;
-import model.MoveResult;
+import model.move.Move;
+import model.move.MoveResult;
 
 public class MockMoveExecutor implements IMoveExecutor {
 

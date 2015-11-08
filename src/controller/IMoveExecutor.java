@@ -2,8 +2,8 @@ package controller;
 
 import model.IdiotGameConfiguration;
 import model.IdiotGameState;
-import model.Move;
-import model.MoveResult;
+import model.move.Move;
+import model.move.MoveResult;
 
 public interface IMoveExecutor {
 	

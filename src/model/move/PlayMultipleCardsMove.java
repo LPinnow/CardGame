@@ -1,4 +1,4 @@
-package model;
+package model.move;
 
 import java.util.List;
 

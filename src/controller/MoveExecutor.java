@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import controller.validators.ValidationResult;
 import model.IdiotGameConfiguration;
 import model.IdiotGameState;
-import model.Move;
-import model.MoveResult;
-import model.PlayMultipleCardsMove;
-import model.PlayOneCardMove;
-import model.PlayTopOfDeck;
-import model.TakePileMove;
 import model.card.Card;
 import model.card.GameCardRank;
+import model.move.Move;
+import model.move.MoveResult;
+import model.move.PlayMultipleCardsMove;
+import model.move.PlayOneCardMove;
+import model.move.PlayTopOfDeck;
+import model.move.TakePileMove;
 
 public class MoveExecutor implements IMoveExecutor {
 

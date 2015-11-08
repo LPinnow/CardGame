@@ -4,7 +4,7 @@ import controller.validators.IMoveValidator;
 import controller.validators.ValidationResult;
 import model.IdiotGameConfiguration;
 import model.IdiotGameState;
-import model.Move;
+import model.move.Move;
 
 public class MockMoveValidator implements IMoveValidator {
 

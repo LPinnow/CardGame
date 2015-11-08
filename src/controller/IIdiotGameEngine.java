@@ -4,6 +4,8 @@ import java.util.List;
 
 import model.*;
 import model.card.Card;
+import model.move.Move;
+import model.move.MoveResult;
 
 public interface IIdiotGameEngine {
 
