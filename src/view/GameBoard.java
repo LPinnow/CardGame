@@ -314,9 +314,6 @@ public class GameBoard extends Pane {
 	        getChildren().add(foundationPileView_1.getTopCardView());
 			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
 		}
-		else {
-			//TODO: insert code to remove rendering of table cards1 if none are remaining for a given stack
-		}
 			
 		//draw card pile 2
 		
@@ -327,9 +324,6 @@ public class GameBoard extends Pane {
 			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
 	        getChildren().add(foundationPileView_2.getTopCardView());
 			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
-		}
-		else {
-			//TODO: insert code to remove rendering of table cards2 if none are remaining for a given stack
 		}
 		
 		//draw card pile 3
@@ -342,9 +336,6 @@ public class GameBoard extends Pane {
 	        getChildren().add(foundationPileView_3.getTopCardView());
 			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
 		}
-		else {
-			//TODO: insert code to remove rendering of table cards2 if none are remaining for a given stack
-		}
 
 		//draw hand
 		
@@ -353,7 +344,6 @@ public class GameBoard extends Pane {
 		Iterator<Card> deckIterator = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards().iterator();
 		deckIterator.forEachRemaining(card -> {
 			handPileView.addCardView(CardViewFactory.createCardView(card));
-	        //cardViewList.add(handPileView.getTopCardView());
 	        
 	        if(playerNumber == 1){
 	        	mouseUtility.makeClickable(handPileView.getTopCardView());
@@ -362,7 +352,6 @@ public class GameBoard extends Pane {
 	        else{
 	        	mouseUtility.makeClickable(handPileView.getTopCardView());
 	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
-	        	//handPileView.getTopCardView().flip();
 	        }
 
 	        getChildren().add(handPileView.getTopCardView());

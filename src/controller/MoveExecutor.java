@@ -70,6 +70,7 @@ public class MoveExecutor implements IMoveExecutor {
 			
 			handleIfCardPlayedOnPileWasBurnCard();
 			handleIfTopFourPileCardsAreSameRank();
+			handleIfPlayersHandDropsBelowThreeCards();
 		}
 		
 		if (move instanceof PlayMultipleCardsMove) {
@@ -92,6 +93,7 @@ public class MoveExecutor implements IMoveExecutor {
 			
 			handleIfCardPlayedOnPileWasBurnCard();
 			handleIfTopFourPileCardsAreSameRank();
+			handleIfPlayersHandDropsBelowThreeCards();
 		}
 			
 		if (endGameChecker.endGameConditionReached()) return new MoveResult() {{ success = true; gameEnded = true; message = "Player " + state.currentPlayerTurn + " has won"; }};
@@ -132,7 +134,15 @@ public class MoveExecutor implements IMoveExecutor {
 				state.pile = new ArrayList<Card>();
 			}
 		}
+	}
 	
+	private void handleIfPlayersHandDropsBelowThreeCards() {
+		while (state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand.size() < 3) {
+			if (state.drawCards.size() == 0) break;
+			
+			state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand.add(state.drawCards.get(state.drawCards.size()-1));
+			state.drawCards.remove(state.drawCards.size()-1);
+		}
 	}
 	
 	private void advancePlayerTurn() {
