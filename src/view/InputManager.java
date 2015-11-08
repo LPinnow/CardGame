@@ -190,6 +190,11 @@ public class InputManager {
 		CardPileView activePileView = cardView.getContainingPile();
 		/** get current pile. */
 		List<Card> activePile = game.getPileById(activePileView.getShortID());
+		
+		for(Card c : activePile){
+	    	if(c.getId().equals(cardView.getShortID()))
+	    		card = c;
+	    }
 
 		System.out.println("CardView ID: " + cardView.getShortID()
 				+ " in pile: " + activePileView.getShortID());
@@ -392,8 +397,21 @@ public class InputManager {
 								.asGameCard());
 				if (swapResult.success) {
 					gameBoard.updateCurrentState(game.getCurrentGameState());
-					gameBoard.drawPlayerPlace(game.getCurrentGameState()
-							.CurrentPlayerTurn());
+					//gameBoard.drawPlayerPlace(game.getCurrentGameState()
+					//		.CurrentPlayerTurn());
+					
+					//Added in functionality to fix the UI. Might want to move it to drawPlayerPlace?
+					//TODO Might want to look at changing the order of the cards in the hand
+					//     to match the UI views. Moving the middle card adds the card view to
+					//		to the same spot but adds it at the end of the arraylist of hand cards.
+					CardView tablePileTopCardView = pileView.getTopCardView();
+		    		
+					slideToPile(cardView, activePileView, pileView);
+	    			slideToHand(tablePileTopCardView, pileView, activePileView,
+	    				  draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);
+	    			makeDraggable(tablePileTopCardView);
+	    			removeDraggable(cardView);
+	    			
 					gameBoard.setMessageLabelText("");
 					result = true;
 
