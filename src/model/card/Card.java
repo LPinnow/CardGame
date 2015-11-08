@@ -45,6 +45,8 @@ public abstract class Card {
 	   if (shortID == null || shortID.length() != 2)
 		   throw new IllegalStateException("Invalid shortID passed to card constructor: " + shortID);
 	   
+	   shortID = shortID.replaceAll("10", "X");
+	   
 	    switch (shortID.charAt(0)) {
 	      case 'A':
 	    	rank = GameCardRank.Ace;
