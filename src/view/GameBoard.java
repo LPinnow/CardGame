@@ -233,6 +233,8 @@ public class GameBoard extends Pane {
     cardViewList.forEach(cardView -> {
       cardView.setFrontFace(cardTheme.getFrontFace(cardView.getShortID()));
       cardView.setBackFace(cardTheme.getBackFace());
+      /*TODO:  solve update issue for theme files */
+      
     });
   }
 

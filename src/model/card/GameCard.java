@@ -69,7 +69,7 @@ public class GameCard extends Card {
         rankChar = "9";
         break;
       case Ten:
-        rankChar = "X";
+        rankChar = "10";
         break;
       case Jack:
         rankChar = "J";
