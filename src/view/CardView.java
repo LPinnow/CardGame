@@ -1,6 +1,7 @@
 package view;
 
 import model.card.Card;
+import model.card.GameCard;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -180,6 +181,10 @@ public class CardView extends ImageView {
   public void setToFaceDown() {
     faceDown = true;
     setImage(backFace);
+  }
+  
+  public Card asGameCard() {
+	  return new GameCard(getShortID());
   }
 
 }

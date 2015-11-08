@@ -16,6 +16,15 @@ public class GameCard extends Card {
   public GameCard(boolean faceDown, GameCardSuit suit, GameCardRank rank) {
     super(faceDown, suit, rank);
   }
+  
+  /***
+   * Constructs a GameCard from the short ID used by the CardView
+   * @param shortID
+   */
+  
+  public GameCard(String shortID) {
+	  super(shortID);
+  }
 
   /**
    * Builds a short {@link String} identifier. This should be only called once,
@@ -60,7 +69,7 @@ public class GameCard extends Card {
         rankChar = "9";
         break;
       case Ten:
-        rankChar = "10";
+        rankChar = "X";
         break;
       case Jack:
         rankChar = "J";

@@ -103,13 +103,13 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	}
 
 	@Override
-	public MoveResult requestHandToTableCardSwap(Player playerRequesting, Card handCard, Card tableCard) {
+	public MoveResult requestHandToTableCardSwap(int playerRequesting, Card handCard, Card tableCard) {
 		
 		if (state.CurrentGamePhase != IdiotGameState.GamePhases.CardSwapping) {
 			return new MoveResult() {{ success = false; message = "Swapping table cards is not valid in this state of the game."; }};
 		}
 
-		TableSwapValidationResult validationResult = tableSwapValidator.isValidSwap(playerRequesting.getNum(), handCard, tableCard);
+		TableSwapValidationResult validationResult = tableSwapValidator.isValidSwap(playerRequesting, handCard, tableCard);
 		
 		if (validationResult.Success) {
 			
@@ -126,9 +126,9 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		}
 	}
 
-	private synchronized void updateStateForTableSwap(Player playerRequesting, Card handCard, Card tableCard, int targetTableStack) {
+	private synchronized void updateStateForTableSwap(int playerRequesting, Card handCard, Card tableCard, int targetTableStack) {
 		
-		int playerPlaceIndex = playerRequesting.getNum()-1;
+		int playerPlaceIndex = playerRequesting - 1;
 		
 		state.PlayerPlaces.get(playerPlaceIndex).hand.remove(handCard);
 		

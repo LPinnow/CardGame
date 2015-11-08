@@ -43,7 +43,7 @@ public class IdiotGameEngineTests {
 		classUnderTest.initializeNewGame(numberOfPlayers, new MockRuleConfigurationLoader());
 		classUnderTest.beginPlay();
 		
-		MoveResult result = classUnderTest.requestHandToTableCardSwap(new Player(1, "Gary", false, false), null, null);
+		MoveResult result = classUnderTest.requestHandToTableCardSwap(1, null, null);
 		
 		assertFalse(result.success);
 		assertEquals("Swapping table cards is not valid in this state of the game.", result.message);
@@ -60,7 +60,7 @@ public class IdiotGameEngineTests {
 		IdiotGameEngine classUnderTest = new IdiotGameEngine(new MockTableSwapValidator(validatorResultToReturn), new MockMoveValidator(), new MockGameEndedChecker(), new MockMoveExecutor());
 		classUnderTest.initializeNewGame(numberOfPlayers, new MockRuleConfigurationLoader());
 		
-		MoveResult result = classUnderTest.requestHandToTableCardSwap(new Player(1, "Gary", false, false), null, null);
+		MoveResult result = classUnderTest.requestHandToTableCardSwap(1, null, null);
 		
 		assertFalse(result.success);
 		assertEquals(validatorErrorMessage, result.message);
@@ -80,7 +80,7 @@ public class IdiotGameEngineTests {
 		Card validTableSwapCardForPlayer1 = classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getTableCards1().getTopCard();
 		Card validHandCardForPlayer1 = classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getHand().getCards().get(0);
 		
-		MoveResult result = classUnderTest.requestHandToTableCardSwap(new Player(1, "Gary", false, false), validHandCardForPlayer1, validTableSwapCardForPlayer1);
+		MoveResult result = classUnderTest.requestHandToTableCardSwap(1, validHandCardForPlayer1, validTableSwapCardForPlayer1);
 		
 		assertTrue(result.success);
 		assertEquals(validHandCardForPlayer1, classUnderTest.getCurrentGameState().getPlayerPlaces().get(0).getTableCards1().getTopCard());

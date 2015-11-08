@@ -80,12 +80,12 @@ public class RuleConfigurationLoader implements IRuleConfigurationLoader {
 		case "7" : return GameCardRank.Seven;
 		case "8" : return GameCardRank.Eight;
 		case "9" : return GameCardRank.Nine;
-		case "10" : return GameCardRank.Ten;
+		case "X" : return GameCardRank.Ten;
+		case "10": return GameCardRank.Ten;
 		case "J" : return GameCardRank.Jack;
 		case "Q" : return GameCardRank.Queen;
 		case "K" : return GameCardRank.King;
+		default: throw new IllegalStateException("Unrecognized game card rank read from config file: " + cardRank);
 		}
-		
-		return null;
 	}
 }

@@ -24,7 +24,7 @@ public interface IIdiotGameEngine {
 	 * Before play begins, called to request a swap of a hand card with a table card
 	 */
 	
-	MoveResult requestHandToTableCardSwap(Player playerRequesting, Card handCard, Card tableCard);
+	MoveResult requestHandToTableCardSwap(int playerRequesting, Card handCard, Card tableCard);
 	
 	/**
 	 * Invoked by the UI when both players have finished swapping hand cards with table cards and are

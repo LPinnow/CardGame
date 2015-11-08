@@ -5,10 +5,7 @@ package model.card;
  * Standard French playing card ranks.
  */
 public enum GameCardRank {
-  /**
-   * Symbol "A" on the cards.
-   */
-  Ace,
+  
   /**
    * Symbol "2" on the cards.
    */
@@ -56,5 +53,9 @@ public enum GameCardRank {
   /**
    * Symbol "K" on the cards.
    */
-  King
+  King, 
+  /**
+   * Symbol "A" on the cards.
+   */
+  Ace,
 }

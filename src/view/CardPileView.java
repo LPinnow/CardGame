@@ -230,13 +230,20 @@ public class CardPileView extends Pane implements Iterable<CardView> {
     cardsToMove.clear();
   }
 
+  public void clearContents() {
+	  cards.removeAll();
+  }
+  
   /**
    * Moves a single card to another pile.
    *
    * @param cardToMove The card to move to the destination pile.
    * @param destPile   The destination pile.
    */
+  
   public void moveCardViewToPile(CardView cardToMove, CardPileView destPile) {
+	  //TODO: this should request a move or card swap of the game engine, then refresh and re-render the collections
+	  //      if successful. Otherwise it should display the error message received from the game engine.
     destPile.addCardView(cardToMove);
     cards.remove(cardToMove);
   }
@@ -272,10 +279,10 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 	  cards.remove(cardToRemove);
   }
   
-  public void addCardViewToPile(CardView cardToAdd, CardPileView destPile) {
+/*  public void addCardViewToPile(CardView cardToAdd, CardPileView destPile) {
 	cards.add(cardToAdd);
 	cardToAdd.setContainingPile(destPile);
-  }
+  }*/
   
   /**
    * Returns an iterator for iterating through the cards.

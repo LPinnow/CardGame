@@ -422,7 +422,7 @@ public class GameBoard extends Pane {
 			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
 	        getChildren().add(foundationPileView_1.getTopCardView());
 	        cardViewList.add(foundationPileView_1.getTopCardView());
-	        foundationPileView_1.getTopCardView().setMouseTransparent(true);
+	        //foundationPileView_1.getTopCardView().setMouseTransparent(true);
 			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
 		}
 		else {
@@ -437,7 +437,7 @@ public class GameBoard extends Pane {
 			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
 	        getChildren().add(foundationPileView_2.getTopCardView());
 	        cardViewList.add(foundationPileView_2.getTopCardView());
-	        foundationPileView_2.getTopCardView().setMouseTransparent(true);
+	        //foundationPileView_2.getTopCardView().setMouseTransparent(true);
 			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
 		}
 		else {
@@ -452,7 +452,7 @@ public class GameBoard extends Pane {
 			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
 	        getChildren().add(foundationPileView_3.getTopCardView());
 	        cardViewList.add(foundationPileView_3.getTopCardView());
-	        foundationPileView_3.getTopCardView().setMouseTransparent(true);
+	        //foundationPileView_3.getTopCardView().setMouseTransparent(true);
 			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
 		}
 		else {
@@ -462,6 +462,7 @@ public class GameBoard extends Pane {
 		//draw hand
 		Iterator<Card> deckIterator = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards().iterator();
 		deckIterator.forEachRemaining(card -> {
+			handPileView.clearContents();
 			handPileView.addCardView(CardViewFactory.createCardView(card));
 	        cardViewList.add(handPileView.getTopCardView());
 	        

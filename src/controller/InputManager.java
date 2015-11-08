@@ -7,6 +7,8 @@ import view.CardPileView;
 import view.CardView;
 import view.GameBoard;
 import model.IdiotGameState;
+import model.MoveResult;
+import controller.validators.TableSwapValidationResult;
 import model.card.Card;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -341,9 +343,14 @@ public class InputManager {
       if(isOverPile(cardView, pileView)){
     	  System.out.println("Dropped on pile: " + pileView.getShortID());
     	  
-    	  if(game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.CardSwapping)){
-    		  //TODO Validate if pile the card is dropped on is a valid move during the CardSwapping phase
-    	  } else if (game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.GamePlay)){
+    	  if(game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.CardSwapping))
+    	  {
+    		  MoveResult swapResult = game.requestHandToTableCardSwap(game.getCurrentGameState().CurrentPlayerTurn(), cardView.asGameCard(), pileView.getCards().get(pileView.getCards().size()-1).asGameCard());
+    		  if (swapResult.success) gameBoard.updateCurrentState(game.getCurrentGameState());
+    		  gameBoard.drawBothPlayerPlaces();
+    	  } 	
+    	  else if (game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.GamePlay))
+    	  {
     		//TODO Validate if pile the card is dropped on is a valid move during the GamePlay phase
     	  }
       }
@@ -378,6 +385,12 @@ public class InputManager {
 //	      }
 	      
 	      if(isOverPile(cardView, pileView)){
+	    	  if(game.getCurrentGameState().CurrentGamePhase().equals(IdiotGameState.GamePhases.CardSwapping))
+	    	  {
+		    	  MoveResult swapResult = game.requestHandToTableCardSwap(game.getCurrentGameState().CurrentPlayerTurn(), cardView.asGameCard(), pileView.getCards().get(pileView.getCards().size()-1).asGameCard());
+	    		  if (swapResult.success) gameBoard.updateCurrentState(game.getCurrentGameState());
+	    		  	gameBoard.drawBothPlayerPlaces();
+	    	  }
 	    	  System.out.println("Dropped on pile: " + pileView.getShortID());
 	      }
 	    

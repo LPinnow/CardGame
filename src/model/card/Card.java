@@ -39,6 +39,75 @@ public abstract class Card {
     this.rank = rank;
     this.id = buildId();
   }
+  
+  public Card(String shortID) { 
+	  
+	   if (shortID == null || shortID.length() != 2)
+		   throw new IllegalStateException("Invalid shortID passed to card constructor: " + shortID);
+	   
+	    switch (shortID.charAt(0)) {
+	      case 'A':
+	    	rank = GameCardRank.Ace;
+	        break;
+	      case '2':
+	    	rank = GameCardRank.Two;
+	        break;
+	      case '3':
+	    	rank = GameCardRank.Three;
+	        break;
+	      case '4':
+	    	rank = GameCardRank.Four;
+	        break;
+	      case '5':
+	    	rank = GameCardRank.Five;
+	        break;
+	      case '6':
+	    	rank = GameCardRank.Six;
+	        break;
+	      case '7':
+	    	rank = GameCardRank.Seven;
+	        break;
+	      case '8':
+	    	rank = GameCardRank.Eight;
+	        break;
+	      case '9':
+	    	rank = GameCardRank.Nine;
+	        break;
+	      case 'X':
+	    	rank = GameCardRank.Ten;
+	        break;
+	      case 'J':
+	    	rank = GameCardRank.Jack;
+	        break;
+	      case 'Q':
+	    	rank = GameCardRank.Queen;
+	        break;
+	      case 'K':
+	    	rank = GameCardRank.King;
+	        break;
+	      default: 
+	        throw new IllegalStateException("Card shortID constructor passed unrecognized rank char: " + shortID.charAt(0));
+	    }
+
+	    switch (shortID.charAt(1)) {
+	      case 'C': 
+	        suit = GameCardSuit.Clubs;
+	        break;
+	      case 'D':
+	        suit = GameCardSuit.Diamonds;
+	        break;
+	      case 'H':
+	    	  suit = GameCardSuit.Hearts;
+	        break;
+	      case 'S':
+	    	  suit = GameCardSuit.Spades;
+	        break;
+	      default: 
+		    throw new IllegalStateException("Card shortID constructor passed unrecognized suit char: " + shortID.charAt(1));
+	    }
+	    
+	    this.id = shortID;
+  }
 
   /**
    * Returns a short identifier.

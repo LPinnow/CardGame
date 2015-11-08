@@ -54,7 +54,7 @@ public class PlayerZone {
 	 */
 	
 	public int getMatchingFaceUpTableCard(Card card) {
-		
+
 		if (tableCards1.size() > 0 && tableCards1.get(tableCards1.size()-1).equals(card)) return 1;
 		if (tableCards2.size() > 0 && tableCards2.get(tableCards2.size()-1).equals(card)) return 2;
 		if (tableCards3.size() > 0 && tableCards3.get(tableCards3.size()-1).equals(card)) return 3;
