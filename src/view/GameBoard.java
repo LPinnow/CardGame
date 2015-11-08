@@ -487,23 +487,23 @@ public class GameBoard extends Pane {
 	  public void setActivePlayer(int activePlayerNumber) {
 		  if(activePlayerNumber == 1){
 			  for(CardView cardView : getP1_HandPileView()){
-					mouseUtility.removeDraggable(cardView);
+					mouseUtility.makeDraggable(cardView);
 					cardView.setToFaceUp();
 				}
 				
 				for(CardView cardView : getP2_HandPileView()){
-					mouseUtility.makeDraggable(cardView);
+					mouseUtility.removeDraggable(cardView);
 					cardView.setToFaceDown();
 				}
 			  
 		  } else if (activePlayerNumber == 2){
 			  for(CardView cardView : getP2_HandPileView()){
-					mouseUtility.removeDraggable(cardView);
+					mouseUtility.makeDraggable(cardView);
 					cardView.setToFaceUp();
 				}
 				
 				for(CardView cardView : getP1_HandPileView()){
-					mouseUtility.makeDraggable(cardView);
+					mouseUtility.removeDraggable(cardView);
 					cardView.setToFaceDown();
 				}
 		  }

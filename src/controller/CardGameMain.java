@@ -141,6 +141,7 @@ public class CardGameMain extends Application {
 			
 			mouseUtility.makeClickable(gameBoard.getDrawCardsView().getTopCardView());
 			gameEngine.beginPlay();
+			gameBoard.setActivePlayer(gameEngine.getCurrentGameState().CurrentPlayerTurn());
 		}});
   }
   
