@@ -21,16 +21,6 @@ import javafx.stage.Stage;
 public class CardGameMain extends Application {
 
 	/**
-	 * Width of the main window.
-	 */
-	private static final double WIDTH = 1280;
-
-	/**
-	 * Height of the main window.
-	 */
-	private static final double HEIGHT = 800;
-
-	/**
 	 * Reference to a {@link IIdiotGameEngine} instance.
 	 */
 	IIdiotGameEngine gameEngine;
@@ -54,6 +44,8 @@ public class CardGameMain extends Application {
 	 * The current theme of the cards.
 	 */
 	public CardTheme cardTheme;
+	
+	public ConfigurationLoader configurationManager;
 
 	/**
 	 * Main function of the application.
@@ -74,15 +66,15 @@ public class CardGameMain extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) {
-
-		// Game area
-		gameBoard = new GameBoard(new ConfigurationLoader(
-				"/configurationfiles/idiotCards.json",
+		configurationManager = new ConfigurationLoader("/configurationfiles/idiotCards.json",
 				"/configurationfiles/idiotGameBoard.json",
 				"/configurationfiles/idiotPlayers.json",
-				"/configurationfiles/idiotRules.json",
-				"/configurationfiles/idiotTheme.json").loadGameBoardLayout(),
-				new Image("/tableaous/green-felt.png"));
+				"/configurationfiles/idiotRules.json","/configurationfiles/idiotTheme.json");
+		
+		configurationManager.loadTheme();
+		// Game area
+		gameBoard = new GameBoard(configurationManager.loadGameBoardLayout(),
+				new Image(configurationManager.getDefaultBackground()));
 
 		// Menu bar
 		GameMenu menuBar = new GameMenu(this);
@@ -96,11 +88,11 @@ public class CardGameMain extends Application {
 		bord.setTop(menuBar);
 		bord.setBottom(statusBar);
 
-		Scene scene = new Scene(bord, WIDTH, HEIGHT);
-		scene.getStylesheets().add("styles/main.css");
+		Scene scene = new Scene(bord, configurationManager.getLayoutWidth(), configurationManager.getLayoutHeight());
+		scene.getStylesheets().add(configurationManager.getStylesheet());
 
-		cardTheme = new CardTheme("/cardfaces/classic/theme.json",
-				"/backfaces/bb.png");
+		cardTheme = new CardTheme(configurationManager.getFrontFace(),
+				configurationManager.getBackFace());
 		CardViewFactory.setCardTheme(cardTheme);
 
 		EndGameChecker endGameChecker = new EndGameChecker();
@@ -111,8 +103,7 @@ public class CardGameMain extends Application {
 
 		mouseUtility = new InputManager(gameEngine, gameBoard);
 		gameBoard.setInputManager(mouseUtility);
-		gameEngine.initializeNewGame(2, new RuleConfigurationLoader(
-				"/configurationfiles/idiotRules.json"));
+		gameEngine.initializeNewGame(2, new RuleConfigurationLoader("/configurationfiles/idiotRules.json"));
 		gameBoard.updateCurrentState(gameEngine.getCurrentGameState());
 		gameBoard.drawDeck();
 		gameBoard.drawBothPlayerPlaces();

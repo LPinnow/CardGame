@@ -1,4 +1,6 @@
 {
+ "defaultWidth": 1280,
+ "defaultHeight": 800,
  "deck" : {
  			"initialX" : 500,
  			"initialY" : 275,

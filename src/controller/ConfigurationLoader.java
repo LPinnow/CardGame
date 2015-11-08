@@ -18,6 +18,8 @@ public class ConfigurationLoader implements IConfigurationLoader {
 
 	protected IdiotGameConfiguration gameRules = new IdiotGameConfiguration();
 	protected ArrayList<CardPileView> piles = new ArrayList<CardPileView>();
+	private int defaultWidth;
+	private int defaultHeight;
 
 	/**
 	 * Path to the Card Configuration json file.
@@ -31,6 +33,8 @@ public class ConfigurationLoader implements IConfigurationLoader {
 	private String ruleConfigFile;
 
 	private String themeConfigFile;
+	
+	private String stylesheet, backFace, frontFace, defaultBackground;
 
 	/**
 	 * Loads card rules from input file path
@@ -57,7 +61,7 @@ public class ConfigurationLoader implements IConfigurationLoader {
 
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
-					getClass().getResourceAsStream(cardConfigFile),
+					getClass().getResourceAsStream(ruleConfigFile),
 					Charset.forName("UTF-8")));
 
 			JsonObject jo = gson.fromJson(br, JsonObject.class);
@@ -99,7 +103,7 @@ public class ConfigurationLoader implements IConfigurationLoader {
 	@Override
 	public ArrayList<CardPileView> loadGameBoardLayout() {
 		Gson gson = new Gson();
-		
+
 		try {
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -108,17 +112,29 @@ public class ConfigurationLoader implements IConfigurationLoader {
 			JsonObject jo = gson.fromJson(br, JsonObject.class);
 
 			for (Map.Entry<String, JsonElement> elem : jo.entrySet()) {
+				
+				if(!elem.getValue().isJsonObject()) {
+					if (elem.getKey().equalsIgnoreCase("defaultWidth")) {
+						defaultWidth = elem.getValue().getAsInt();
+					} else if (elem.getKey().equalsIgnoreCase("defaultHeight")) {
+						defaultHeight = elem.getValue().getAsInt();
+					}					
+				} else {
 
-				CardPileView view = new CardPileView(
-						elem.getValue().getAsJsonObject().get("cardGapVertical").getAsDouble(), 
-						elem.getValue().getAsJsonObject().get("cardGapHorizontal").getAsDouble(), 
-						elem.getValue().getAsJsonObject().get("initialX").getAsDouble(), 
-						elem.getValue().getAsJsonObject().get("initialY").getAsDouble(),
-						elem.getValue().getAsJsonObject().get("id").getAsString());
-				piles.add(view);
-
+					CardPileView view = new CardPileView(
+							elem.getValue().getAsJsonObject()
+									.get("cardGapVertical").getAsDouble(),
+							elem.getValue().getAsJsonObject()
+									.get("cardGapHorizontal").getAsDouble(),
+							elem.getValue().getAsJsonObject().get("initialX")
+									.getAsDouble(),
+							elem.getValue().getAsJsonObject().get("initialY")
+									.getAsDouble(),
+							elem.getValue().getAsJsonObject().get("id")
+									.getAsString());
+					piles.add(view);
+				}
 			}
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,8 +151,33 @@ public class ConfigurationLoader implements IConfigurationLoader {
 
 	@Override
 	public boolean loadTheme() {
-		// TODO Auto-generated method stub
-		return false;
+		Gson gson = new Gson();
+
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					getClass().getResourceAsStream(themeConfigFile),
+					Charset.forName("UTF-8")));
+
+			JsonObject jo = gson.fromJson(br, JsonObject.class);
+
+			for (Map.Entry<String, JsonElement> elem : jo.entrySet()) {
+				if (elem.getKey().equalsIgnoreCase("stylesheet")) {
+					stylesheet = elem.getValue().getAsString();
+				} else if (elem.getKey().equalsIgnoreCase("backFace")) {
+					backFace = elem.getValue().getAsString();
+				} else if (elem.getKey().equalsIgnoreCase("frontFace")) {
+					frontFace = elem.getValue().getAsString();
+				} else if (elem.getKey().equalsIgnoreCase("defaultBackground")) {
+					defaultBackground = elem.getValue().getAsString();
+				} 
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+		
 	}
 
 	private GameCardRank parseCardRankString(String cardRank) {
@@ -173,5 +214,30 @@ public class ConfigurationLoader implements IConfigurationLoader {
 
 		return null;
 	}
+
+	public int getLayoutWidth() {
+		return defaultWidth;
+	}
+
+	public int getLayoutHeight() {
+		return defaultHeight;
+	}
+	
+	public String getStylesheet() {
+		return stylesheet;
+	}
+
+	public String getFrontFace() {
+		return frontFace;
+	}
+	
+	public String getBackFace() {
+		return backFace;
+	}
+	
+	public String getDefaultBackground() {
+		return defaultBackground;
+	}
+
 
 }

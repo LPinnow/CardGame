@@ -1,6 +1,7 @@
 {
- "stylesheet" : "main.css",
- "backFace" : "piatnik_luxury_1.png",
- "frontFace" : "piatnik_imperial"
+ "stylesheet" : "/stylesheets/idiotMain.css",
+ "backFace" : "/backfaces/piatnik_luxury_1.png",
+ "frontFace" : "/cardfaces/piatnik_luxury/theme.json",
+ "defaultBackground" : "/tableaous/green-felt.png"
 }
 
