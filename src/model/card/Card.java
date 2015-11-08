@@ -42,12 +42,12 @@ public abstract class Card {
   
   public Card(String shortID) { 
 	  
-	   if (shortID == null || shortID.length() != 2)
+	   if (shortID == null || (shortID.length() != 2 && shortID.length() != 3))
 		   throw new IllegalStateException("Invalid shortID passed to card constructor: " + shortID);
 	   
-	   shortID = shortID.replaceAll("10", "X");
+	   String twoCharShortID = shortID.replaceAll("10", "X");
 	   
-	    switch (shortID.charAt(0)) {
+	    switch (twoCharShortID.charAt(0)) {
 	      case 'A':
 	    	rank = GameCardRank.Ace;
 	        break;
@@ -91,7 +91,7 @@ public abstract class Card {
 	        throw new IllegalStateException("Card shortID constructor passed unrecognized rank char: " + shortID.charAt(0));
 	    }
 
-	    switch (shortID.charAt(1)) {
+	    switch (twoCharShortID.charAt(1)) {
 	      case 'C': 
 	        suit = GameCardSuit.Clubs;
 	        break;
