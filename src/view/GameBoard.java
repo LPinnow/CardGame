@@ -25,6 +25,9 @@ import model.card.TopCardUpStack;
 
 /**
  * This class represents the area where the game is taking place.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class GameBoard extends Pane {
 

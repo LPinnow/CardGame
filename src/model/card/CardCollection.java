@@ -8,6 +8,9 @@ import java.util.function.Consumer;
 
 /**
  * Class representing a pile of cards.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class CardCollection implements Iterable<Card> {
 

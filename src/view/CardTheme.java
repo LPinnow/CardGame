@@ -13,6 +13,9 @@ import java.util.Map;
 
 /**
  * Class representing a card theme.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class CardTheme {
 

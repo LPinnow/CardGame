@@ -25,6 +25,9 @@ import controller.IIdiotGameEngine;
 
 /**
  * This class serves as the controller for the application.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class InputManager {
 

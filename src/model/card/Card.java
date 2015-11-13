@@ -3,6 +3,9 @@ package model.card;
 
 /**
  * Abstract class representing the concept of a playing card.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public abstract class Card {
 

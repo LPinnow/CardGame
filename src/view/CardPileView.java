@@ -11,6 +11,9 @@ import java.util.function.Consumer;
 
 /**
  * Visual representation of a pile of cards.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class CardPileView extends Pane implements Iterable<CardView> {
 

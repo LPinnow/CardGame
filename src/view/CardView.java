@@ -10,6 +10,9 @@ import javafx.scene.paint.Color;
 /**
  * This abstract class provides a base for classes that implements various
  * JavaFX based views for {@link Card} objects.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class CardView extends ImageView {
 

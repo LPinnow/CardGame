@@ -4,6 +4,9 @@ import model.card.Card;
 
 /**
  * Factory class for creating {@link CardView} objects.
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class CardViewFactory {
 

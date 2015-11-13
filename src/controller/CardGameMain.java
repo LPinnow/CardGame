@@ -17,6 +17,18 @@ import javafx.stage.Stage;
 
 /**
  * This class serves as the entry point of the application.
+ *
+ * @author Leah Pinnow, David Nordahl, Bryant Weaver, Divya Chepuri
+ * @since October 2015
+ * 
+ * References:
+ * Design and functionality of the Idiot Card Game are based on 
+ * the following website:
+ * cardgames.io/idiot
+ * 
+ * This class has code based upon the following project:
+ * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
+ * 
  */
 public class CardGameMain extends Application {
 
