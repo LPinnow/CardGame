@@ -20,14 +20,16 @@ import javafx.util.Duration;
 import model.IdiotGameState;
 import model.card.Card;
 import model.move.MoveResult;
+import model.move.PlayTopOfDeck;
 import controller.CardGame;
 import controller.IIdiotGameEngine;
 
 /**
  * This class serves as the controller for the application.
  * 
- * This class has code based upon the following project:
- * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
+ * This class has code based upon the following project: Zoltan Dalmadi,
+ * "JCardGamesFX", 2015, GitHub repository,
+ * github.com/ZoltanDalmadi/JCardGamesFX.
  */
 public class InputManager {
 
@@ -72,18 +74,19 @@ public class InputManager {
 		Card card = game.getCurrentGameState().GetFullDeck()
 				.getById(cardView.getShortID());
 
-		// game.drawFromStock(card);
-
-		// TODO: The mouse click listener should not be moving the cards to the
-		// pile directly.. It should be submitting
-		// the move to the controller and redrawing the updated the state from
-		// the controller if the move is successful.
-
-		gameBoard.getDeckView().moveCardViewToPile(cardView,
-				gameBoard.getWasteView());
-		cardView.setToFaceUp();
-		cardView.setMouseTransparent(false);
-		makeDraggable(cardView);
+		MoveResult playDeckResult = game.submitMove(game.getCurrentGameState()
+				.CurrentPlayerTurn(), new PlayTopOfDeck(card.getId(), game
+				.getCurrentGameState().GetPile().toString()));
+		if (playDeckResult.success) {
+			gameBoard.setMessageLabelText("");
+			gameBoard.getDeckView().moveCardViewToPile(cardView,
+					gameBoard.getWasteView());
+			cardView.setToFaceUp();
+			cardView.setMouseTransparent(false);
+			makeDraggable(cardView);
+		} else {
+			gameBoard.setMessageLabelText("Invalid PlayTopOfDeck Move");
+		}
 	};
 
 	/**
@@ -164,12 +167,6 @@ public class InputManager {
 		draggedCardView.toFront();
 		draggedCardView.setTranslateX(offsetX);
 		draggedCardView.setTranslateY(offsetY);
-
-		// Bring them to front & apply difference vector to dragged cards
-		/*
-		 * draggedCardView.forEach(cw -> { cw.toFront();
-		 * cw.setTranslateX(offsetX); cw.setTranslateY(offsetY); });
-		 */
 	};
 
 	/**
@@ -178,9 +175,10 @@ public class InputManager {
 	 */
 	EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
 		// if no cards are dragged, return immediately
-		if (draggedCard == null && draggedCardView == null)
+		if (draggedCard == null && draggedCardView == null) {
 			return;
-
+		}
+		
 		// Get the actual card
 		/** get current card view. */
 		CardView cardView = (CardView) e.getSource();
@@ -193,11 +191,11 @@ public class InputManager {
 		CardPileView activePileView = cardView.getContainingPile();
 		/** get current pile. */
 		List<Card> activePile = game.getPileById(activePileView.getShortID());
-		
-		for(Card c : activePile){
-	    	if(c.getId().equals(cardView.getShortID()))
-	    		card = c;
-	    }
+
+		for (Card c : activePile) {
+			if (c.getId().equals(cardView.getShortID()))
+				card = c;
+		}
 
 		System.out.println("CardView ID: " + cardView.getShortID()
 				+ " in pile: " + activePileView.getShortID());
@@ -299,36 +297,40 @@ public class InputManager {
 	private boolean checkAllPiles(
 			Card card, CardView cardView, List<Card> activePile,
 			CardPileView activePileView) {
+		System.out.println("Drag X: " + draggedCardView.getX());
+		System.out.println("Drag Y: " + draggedCardView.getY());
+		if(checkPile(card, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) return true;;
+		
 
-		// check player 1 table piles
-		if (checkPiles(card, cardView, activePile,
-				activePileView, gameBoard.getFoundationPileViews(1)))
-			return true;
-
-		// check player 1 hand pile
-		if (checkPile(card, cardView, activePile,
-				activePileView, gameBoard.getPlayerHandView(1)))
-			return true;
-
-		// check player 2 table piles
-		if (checkPiles(card, cardView, activePile,
-				activePileView, gameBoard.getFoundationPileViews(2)))
-			return true;
-
-		// check player 2 hand pile
-		if (checkPile(card, cardView, activePile,
-				activePileView, gameBoard.getPlayerHandView(2)))
-			return true;
-
-		// check draw pile
-		if (checkPile(card, cardView, activePile,
-				activePileView, gameBoard.getDeckView()))
-			return true;
-
-		// check pile
-		if (checkPile(card, cardView, activePile,
-				activePileView, gameBoard.getWasteView()))
-			return true;
+//		// check player 1 table piles
+//		if (checkPiles(card, cardView, activePile,
+//				activePileView, gameBoard.getFoundationPileViews(1)))
+//			return true;
+//
+//		// check player 1 hand pile
+//		if (checkPile(card, cardView, activePile,
+//				activePileView, gameBoard.getPlayerHandView(1)))
+//			return true;
+//
+//		// check player 2 table piles
+//		if (checkPiles(card, cardView, activePile,
+//				activePileView, gameBoard.getFoundationPileViews(2)))
+//			return true;
+//
+//		// check player 2 hand pile
+//		if (checkPile(card, cardView, activePile,
+//				activePileView, gameBoard.getPlayerHandView(2)))
+//			return true;
+//
+//		// check draw pile
+//		if (checkPile(card, cardView, activePile,
+//				activePileView, gameBoard.getDeckView()))
+//			return true;
+//
+//		// check pile
+//		if (checkPile(card, cardView, activePile,
+//				activePileView, gameBoard.getWasteView()))
+//			return true;
 
 		return false;
 
@@ -349,10 +351,6 @@ public class InputManager {
 	 *            The list of piles to check.
 	 * @return true if intersects with any pile, false otherwise.
 	 */
-
-	// TODO: Not sure why there's to almost identical variations of the
-	// checkPiles.. Need to be merged into one.
-	
 	private boolean checkPiles(
 			Card card, CardView cardView, List<Card> activePile,
 			CardPileView activePileView, List<CardPileView> pileViews) {
@@ -360,7 +358,8 @@ public class InputManager {
 		boolean result = false;
 
 		for (CardPileView pileView : pileViews) {
-			result = checkPile(card, cardView, activePile, activePileView, pileView);
+			result = checkPile(card, cardView, activePile, activePileView,
+					pileView);
 		}
 
 		return result;
@@ -389,7 +388,7 @@ public class InputManager {
 		if (isOverPile(cardView, pileView)) {
 			System.out.println("Dropped on pile: " + pileView.getShortID());
 			result = true;
-			
+
 			if (game.getCurrentGameState().CurrentGamePhase()
 					.equals(IdiotGameState.GamePhases.CardSwapping))
 			{
@@ -400,21 +399,26 @@ public class InputManager {
 								.asGameCard());
 				if (swapResult.success) {
 					gameBoard.updateCurrentState(game.getCurrentGameState());
-					//gameBoard.drawPlayerPlace(game.getCurrentGameState()
-					//		.CurrentPlayerTurn());
-					
-					//Added in functionality to fix the UI. Might want to move it to drawPlayerPlace?
-					//TODO Might want to look at changing the order of the cards in the hand
-					//     to match the UI views. Moving the middle card adds the card view to
-					//		to the same spot but adds it at the end of the arraylist of hand cards.
+					// gameBoard.drawPlayerPlace(game.getCurrentGameState()
+					// .CurrentPlayerTurn());
+
+					// Added in functionality to fix the UI. Might want to move
+					// it to drawPlayerPlace?
+					// TODO Might want to look at changing the order of the
+					// cards in the hand
+					// to match the UI views. Moving the middle card adds the
+					// card view to
+					// to the same spot but adds it at the end of the arraylist
+					// of hand cards.
 					CardView tablePileTopCardView = pileView.getTopCardView();
-		    		
-					slideToPile(cardView, activePileView, pileView);
-	    			slideToHand(tablePileTopCardView, pileView, activePileView,
-	    				  draggedCardView.getLayoutX(), draggedCardView.getLayoutY(), draggedCardViewIndex);
-	    			makeDraggable(tablePileTopCardView);
-	    			removeDraggable(cardView);
-	    			
+
+					slideToPile(cardView, activePileView, pileView, true);
+					slideToHand(tablePileTopCardView, pileView, activePileView,
+							draggedCardView.getLayoutX(),
+							draggedCardView.getLayoutY(), draggedCardViewIndex, false);
+					makeDraggable(tablePileTopCardView);
+					removeDraggable(cardView);
+
 					gameBoard.setMessageLabelText("");
 					result = true;
 
@@ -485,11 +489,9 @@ public class InputManager {
 	 *            The destination pile.
 	 */
 	private void slideToPile(CardView cardToSlide, CardPileView sourcePile,
-			CardPileView destPile) {
+			CardPileView destPile, boolean replaceAtIndex) {
 		if (cardToSlide == null)
 			return;
-
-		double destCardGap = destPile.getCardGapVertical();
 
 		double targetX;
 		double targetY;
@@ -532,11 +534,9 @@ public class InputManager {
 	 *            The destination pile.
 	 */
 	private void slideToHand(CardView cardToSlide, CardPileView sourcePile,
-			CardPileView destPile, double x, double y, int index) {
+			CardPileView destPile, double x, double y, int index, boolean replaceAtIndex) {
 		if (cardToSlide == null)
 			return;
-
-		double destHorizontalCardGap = destPile.getcardGapHorizontal();
 
 		double sourceX = cardToSlide.getLayoutX() + cardToSlide.getTranslateX();
 		double sourceY = cardToSlide.getLayoutY() + cardToSlide.getTranslateY();
@@ -547,7 +547,7 @@ public class InputManager {
 		animateCardMovement(cardToSlide, sourceX, sourceY,
 				targetX, targetY, Duration.millis(150), e -> {
 					sourcePile.replaceCardViewOnPile(cardToSlide, destPile,
-							targetX, targetY, index);
+							targetX, targetY, index, replaceAtIndex);
 					cardToSlide.getDropShadow().setRadius(2);
 					cardToSlide.getDropShadow().setOffsetX(0);
 					cardToSlide.getDropShadow().setOffsetY(0);

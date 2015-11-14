@@ -74,7 +74,7 @@ public class GameBoard extends Pane {
    */
   private Button p2_ready;
   
-  
+  private List<CardPileView> allPileViews;
   
   private InputManager mouseUtility;
   
@@ -100,6 +100,8 @@ public class GameBoard extends Pane {
     
     this.messageLabel = new Label("");
     this.messageLabel.setTextFill(Color.RED);
+    
+    allPileViews = new ArrayList<CardPileView>();
 	
 	initGameArea(piles);
   }
@@ -140,6 +142,8 @@ public class GameBoard extends Pane {
 				this.wasteView = pileView;
 				buildPile(wasteView);
 			}
+			
+			allPileViews.add(pileView);
 		}
 	  
 	    placeReadyButton(p1_ready, 1000, 625);
@@ -149,7 +153,7 @@ public class GameBoard extends Pane {
 		placeLabel(messageLabel, 50, 500, 14);
   }
   
-  private void buildPile(CardPileView cardView) {
+  private void buildPile(CardPileView cardPileView) {
 	  BackgroundFill backgroundFill = new BackgroundFill(
 		        Color.gray(0.0, 0.2), null, null);
 
@@ -157,12 +161,12 @@ public class GameBoard extends Pane {
 
 		    GaussianBlur gaussianBlur = new GaussianBlur(10);
 
-		    cardView.setPrefSize(130, 180);
-		    cardView.setBackground(background);
-		    cardView.setLayoutX(cardView.getInitialX());
-		    cardView.setLayoutY(cardView.getInitialY());
-		    cardView.setEffect(gaussianBlur);
-		    getChildren().add(cardView);
+		    cardPileView.setPrefSize(130, 180);
+		    cardPileView.setBackground(background);
+		    cardPileView.setLayoutX(cardPileView.getInitialX());
+		    cardPileView.setLayoutY(cardPileView.getInitialY());
+		    cardPileView.setEffect(gaussianBlur);
+		    getChildren().add(cardPileView);	    
   }
   
   private void placeLabel(Label label, int x, int y, int fontSize){
@@ -239,6 +243,37 @@ public class GameBoard extends Pane {
       /*TODO:  solve update issue for theme files */
       
     });
+  }
+  
+  public CardPileView getNearestPile(CardView cardView) {
+	  double cardWidth = cardView.getFitWidth();
+	  double cardHeight = cardView.getFitHeight();
+	  
+	  double viewX = cardView.getLayoutX() + cardView.getTranslateX() + (cardWidth/2);
+	  double viewY = cardView.getLayoutY() + cardView.getTranslateY() + (cardHeight/2);
+	  double diffX, diffY;
+	  double distance = 0, prevDistance = 0;
+	  int closestPileByIndex = 0;	  
+	  
+	  for(int i = 0; i < allPileViews.size(); i++) {
+		  
+		  CardPileView currentPile = allPileViews.get(i);
+		  double cardPileWidth = (currentPile.getCards().size() * cardWidth) + (currentPile.getCards().size()-2 * currentPile.getCardGapHorizontal());
+		  double cardPileHeight = (currentPile.getCards().size() * cardHeight) + (currentPile.getCards().size()-2 * currentPile.getCardGapVertical());
+		  
+		  diffX = viewX - (currentPile.getLayoutX() + cardPileWidth/2);
+		  diffY = viewY - (currentPile.getLayoutY() + cardPileHeight/2);
+		  
+		  distance = Math.hypot(diffX, diffY);
+		  if(i == 0 || distance < prevDistance ) {
+			  System.out.println(allPileViews.get(i).getShortID());
+			  prevDistance = distance;
+			  closestPileByIndex = i;
+			  System.out.println(distance);
+		  }
+	  }
+	  System.out.println("Returning: " + allPileViews.get(closestPileByIndex).getShortID());
+	  return allPileViews.get(closestPileByIndex);
   }
 
   public Button getP1_ReadyButton(){
@@ -340,10 +375,8 @@ public class GameBoard extends Pane {
 			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
 		}
 
-		//draw hand
-		
 		handPileView.clearContents();
-		
+				
 		Iterator<Card> deckIterator = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards().iterator();
 		deckIterator.forEachRemaining(card -> {
 			handPileView.addCardView(CardViewFactory.createCardView(card));
@@ -359,6 +392,17 @@ public class GameBoard extends Pane {
 
 	        getChildren().add(handPileView.getTopCardView());
 		});
+		
+		System.out.println(handPileView.getCards().size());
+	}
+	
+	private void removePileFromGameBoard(CardPileView cardPile) {
+		if(!cardPile.isEmpty() && cardPile != null) {
+			for(CardView cardView : cardPile.getCards()) {
+				getChildren().remove(cardView.getBackFace());
+				getChildren().remove(cardView.getFrontFace());
+			}
+		}
 	}
 	
 	  /**

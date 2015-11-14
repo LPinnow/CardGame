@@ -48,7 +48,7 @@ public interface IIdiotGameEngine {
 	 * @return the result of the move request
 	 */
 	
-	MoveResult submitMove(Player playerRequesting, Move move);
+	MoveResult submitMove(int playerReuqesting, Move move);
 	
 	List<Card> getPileById(String shortID);
 }

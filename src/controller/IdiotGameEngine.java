@@ -151,13 +151,13 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 	}
 
 	@Override
-	public MoveResult submitMove(Player playerRequesting, Move move) {
+	public MoveResult submitMove(int playerRequesting, Move move) {
 		
 		if (state.CurrentGamePhase != IdiotGameState.GamePhases.GamePlay) {
 			return new MoveResult() {{ success = false; message = "Game play has not yet started"; }};
 		}
 		
-		if (state.currentPlayerTurn != playerRequesting.getNum()) {
+		if (state.currentPlayerTurn != playerRequesting) {
 			return new MoveResult() {{ success = false; message = "It is not the turn of the player requesting move"; }};
 		}
 		

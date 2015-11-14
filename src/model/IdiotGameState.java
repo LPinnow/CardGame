@@ -46,6 +46,8 @@ public class IdiotGameState {
 	public String idDrawCards;
 	public String idPile;
 	
+	
+	
 	/**
 	 * The collections of cards settings for each player
 	 */
