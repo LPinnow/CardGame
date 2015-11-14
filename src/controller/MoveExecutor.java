@@ -29,6 +29,7 @@ public class MoveExecutor implements IMoveExecutor {
 		boolean deckIsEmpty = state.drawCards.size() == 0;
 		boolean wasteIsEmpty = state.pile.size() == 0;
 
+
 		if (move instanceof TakePileMove && !wasteIsEmpty) {
 			state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand
 					.addAll(state.pile);
@@ -36,7 +37,6 @@ public class MoveExecutor implements IMoveExecutor {
 		}
 
 		if (move instanceof PlayTopOfDeck && !deckIsEmpty) {
-
 			Card cardFromTopOfDeck = state.drawCards
 					.get(state.drawCards.size() - 1);
 			if (wasteIsEmpty) {
@@ -45,7 +45,6 @@ public class MoveExecutor implements IMoveExecutor {
 			} else {
 				GameCardRank topPileCardRank = state.pile
 						.get(state.pile.size() - 1).getRank();
-
 				if (cardCanBePlayedOnPile(cardFromTopOfDeck.getRank(),
 						topPileCardRank)) {
 					state.pile.add(cardFromTopOfDeck);
@@ -67,11 +66,12 @@ public class MoveExecutor implements IMoveExecutor {
 		if (move instanceof PlayOneCardMove) {
 			PlayOneCardMove cardPlay = (PlayOneCardMove) move;
 
-			if (!cardCanBePlayedOnPile(cardPlay.card.getRank(),
-					state.pile.get(state.pile.size() - 1).getRank()))
-				throw new IllegalStateException(
-						"Validator should have prevented an invalid pile card play from occurring.");
-
+			if (!wasteIsEmpty) {
+				if (!cardCanBePlayedOnPile(cardPlay.card.getRank(),
+						state.pile.get(state.pile.size() - 1).getRank()))
+					throw new IllegalStateException(
+							"Validator should have prevented an invalid pile card play from occurring.");
+			}
 			state.pile.add(cardPlay.card); // (move should be validated by move
 											// validator before this point)
 			if (state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand

@@ -321,6 +321,7 @@ public class GameBoard extends Pane {
 	      getDeckView().addCardView(CardViewFactory.createCardView(card));
 	      cardViewList.add(getDeckView().getTopCardView());
 	      getChildren().add(getDeckView().getTopCardView());
+	      mouseUtility.makeClickable(getDeckView().getTopCardView());
 	    });
 	    deckView.getTopCardView().setMouseTransparent(false);
   }
