@@ -245,6 +245,15 @@ public class GameBoard extends Pane {
     });
   }
   
+  private CardView getCardViewById(String id) {
+	  for(CardView cardView: cardViewList) {
+		  if(cardView.getShortID() == id) {
+			  return cardView;
+		  }
+	  }
+	  return null;
+  }
+  
   public CardPileView getNearestPile(CardView cardView) {
 	  double cardWidth = cardView.getFitWidth();
 	  double cardHeight = cardView.getFitHeight();
@@ -256,8 +265,12 @@ public class GameBoard extends Pane {
 	  int closestPileByIndex = 0;	  
 	  
 	  for(int i = 0; i < allPileViews.size(); i++) {
-		  
 		  CardPileView currentPile = allPileViews.get(i);
+		  
+		  //Don't check pile against itself
+		  if(currentPile == cardView.getContainingPile()) {
+			  continue;
+		  }
 		  double cardPileWidth = (currentPile.getCards().size() * cardWidth) + (currentPile.getCards().size()-2 * currentPile.getCardGapHorizontal());
 		  double cardPileHeight = (currentPile.getCards().size() * cardHeight) + (currentPile.getCards().size()-2 * currentPile.getCardGapVertical());
 		  
@@ -265,14 +278,11 @@ public class GameBoard extends Pane {
 		  diffY = viewY - (currentPile.getLayoutY() + cardPileHeight/2);
 		  
 		  distance = Math.hypot(diffX, diffY);
-		  if(i == 0 || distance < prevDistance ) {
-			  System.out.println(allPileViews.get(i).getShortID());
+		  if(i == 0 || distance < prevDistance) {
 			  prevDistance = distance;
 			  closestPileByIndex = i;
-			  System.out.println(distance);
 		  }
 	  }
-	  System.out.println("Returning: " + allPileViews.get(closestPileByIndex).getShortID());
 	  return allPileViews.get(closestPileByIndex);
   }
 
@@ -329,7 +339,81 @@ public class GameBoard extends Pane {
 		CardPileView foundationPileView_2;
 		CardPileView foundationPileView_3;
 		CardPileView handPileView;
+
+		if(playerNumber == 1){
+			foundationPileView_1 = foundationPiles.get(1).get(0);
+			foundationPileView_2 =  foundationPiles.get(1).get(1);
+			foundationPileView_3 =  foundationPiles.get(1).get(2);
+			handPileView = playerHands.get(1).get(0);
+		} else {
+			foundationPileView_1 = foundationPiles.get(2).get(0);
+			foundationPileView_2 = foundationPiles.get(2).get(1);
+			foundationPileView_3 = foundationPiles.get(2).get(2);
+			handPileView = playerHands.get(2).get(0);
+		}
 		
+		//draw card pile 1
+
+		TopCardUpStack tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards1();
+		System.out.println(tableCards1.getTopCard().toString());
+		if (tableCards1.getTopCard() != null) {
+			foundationPileView_1.clearContents();
+			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
+	        getChildren().add(foundationPileView_1.getTopCardView());
+	        mouseUtility.slideFromDeck(foundationPileView_1.getTopCardView(), 300);
+			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
+		}
+			
+		//draw card pile 2
+		
+	    TopCardUpStack tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards2();
+	    System.out.println(tableCards2.getTopCard().toString());
+		if (tableCards2.getTopCard() != null) {
+			foundationPileView_2.clearContents();
+			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
+	        getChildren().add(foundationPileView_2.getTopCardView());
+	        mouseUtility.slideFromDeck(foundationPileView_2.getTopCardView(), 600);
+			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
+		}
+		
+		//draw card pile 3
+		
+	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
+	    System.out.println(tableCards3.getTopCard().toString());
+		if (tableCards3.getTopCard() != null) {
+			foundationPileView_3.clearContents();
+			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
+	        getChildren().add(foundationPileView_3.getTopCardView());
+	        mouseUtility.slideFromDeck(foundationPileView_3.getTopCardView(), 900);
+			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
+		}
+		
+		
+
+		
+		handPileView.clearContents();
+		
+		int dealDelay = 1200;
+		List<Card> hand = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards();
+
+		for (int i = 0; i < hand.size(); i++) {
+			handPileView.addCardView(CardViewFactory.createCardView(hand.get(i)));
+			mouseUtility.makeClickable(handPileView.getTopCardView());
+        	mouseUtility.makeDraggable(handPileView.getTopCardView());
+			
+			getChildren().add(handPileView.getTopCardView());
+	        mouseUtility.slideFromDeck(handPileView.getTopCardView(), dealDelay);
+			dealDelay += 300;
+		}
+		
+	}
+	
+	public void updatePlayerPlace(int playerNumber) {
+		CardPileView foundationPileView_1;
+		CardPileView foundationPileView_2;
+		CardPileView foundationPileView_3;
+		CardPileView handPileView;
+
 		if(playerNumber == 1){
 			foundationPileView_1 = foundationPiles.get(1).get(0);
 			foundationPileView_2 =  foundationPiles.get(1).get(1);
@@ -374,35 +458,38 @@ public class GameBoard extends Pane {
 	        getChildren().add(foundationPileView_3.getTopCardView());
 			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
 		}
-
-		handPileView.clearContents();
-				
-		Iterator<Card> deckIterator = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards().iterator();
-		deckIterator.forEachRemaining(card -> {
-			handPileView.addCardView(CardViewFactory.createCardView(card));
-	        
-	        if(playerNumber == 1){
-	        	mouseUtility.makeClickable(handPileView.getTopCardView());
-	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
-	        }
-	        else{
-	        	mouseUtility.makeClickable(handPileView.getTopCardView());
-	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
-	        }
-
-	        getChildren().add(handPileView.getTopCardView());
-		});
 		
-		System.out.println(handPileView.getCards().size());
-	}
-	
-	private void removePileFromGameBoard(CardPileView cardPile) {
-		if(!cardPile.isEmpty() && cardPile != null) {
-			for(CardView cardView : cardPile.getCards()) {
-				getChildren().remove(cardView.getBackFace());
-				getChildren().remove(cardView.getFrontFace());
+		
+		List<Card> hand = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards();
+		
+			
+		
+		for (int i = 0; i < hand.size(); i++) {
+			CardView repView = getCardViewById(hand.get(i).getId());
+
+			if(!handPileView.getCards().contains(repView) && repView != null) {				
+				mouseUtility.slideToPile(repView, repView.getContainingPile(), handPileView, false);
+					repView.setToFaceUp();
+					mouseUtility.makeClickable(repView);
+					mouseUtility.makeDraggable(repView);
+				
 			}
 		}
+//		deckIterator.forEachRemaining(card -> {
+//			handPileView.addCardView(CardViewFactory.createCardView(card));
+//	        
+//	        if(playerNumber == 1){
+//	        	mouseUtility.makeClickable(handPileView.getTopCardView());
+//	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
+//	        }
+//	        else{
+//	        	mouseUtility.makeClickable(handPileView.getTopCardView());
+//	        	mouseUtility.makeDraggable(handPileView.getTopCardView());
+//	        }
+//
+//	        getChildren().add(handPileView.getTopCardView());
+//		});
+		
 	}
 	
 	  /**
@@ -432,5 +519,14 @@ public class GameBoard extends Pane {
 					cardView.setToFaceDown();
 				}
 		  }
+	  }
+	  
+	  public void changePlayerTurn(int currentPlayer) {
+		  if(currentPlayer == 1) {
+			  setActivePlayer(2);
+		  } else {
+			  setActivePlayer(1);
+		  }
+		  
 	  }
 }

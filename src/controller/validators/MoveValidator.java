@@ -3,6 +3,7 @@ package controller.validators;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import model.*;
 import model.card.*;
@@ -35,8 +36,8 @@ public class MoveValidator implements IMoveValidator {
 		}
 		
 		if (move instanceof PlayOneCardMove) {
-			PlayOneCardMove cardPlay = (PlayOneCardMove)move;
 			
+			PlayOneCardMove cardPlay = (PlayOneCardMove)move;
 			ValidationResult resultOfCheckForCardOwnership = playerHasCardPlayed(cardPlay.card);
 			
 			if (! resultOfCheckForCardOwnership.Success) return resultOfCheckForCardOwnership;
@@ -94,7 +95,7 @@ public class MoveValidator implements IMoveValidator {
 	
 	private ValidationResult playerHasCardPlayed(Card card) {
 		
-		List<Card> currentPlayerHand = state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand;
+		List<Card> currentPlayerHand = state.PlayerPlaces.get(state.currentPlayerTurn-1).hand;
 		List<Card> currentPlayerTableCards1 = state.PlayerPlaces.get(state.currentPlayerTurn - 1).tableCards1;
 		List<Card> currentPlayerTableCards2 = state.PlayerPlaces.get(state.currentPlayerTurn - 1).tableCards2;
 		List<Card> currentPlayerTableCards3 = state.PlayerPlaces.get(state.currentPlayerTurn - 1).tableCards3;

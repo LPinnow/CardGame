@@ -166,7 +166,8 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		cards.add(cardView);
 		cardView.setContainingPile(this);
 		cardView.toFront();
-		layoutCard(cardView);
+		//layoutCard(cardView);
+		restackCards();
 	}
 
 	/**
@@ -186,7 +187,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		cardView.setLayoutY(getLayoutY() + (cards.size() - 1) * cardGapVertical);
 	}
 	
-	private void restackCards() {
+	public void restackCards() {
 		for(int i = 0; i < cards.size(); i++) {
 			CardView tempView = cards.get(i);
 			tempView.relocate(cards.get(i).getLayoutX() + tempView.getTranslateX(),
@@ -279,8 +280,10 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 	 */
 
 	public void moveCardViewToPile(CardView cardToMove, CardPileView destPile) {
+		System.out.println("Adding " + cardToMove.getShortID() + " to " + destPile.getShortID() + " from " + getShortID());
 		destPile.addCardView(cardToMove);
 		cards.remove(cardToMove);
+		restackCards();
 	}
 
 	public void replaceCardViewOnPile(CardView cardToMove,
@@ -321,11 +324,6 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 	public void removeCardViewFromPile(CardView cardToRemove) {
 		cards.remove(cardToRemove);
 	}
-
-	/*
-	 * public void addCardViewToPile(CardView cardToAdd, CardPileView destPile)
-	 * { cards.add(cardToAdd); cardToAdd.setContainingPile(destPile); }
-	 */
 
 	/**
 	 * Returns an iterator for iterating through the cards.

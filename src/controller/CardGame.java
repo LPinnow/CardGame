@@ -173,7 +173,7 @@ public class CardGame {
   }
   
   /**
-   * Returns player 1's hand.
+   * Returns player 2's hand.
    *
    * @return The {@link CardCollection} object representing player 1's hand.
    */

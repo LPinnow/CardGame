@@ -107,8 +107,6 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		
 		if (validationResult.Success) {
 			
-			//System.out.println(state.toString());
-			
 			updateStateForTableSwap(playerRequesting, handCard, tableCard, validationResult.targetTableStack);
 			
 			

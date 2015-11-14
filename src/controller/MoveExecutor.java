@@ -90,6 +90,7 @@ public class MoveExecutor implements IMoveExecutor {
 					.contains(cardPlay.card))
 				state.PlayerPlaces.get(state.currentPlayerTurn - 1).tableCards3
 						.remove(cardPlay.card);
+			cardPlay.card.flip();
 
 			handleIfCardPlayedOnPileWasBurnCard();
 			handleIfTopFourPileCardsAreSameRank();
@@ -139,9 +140,10 @@ public class MoveExecutor implements IMoveExecutor {
 					message = "Player " + state.currentPlayerTurn + " has won";
 				}
 			};
-		else
+		else {
 			advancePlayerTurn();
-
+		}
+		System.out.println("After turn game-state: \n\n" + state.toString() + "\n");
 		return new MoveResult() {
 			{
 				success = true;
@@ -209,7 +211,7 @@ public class MoveExecutor implements IMoveExecutor {
 	private void advancePlayerTurn() {
 		if (state.currentPlayerTurn == 2)
 			state.currentPlayerTurn = 1;
-		if (state.currentPlayerTurn == 1)
+		else if (state.currentPlayerTurn == 1)
 			state.currentPlayerTurn = 2;
 	}
 

@@ -144,14 +144,12 @@ public class GameMenu extends MenuBar {
     MenuItem confirmBoxTest = new MenuItem("Confirm Box Test");
     confirmBoxTest.setOnAction(e -> {
     	boolean message = ConfirmBox.display("Confirm Box Test", "Question?");
-    	System.out.println("Confirm Box Return: " + message);
     });
 
     
     MenuItem inputBoxTest = new MenuItem("Input Box Test");
     inputBoxTest.setOnAction(e -> {
     	String message = InputBox.display("Input Box Test", "Enter your name:");
-    	System.out.println("Input Box Return: " + message);
     });
 
 

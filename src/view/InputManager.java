@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import model.IdiotGameState;
 import model.card.Card;
 import model.move.MoveResult;
+import model.move.PlayOneCardMove;
 import model.move.PlayTopOfDeck;
 import controller.CardGame;
 import controller.IIdiotGameEngine;
@@ -84,6 +85,8 @@ public class InputManager {
 			cardView.setToFaceUp();
 			cardView.setMouseTransparent(false);
 			makeDraggable(cardView);
+			gameBoard.setActivePlayer(game.getCurrentGameState()
+					.CurrentPlayerTurn());
 		} else {
 			gameBoard.setMessageLabelText("Invalid PlayTopOfDeck Move");
 		}
@@ -297,41 +300,8 @@ public class InputManager {
 	private boolean checkAllPiles(
 			Card card, CardView cardView, List<Card> activePile,
 			CardPileView activePileView) {
-		System.out.println("Drag X: " + draggedCardView.getX());
-		System.out.println("Drag Y: " + draggedCardView.getY());
 		if(checkPile(card, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) return true;;
 		
-
-//		// check player 1 table piles
-//		if (checkPiles(card, cardView, activePile,
-//				activePileView, gameBoard.getFoundationPileViews(1)))
-//			return true;
-//
-//		// check player 1 hand pile
-//		if (checkPile(card, cardView, activePile,
-//				activePileView, gameBoard.getPlayerHandView(1)))
-//			return true;
-//
-//		// check player 2 table piles
-//		if (checkPiles(card, cardView, activePile,
-//				activePileView, gameBoard.getFoundationPileViews(2)))
-//			return true;
-//
-//		// check player 2 hand pile
-//		if (checkPile(card, cardView, activePile,
-//				activePileView, gameBoard.getPlayerHandView(2)))
-//			return true;
-//
-//		// check draw pile
-//		if (checkPile(card, cardView, activePile,
-//				activePileView, gameBoard.getDeckView()))
-//			return true;
-//
-//		// check pile
-//		if (checkPile(card, cardView, activePile,
-//				activePileView, gameBoard.getWasteView()))
-//			return true;
-
 		return false;
 
 	}
@@ -387,7 +357,6 @@ public class InputManager {
 
 		if (isOverPile(cardView, pileView)) {
 			System.out.println("Dropped on pile: " + pileView.getShortID());
-			result = true;
 
 			if (game.getCurrentGameState().CurrentGamePhase()
 					.equals(IdiotGameState.GamePhases.CardSwapping))
@@ -399,17 +368,6 @@ public class InputManager {
 								.asGameCard());
 				if (swapResult.success) {
 					gameBoard.updateCurrentState(game.getCurrentGameState());
-					// gameBoard.drawPlayerPlace(game.getCurrentGameState()
-					// .CurrentPlayerTurn());
-
-					// Added in functionality to fix the UI. Might want to move
-					// it to drawPlayerPlace?
-					// TODO Might want to look at changing the order of the
-					// cards in the hand
-					// to match the UI views. Moving the middle card adds the
-					// card view to
-					// to the same spot but adds it at the end of the arraylist
-					// of hand cards.
 					CardView tablePileTopCardView = pileView.getTopCardView();
 
 					slideToPile(cardView, activePileView, pileView, true);
@@ -421,20 +379,36 @@ public class InputManager {
 
 					gameBoard.setMessageLabelText("");
 					result = true;
+					gameBoard.setActivePlayer(game.getCurrentGameState()
+							.CurrentPlayerTurn());
 
 				}
 				else {
+					result = false;
 					gameBoard.setMessageLabelText(swapResult.message);
 				}
 			}
 			else if (game.getCurrentGameState().CurrentGamePhase()
 					.equals(IdiotGameState.GamePhases.GamePlay))
 			{
-				// TODO Validate if pile the card is dropped on is a valid move
-				// during the GamePlay phase
-			}
-		}
+				int currentPlayer = game.getCurrentGameState()
+						.CurrentPlayerTurn();
+				MoveResult playCard = game.submitMove(currentPlayer, new PlayOneCardMove(card.getId(), game
+						.getCurrentGameState().GetPile().toString(), card));
+				if (playCard.success) {
+					slideToPile(cardView, activePileView, pileView, true);
+					gameBoard.updatePlayerPlace(currentPlayer);
+					result = true;
+					gameBoard.setActivePlayer(game.getCurrentGameState()
+						.CurrentPlayerTurn());
+				} else {
+					result = false;
+					gameBoard.setMessageLabelText("Invalid PlayOneCardMove");
+				}
 
+				}
+			}
+		
 		return result;
 	}
 
@@ -476,6 +450,51 @@ public class InputManager {
 					card.getDropShadow().setOffsetY(0);
 				});
 	}
+	
+	public void slideFromDeck(CardView cardToSlide, int ms) {
+		if (cardToSlide == null)
+			return;
+		
+		double targetX, targetY, sourceX, sourceY;
+		
+		targetX = cardToSlide.getLayoutX();
+		targetY = cardToSlide.getLayoutY();
+		
+		sourceX = gameBoard.getDeckView().getLayoutX();
+		sourceY = gameBoard.getDeckView().getLayoutY();
+		
+		animateCardMovement(cardToSlide, sourceX, sourceY, targetX,
+				targetY,
+				Duration.millis(ms),
+				e -> {
+					cardToSlide.getDropShadow().setRadius(2);
+					cardToSlide.getDropShadow().setOffsetX(0);
+					cardToSlide.getDropShadow().setOffsetY(0);
+				});
+	}
+	
+	public void slideToPostion(CardView cardToSlide) {
+		if (cardToSlide == null)
+			return;
+		
+		double targetX, targetY, sourceX, sourceY;
+		
+		targetX = cardToSlide.getLayoutX();
+		targetY = cardToSlide.getLayoutY();
+		
+		sourceX = cardToSlide.getLayoutX() + cardToSlide.getTranslateX();
+		sourceY = cardToSlide.getLayoutY() + cardToSlide.getTranslateY();
+		
+		animateCardMovement(cardToSlide, sourceX, sourceY, targetX,
+				targetY,
+				Duration.millis(400),
+				e -> {
+					cardToSlide.getDropShadow().setRadius(2);
+					cardToSlide.getDropShadow().setOffsetX(0);
+					cardToSlide.getDropShadow().setOffsetY(0);
+				});
+
+	}
 
 	/**
 	 * Slides the list of dragged cards from the source pile to the destination
@@ -488,7 +507,7 @@ public class InputManager {
 	 * @param destPile
 	 *            The destination pile.
 	 */
-	private void slideToPile(CardView cardToSlide, CardPileView sourcePile,
+	public void slideToPile(CardView cardToSlide, CardPileView sourcePile,
 			CardPileView destPile, boolean replaceAtIndex) {
 		if (cardToSlide == null)
 			return;
@@ -509,15 +528,16 @@ public class InputManager {
 				currentCardView.getLayoutX() + currentCardView.getTranslateX();
 		double sourceY =
 				currentCardView.getLayoutY() + currentCardView.getTranslateY();
-
+		sourcePile.moveCardViewToPile(currentCardView, destPile);
+		
 		animateCardMovement(currentCardView, sourceX, sourceY, targetX,
 				targetY,
 				Duration.millis(150),
 				e -> {
-					sourcePile.moveCardViewToPile(currentCardView, destPile);
 					currentCardView.getDropShadow().setRadius(2);
 					currentCardView.getDropShadow().setOffsetX(0);
 					currentCardView.getDropShadow().setOffsetY(0);
+					destPile.restackCards();
 				});
 
 	}
@@ -543,11 +563,13 @@ public class InputManager {
 
 		double targetX = x;
 		double targetY = y;
-
+		
+		sourcePile.replaceCardViewOnPile(cardToSlide, destPile,
+				targetX, targetY, index, replaceAtIndex);
+		
 		animateCardMovement(cardToSlide, sourceX, sourceY,
 				targetX, targetY, Duration.millis(150), e -> {
-					sourcePile.replaceCardViewOnPile(cardToSlide, destPile,
-							targetX, targetY, index, replaceAtIndex);
+
 					cardToSlide.getDropShadow().setRadius(2);
 					cardToSlide.getDropShadow().setOffsetX(0);
 					cardToSlide.getDropShadow().setOffsetY(0);
