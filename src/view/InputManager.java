@@ -99,7 +99,6 @@ public class InputManager {
 		} else if (e.getButton() == MouseButton.PRIMARY) {
 
 			if (cardView.getContainingPile().equals(gameBoard.getDeckView())) {
-				System.out.println("Play Top Deck Move ");
 				MoveResult playDeckResult = game.submitMove(game
 						.getCurrentGameState()
 						.CurrentPlayerTurn(), new PlayTopOfDeck(card.getId(),
@@ -111,10 +110,6 @@ public class InputManager {
 							gameBoard.getWasteView(), true);
 
 					gameBoard.updateGameBoard();
-					gameBoard.setActivePlayer(game.getCurrentGameState()
-							.CurrentPlayerTurn());
-
-
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 
@@ -134,11 +129,6 @@ public class InputManager {
 					slideToPile(cardView, gameBoard.getWasteView(),
 							gameBoard.getPlayerHandView(currentPlayer), true);
 					gameBoard.updateGameBoard();
-
-					cardView.setToFaceUp();
-					cardView.setMouseTransparent(false);
-					makeDraggable(cardView);
-
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 				}
@@ -248,15 +238,11 @@ public class InputManager {
 			}
 		} else {
 			gameBoard.resetSelection(true);
-
 			// Setup drop shadow
 			cardView.getDropShadow().setRadius(20);
 			cardView.getDropShadow().setOffsetX(10);
 			cardView.getDropShadow().setOffsetY(10);
-
-
 		}
-
 
 		e.consume();
 	};
@@ -307,12 +293,12 @@ public class InputManager {
 
 		// check if card(s) are intersecting with any of the piles
 		if (cardsToPlay.size() > 0) {
-			if (checkAllPiles(cardsToPlay, cardView, activePile, activePileView)) {
+			if (checkPile(cardsToPlay, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
 				draggedCard = null;
 				draggedCardView = null;
 				return;
 			}
-		} else if (checkAllPiles(card, cardView, activePile, activePileView)) {
+		} else if (checkPile(card, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
 			draggedCard = null;
 			draggedCardView = null;
 			return;
@@ -399,44 +385,7 @@ public class InputManager {
 		card.setOnMouseClicked(null);
 	}
 
-	/**
-	 * Check if the actual card is intersecting with any of the piles.
-	 *
-	 * @param card
-	 *            The card to check.
-	 * @param cardView
-	 *            The view of the card.
-	 * @param activePile
-	 *            The pile the card is currently in.
-	 * @param activePileView
-	 *            The view for the pile.
-	 * @return true if intersects with any pile, false otherwise.
-	 */
-	private boolean checkAllPiles(
-			Card card, CardView cardView, List<Card> activePile,
-			CardPileView activePileView) {
-		if (checkPile(card, cardView, activePile, activePileView,
-				gameBoard.getNearestPile(draggedCardView)))
-			return true;
-		;
-
-		return false;
-
-	}
-
-	private boolean checkAllPiles(
-			List<Card> cards, CardView cardView, List<Card> activePile,
-			CardPileView activePileView) {
-		if (checkMultiplePiles(cards, cardView, activePile, activePileView,
-				gameBoard.getNearestPile(draggedCardView))) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-	private boolean checkMultiplePiles(List<Card> cards, CardView cardView,
+	private boolean checkPile(List<Card> cards, CardView cardView,
 			List<Card> activePile,
 			CardPileView activePileView, CardPileView pileView) {
 

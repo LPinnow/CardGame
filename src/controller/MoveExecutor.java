@@ -41,6 +41,7 @@ public class MoveExecutor implements IMoveExecutor {
 			if (wasteIsEmpty) {
 				state.pile.add(cardFromTopOfDeck);
 				state.drawCards.remove(cardFromTopOfDeck);
+				handleIfCardPlayedOnPileWasBurnCard();
 			} else {
 				GameCardRank topPileCardRank = state.pile
 						.get(state.pile.size() - 1).getRank();
