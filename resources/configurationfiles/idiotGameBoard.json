@@ -18,21 +18,21 @@
  "p2Foundation1" : {
  			"initialX" : 50,
  			"initialY" : 20,
- 			"cardGapVertical": 2,
+ 			"cardGapVertical": 3,
  			"cardGapHorizontal" : 0,
  			"id" : "p2Foundation1"
  		},
  "p2Foundation2" : {
  			"initialX" : 210,
  			"initialY" : 20,
- 			"cardGapVertical": 2,
+ 			"cardGapVertical": 3,
  			"cardGapHorizontal" : 0,
  			"id" : "p2Foundation2"
  		},
  "p2Foundation3" : {
  			"initialX" : 370,
  			"initialY" : 20,
- 			"cardGapVertical": 2,
+ 			"cardGapVertical": 3,
  			"cardGapHorizontal" : 0,
  			"id" : "p2Foundation3"
  		},
@@ -46,21 +46,21 @@
  "p1Foundation1" : {
  			"initialX" : 50,
  			"initialY" : 550,
- 			"cardGapVertical": 2,
+ 			"cardGapVertical": 5,
  			"cardGapHorizontal" : 0,
  			"id" : "p1Foundation1"
  		},
  "p1Foundation2" : {
  			"initialX" : 210,
  			"initialY" : 550,
- 			"cardGapVertical": 2,
+ 			"cardGapVertical": 5,
  			"cardGapHorizontal" : 0,
  			"id" : "p1Foundation2"
  		},
  "p1Foundation3" : {
  			"initialX" : 370,
  			"initialY" : 550,
- 			"cardGapVertical": 2,
+ 			"cardGapVertical": 5,
  			"cardGapHorizontal" : 0,
  			"id" : "p1Foundation3"
  		},	

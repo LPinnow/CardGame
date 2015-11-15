@@ -21,7 +21,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.IdiotGameStateFacade;
 import model.card.Card;
-import model.card.TopCardUpStack;
 
 /**
  * This class represents the area where the game is taking place.
@@ -355,39 +354,61 @@ public class GameBoard extends Pane {
 		
 		//draw card pile 1
 
-		TopCardUpStack tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards1();
-		System.out.println(tableCards1.getTopCard().toString());
-		if (tableCards1.getTopCard() != null) {
-			foundationPileView_1.clearContents();
-			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
-	        getChildren().add(foundationPileView_1.getTopCardView());
-	        mouseUtility.slideFromDeck(foundationPileView_1.getTopCardView(), 300);
-			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
-		}
+		List<Card> tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getAllTableCards1();
+		foundationPileView_1.clearContents();
+		for (Card card : tableCards1) {
+	    	foundationPileView_1.addCardView(CardViewFactory.createCardView(card));
+	    	getChildren().add(foundationPileView_1.getTopCardView());
+	    	mouseUtility.slideFromDeck(foundationPileView_1.getTopCardView(), 300);
+	    	foundationPileView_1.getTopCardView().setMouseTransparent(false);	
+	    }
+		
+//		if (tableCards1.getTopCard() != null) {
+//			foundationPileView_1.clearContents();
+//			
+//			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
+//			
+//	        getChildren().add(foundationPileView_1.getTopCardView());
+//	        mouseUtility.slideFromDeck(foundationPileView_1.getTopCardView(), 300);
+//			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
+//		}
 			
 		//draw card pile 2
 		
-	    TopCardUpStack tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards2();
-	    System.out.println(tableCards2.getTopCard().toString());
-		if (tableCards2.getTopCard() != null) {
-			foundationPileView_2.clearContents();
-			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
-	        getChildren().add(foundationPileView_2.getTopCardView());
-	        mouseUtility.slideFromDeck(foundationPileView_2.getTopCardView(), 600);
-			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
-		}
+		List<Card> tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getAllTableCards2();
+    	foundationPileView_2.clearContents();
+	    for (Card card : tableCards2) {
+	    	foundationPileView_2.addCardView(CardViewFactory.createCardView(card));
+	    	getChildren().add(foundationPileView_2.getTopCardView());
+	    	mouseUtility.slideFromDeck(foundationPileView_2.getTopCardView(), 600);
+	    	foundationPileView_2.getTopCardView().setMouseTransparent(false);	
+	    }
+//		if (tableCards2.getTopCard() != null) {
+//			foundationPileView_2.clearContents();
+//			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
+//	        getChildren().add(foundationPileView_2.getTopCardView());
+//	        mouseUtility.slideFromDeck(foundationPileView_2.getTopCardView(), 600);
+//			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
+//		}
 		
 		//draw card pile 3
 		
-	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
-	    System.out.println(tableCards3.getTopCard().toString());
-		if (tableCards3.getTopCard() != null) {
-			foundationPileView_3.clearContents();
-			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
-	        getChildren().add(foundationPileView_3.getTopCardView());
-	        mouseUtility.slideFromDeck(foundationPileView_3.getTopCardView(), 900);
-			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
-		}
+		List<Card> tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getAllTableCards1();
+	    //TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
+    	foundationPileView_3.clearContents();
+		for (Card card : tableCards3) {
+	    	foundationPileView_3.addCardView(CardViewFactory.createCardView(card));
+	    	getChildren().add(foundationPileView_3.getTopCardView());
+	    	mouseUtility.slideFromDeck(foundationPileView_3.getTopCardView(), 900);
+	    	foundationPileView_3.getTopCardView().setMouseTransparent(false);	
+	    }
+//		if (tableCards3.getTopCard() != null) {
+//			foundationPileView_3.clearContents();
+//			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
+//	        getChildren().add(foundationPileView_3.getTopCardView());
+//	        mouseUtility.slideFromDeck(foundationPileView_3.getTopCardView(), 900);
+//			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
+//		}
 		
 		
 
@@ -427,39 +448,8 @@ public class GameBoard extends Pane {
 			handPileView = playerHands.get(2).get(0);
 		}
 		
-		//draw card pile 1
+		//update foundation cards.
 
-		TopCardUpStack tableCards1 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards1();
-		System.out.println(tableCards1.getTopCard().toString());
-		if (tableCards1.getTopCard() != null) {
-			foundationPileView_1.clearContents();
-			foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
-	        getChildren().add(foundationPileView_1.getTopCardView());
-			foundationPileView_1.getTopCardView().setMouseTransparent(false);	
-		}
-			
-		//draw card pile 2
-		
-	    TopCardUpStack tableCards2 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards2();
-	    System.out.println(tableCards2.getTopCard().toString());
-		if (tableCards2.getTopCard() != null) {
-			foundationPileView_2.clearContents();
-			foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
-	        getChildren().add(foundationPileView_2.getTopCardView());
-			foundationPileView_2.getTopCardView().setMouseTransparent(false);	
-		}
-		
-		//draw card pile 3
-		
-	    TopCardUpStack tableCards3 = currentGameState.getPlayerPlaces().get(playerNumber - 1).getTableCards3();
-	    System.out.println(tableCards3.getTopCard().toString());
-		if (tableCards3.getTopCard() != null) {
-			foundationPileView_3.clearContents();
-			foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
-	        getChildren().add(foundationPileView_3.getTopCardView());
-			foundationPileView_3.getTopCardView().setMouseTransparent(false);	
-		}
-		
 		
 		List<Card> hand = currentGameState.getPlayerPlaces().get(playerNumber - 1).getHand().getCards();
 		

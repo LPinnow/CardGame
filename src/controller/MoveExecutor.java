@@ -149,6 +149,8 @@ public class MoveExecutor implements IMoveExecutor {
 				success = true;
 			}
 		};
+		
+		//TODO: When do we flip cards in game state?
 	}
 
 	private boolean cardCanBePlayedOnPile(GameCardRank candidateCardRank,

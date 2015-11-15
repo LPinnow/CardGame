@@ -21,6 +21,21 @@ public class IdiotPlayerZoneFacade {
 	public PlayerHand getHand() {
 		return new PlayerHand(wrappedPlayerZone.hand);
 	}
+	
+	//TODO Control view's access to this
+	public List<Card> getAllTableCards1() {
+		return wrappedPlayerZone.tableCards1;
+	}
+	
+	//TODO Control view's access to this
+	public List<Card> getAllTableCards2() {
+		return wrappedPlayerZone.tableCards2;
+	}
+	
+	//TODO Control view's access to this
+	public List<Card> getAllTableCards3() {
+		return wrappedPlayerZone.tableCards3;
+	}
 
 	public TopCardUpStack getTableCards1() {
 

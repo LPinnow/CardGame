@@ -166,7 +166,6 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		cards.add(cardView);
 		cardView.setContainingPile(this);
 		cardView.toFront();
-		//layoutCard(cardView);
 		restackCards();
 	}
 
