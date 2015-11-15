@@ -22,6 +22,7 @@ import model.card.Card;
 import model.move.MoveResult;
 import model.move.PlayOneCardMove;
 import model.move.PlayTopOfDeck;
+import model.move.TakePileMove;
 import controller.CardGame;
 import controller.IIdiotGameEngine;
 
@@ -68,18 +69,16 @@ public class InputManager {
 	 * the user clicks on a card, it will be flipped and put on the waste.
 	 */
 	EventHandler<MouseEvent> onMouseClickedHandler = e -> {
-		System.out.println("hereeeeee");
 		// put card from stock to waste and flip them
 		/** get current cardView. */
 		CardView cardView = (CardView) e.getSource();
 
 		/** get current card. */
-		Card card = game.getCurrentGameState().GetFullDeck()
-				.getById(cardView.getShortID());
+		Card card = cardView.asGameCard();
 
 		int currentPlayer = game.getCurrentGameState()
 				.CurrentPlayerTurn();
-
+		System.out.println("here");
 		if (cardView.getContainingPile().equals(gameBoard.getDeckView())) {
 			MoveResult playDeckResult = game.submitMove(game
 					.getCurrentGameState()
@@ -87,8 +86,35 @@ public class InputManager {
 					.getCurrentGameState().GetPile().toString()));
 			if (playDeckResult.success) {
 				gameBoard.setMessageLabelText("");
-				gameBoard.getDeckView().moveCardViewToPile(cardView,
-						gameBoard.getWasteView());
+				slideToPile(cardView, gameBoard.getDeckView(), gameBoard.getWasteView(), true);
+			
+					gameBoard.updatePlayerPlace(currentPlayer);
+					gameBoard.setActivePlayer(game.getCurrentGameState()
+							.CurrentPlayerTurn());
+				
+				
+				
+				cardView.setToFaceUp();
+				cardView.setMouseTransparent(false);
+				makeClickable(cardView);
+				if(cardView.getContainingPile().getShortID().contains("Hand")) {
+					makeDraggable(cardView);
+				}
+				
+				gameBoard.setActivePlayer(game.getCurrentGameState()
+						.CurrentPlayerTurn());
+
+			} else {
+				gameBoard.setMessageLabelText("Card cannot be placed on deck");
+			}
+		} else if (cardView.getContainingPile().equals(gameBoard.getWasteView())) {
+			
+			MoveResult playWasteResult = game.submitMove(game
+					.getCurrentGameState()
+					.CurrentPlayerTurn(), new TakePileMove(card.getId(), " "));
+			if (playWasteResult.success) {
+				gameBoard.setMessageLabelText("");
+				slideToPile(cardView, gameBoard.getWasteView(), gameBoard.getPlayerHandView(currentPlayer), true);
 				gameBoard.updatePlayerPlace(currentPlayer);
 
 				cardView.setToFaceUp();
@@ -97,10 +123,10 @@ public class InputManager {
 				
 				gameBoard.setActivePlayer(game.getCurrentGameState()
 						.CurrentPlayerTurn());
-
-			} else {
-				gameBoard.setMessageLabelText("Card cannot be placed on deck");
 			}
+				else {
+					gameBoard.setMessageLabelText("Cannot pick up cards");
+				}
 		}
 
 	};
@@ -493,7 +519,7 @@ public class InputManager {
 				});
 	}
 
-	public void slideToPostion(CardView cardToSlide) {
+	public void slideToPosition(CardView cardToSlide) {
 		if (cardToSlide == null)
 			return;
 
@@ -549,6 +575,11 @@ public class InputManager {
 		double sourceY =
 				currentCardView.getLayoutY() + currentCardView.getTranslateY();
 		sourcePile.moveCardViewToPile(currentCardView, destPile);
+		
+		destPile.restackCards();
+		targetX = cardToSlide.getLayoutX();
+		targetY = cardToSlide.getLayoutY();
+		
 
 		animateCardMovement(currentCardView, sourceX, sourceY, targetX,
 				targetY,
@@ -557,7 +588,7 @@ public class InputManager {
 					currentCardView.getDropShadow().setRadius(2);
 					currentCardView.getDropShadow().setOffsetX(0);
 					currentCardView.getDropShadow().setOffsetY(0);
-					destPile.restackCards();
+					
 				});
 
 	}

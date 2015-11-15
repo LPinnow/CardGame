@@ -3,10 +3,11 @@ package controller.validators;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
-import model.*;
-import model.card.*;
+import model.IdiotGameConfiguration;
+import model.IdiotGameState;
+import model.card.Card;
+import model.card.GameCardRank;
 import model.move.Move;
 import model.move.PlayMultipleCardsMove;
 import model.move.PlayOneCardMove;

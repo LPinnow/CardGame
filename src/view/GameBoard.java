@@ -458,7 +458,7 @@ public class GameBoard extends Pane {
 		for (int i = 0; i < hand.size(); i++) {
 			CardView repView = getCardViewById(hand.get(i).getId());
 
-			if(!handPileView.getCards().contains(repView) && repView != null) {				
+			if(!handPileView.getCards().contains(repView) && repView != null) {		
 				mouseUtility.slideToPile(repView, repView.getContainingPile(), handPileView, false);
 					repView.setToFaceUp();
 					mouseUtility.makeClickable(repView);
