@@ -53,9 +53,7 @@ public class InputManager {
 	 */
 	private CardView draggedCardView;
 
-	private int draggedCardViewIndex;
 
-	private int draggedCardIndex;
 
 	private boolean justDragged;
 
@@ -112,17 +110,10 @@ public class InputManager {
 					slideToPile(cardView, gameBoard.getDeckView(),
 							gameBoard.getWasteView(), true);
 
-					gameBoard.updatePlayerPlace(currentPlayer);
+					gameBoard.updateGameBoard();
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 
-					cardView.setToFaceUp();
-					cardView.setMouseTransparent(false);
-					makeClickable(cardView);
-					if (cardView.getContainingPile().getShortID()
-							.contains("Hand")) {
-						makeDraggable(cardView);
-					}
 
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
@@ -142,7 +133,7 @@ public class InputManager {
 					gameBoard.setMessageLabelText("");
 					slideToPile(cardView, gameBoard.getWasteView(),
 							gameBoard.getPlayerHandView(currentPlayer), true);
-					gameBoard.updatePlayerPlace(currentPlayer);
+					gameBoard.updateGameBoard();
 
 					cardView.setToFaceUp();
 					cardView.setMouseTransparent(false);
@@ -473,7 +464,7 @@ public class InputManager {
 								true);
 					}
 					gameBoard.clearSelection();
-					gameBoard.updatePlayerPlace(currentPlayer);
+					gameBoard.updateGameBoard();
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
@@ -561,7 +552,7 @@ public class InputManager {
 								card));
 				if (playCard.success) {
 					slideToPile(cardView, activePileView, pileView, true);
-					gameBoard.updatePlayerPlace(currentPlayer);
+					gameBoard.updateGameBoard();
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());

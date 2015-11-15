@@ -19,6 +19,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import model.IdiotGameState;
 import model.IdiotGameStateFacade;
 import model.card.Card;
 
@@ -108,17 +109,17 @@ public class GameBoard extends Pane {
 	}
 
 	public void addToSelection(CardView cardView) {
-		if(cardView == null) {
+		if (cardView == null) {
 			return;
 		}
 
-		if(selection.contains(cardView)) {
+		if (selection.contains(cardView)) {
 			mouseUtility.slideToPosition(cardView,
 					cardView.getLayoutX(), cardView.getLayoutY() + 20);
 			selection.remove(cardView);
 			return;
 		}
-		
+
 		if (selection.size() > 0) {
 			boolean isDifferentCard = false;
 			for (CardView selectedCardView : selection) {
@@ -126,7 +127,8 @@ public class GameBoard extends Pane {
 						.asGameCard().getRank()) {
 					isDifferentCard = true;
 					mouseUtility.slideToPosition(selectedCardView,
-							selectedCardView.getLayoutX(), selectedCardView.getLayoutY() + 20);
+							selectedCardView.getLayoutX(),
+							selectedCardView.getLayoutY() + 20);
 				}
 			}
 
@@ -139,30 +141,32 @@ public class GameBoard extends Pane {
 				cardView.getLayoutY() - 20);
 
 	}
-	
+
 	public List<CardView> getSelected() {
 		return selection;
 	}
 
 	public void resetSelection(boolean toDrag) {
-		for (CardView selectedCardView : selection ) {
+		for (CardView selectedCardView : selection) {
 			if (toDrag) {
-				selectedCardView.setLayoutY((selectedCardView.getLayoutY() + 20));
+				selectedCardView
+						.setLayoutY((selectedCardView.getLayoutY() + 20));
 			} else {
-			mouseUtility.slideToPosition(selectedCardView,
-					selectedCardView.getLayoutX(), selectedCardView.getLayoutY() + 20);
+				mouseUtility.slideToPosition(selectedCardView,
+						selectedCardView.getLayoutX(),
+						selectedCardView.getLayoutY() + 20);
 			}
 		}
 		selection.clear();
 	}
-	
+
 	public void removeOffsetSelection() {
-		for (CardView selectedCardView : selection ) {
+		for (CardView selectedCardView : selection) {
 			selectedCardView.setLayoutY((selectedCardView.getLayoutY() + 20));
 		}
-		
+
 	}
-	
+
 	public void clearSelection() {
 		selection.clear();
 	}
@@ -403,197 +407,153 @@ public class GameBoard extends Pane {
 		deckView.getTopCardView().setMouseTransparent(false);
 	}
 
-	public void drawBothPlayerPlaces() {
-		drawPlayerPlace(1);
-		drawPlayerPlace(2);
-	}
-
 	/**
 	 * Called at the start of the game to draw initialized board state
 	 * 
 	 * @param playerPlace
 	 */
-	public void drawPlayerPlace(int playerNumber) {
-		CardPileView foundationPileView_1;
-		CardPileView foundationPileView_2;
-		CardPileView foundationPileView_3;
-		CardPileView handPileView;
+	public void setupGameBoard() {
+		for (int i = 1; i < playerHands.size(); i++) {
+			CardPileView foundationPileView_1 = foundationPiles.get(i).get(0);
+			CardPileView foundationPileView_2 = foundationPiles.get(i).get(1);
+			CardPileView foundationPileView_3 = foundationPiles.get(i).get(2);
+			CardPileView handPileView = playerHands.get(i).get(0);
 
-		if (playerNumber == 1) {
-			foundationPileView_1 = foundationPiles.get(1).get(0);
-			foundationPileView_2 = foundationPiles.get(1).get(1);
-			foundationPileView_3 = foundationPiles.get(1).get(2);
-			handPileView = playerHands.get(1).get(0);
-		} else {
-			foundationPileView_1 = foundationPiles.get(2).get(0);
-			foundationPileView_2 = foundationPiles.get(2).get(1);
-			foundationPileView_3 = foundationPiles.get(2).get(2);
-			handPileView = playerHands.get(2).get(0);
+			createPile(foundationPileView_1, currentGameState
+					.getPlayerPlaces().get(i - 1).getAllTableCards1(), 300*i);
+			createPile(foundationPileView_2, currentGameState
+					.getPlayerPlaces().get(i - 1).getAllTableCards2(), 600*i);
+			createPile(foundationPileView_3, currentGameState
+					.getPlayerPlaces().get(i - 1).getAllTableCards3(), 900*i);
+			createPile(handPileView, currentGameState.getPlayerPlaces()
+					.get(i - 1).getHand().getCards(), 1200*i);
+
+			setupFoundation(foundationPileView_1, handPileView.getCards()
+					.size());
+			setupFoundation(foundationPileView_2, handPileView.getCards()
+					.size());
+			setupFoundation(foundationPileView_3, handPileView.getCards()
+					.size());
+
+			setupHand(handPileView);
+
+		}		
+		setupWaste(getWasteView());
+	}
+
+	private void removePileViewCards(CardPileView pile) {
+		for (CardView cardView : pile) {
+			getChildren().remove(cardView);
 		}
+		pile.clearContents();
+	}
 
-		// draw card pile 1
-
-		List<Card> tableCards1 = currentGameState.getPlayerPlaces()
-				.get(playerNumber - 1).getAllTableCards1();
-		foundationPileView_1.clearContents();
-		for (Card card : tableCards1) {
-			foundationPileView_1.addCardView(CardViewFactory
+	private void createPile(CardPileView pile, List<Card> cards, int dealDelay) {
+		for (Card card : cards) {
+			pile.addCardView(CardViewFactory
 					.createCardView(card));
-			getChildren().add(foundationPileView_1.getTopCardView());
-			mouseUtility.slideFromDeck(foundationPileView_1.getTopCardView(),
-					300);
-			foundationPileView_1.getTopCardView().setMouseTransparent(false);
-		}
-
-		// if (tableCards1.getTopCard() != null) {
-		// foundationPileView_1.clearContents();
-		//
-		// foundationPileView_1.addCardView(CardViewFactory.createCardView(tableCards1.getTopCard()));
-		//
-		// getChildren().add(foundationPileView_1.getTopCardView());
-		// mouseUtility.slideFromDeck(foundationPileView_1.getTopCardView(),
-		// 300);
-		// foundationPileView_1.getTopCardView().setMouseTransparent(false);
-		// }
-
-		// draw card pile 2
-
-		List<Card> tableCards2 = currentGameState.getPlayerPlaces()
-				.get(playerNumber - 1).getAllTableCards2();
-		foundationPileView_2.clearContents();
-		for (Card card : tableCards2) {
-			foundationPileView_2.addCardView(CardViewFactory
-					.createCardView(card));
-			getChildren().add(foundationPileView_2.getTopCardView());
-			mouseUtility.slideFromDeck(foundationPileView_2.getTopCardView(),
-					600);
-			foundationPileView_2.getTopCardView().setMouseTransparent(false);
-		}
-		// if (tableCards2.getTopCard() != null) {
-		// foundationPileView_2.clearContents();
-		// foundationPileView_2.addCardView(CardViewFactory.createCardView(tableCards2.getTopCard()));
-		// getChildren().add(foundationPileView_2.getTopCardView());
-		// mouseUtility.slideFromDeck(foundationPileView_2.getTopCardView(),
-		// 600);
-		// foundationPileView_2.getTopCardView().setMouseTransparent(false);
-		// }
-
-		// draw card pile 3
-
-		List<Card> tableCards3 = currentGameState.getPlayerPlaces()
-				.get(playerNumber - 1).getAllTableCards3();
-		// TopCardUpStack tableCards3 =
-		// currentGameState.getPlayerPlaces().get(playerNumber -
-		// 1).getTableCards3();
-		foundationPileView_3.clearContents();
-		for (Card card : tableCards3) {
-			foundationPileView_3.addCardView(CardViewFactory
-					.createCardView(card));
-			getChildren().add(foundationPileView_3.getTopCardView());
-			mouseUtility.slideFromDeck(foundationPileView_3.getTopCardView(),
-					900);
-			foundationPileView_3.getTopCardView().setMouseTransparent(false);
-		}
-		// if (tableCards3.getTopCard() != null) {
-		// foundationPileView_3.clearContents();
-		// foundationPileView_3.addCardView(CardViewFactory.createCardView(tableCards3.getTopCard()));
-		// getChildren().add(foundationPileView_3.getTopCardView());
-		// mouseUtility.slideFromDeck(foundationPileView_3.getTopCardView(),
-		// 900);
-		// foundationPileView_3.getTopCardView().setMouseTransparent(false);
-		// }
-
-		handPileView.clearContents();
-
-		int dealDelay = 1200;
-		List<Card> hand = currentGameState.getPlayerPlaces()
-				.get(playerNumber - 1).getHand().getCards();
-
-		for (int i = 0; i < hand.size(); i++) {
-			handPileView
-					.addCardView(CardViewFactory.createCardView(hand.get(i)));
-			mouseUtility.makeClickable(handPileView.getTopCardView());
-			mouseUtility.makeDraggable(handPileView.getTopCardView());
-
-			getChildren().add(handPileView.getTopCardView());
-			mouseUtility
-					.slideFromDeck(handPileView.getTopCardView(), dealDelay);
-			dealDelay += 300;
+			getChildren().add(pile.getTopCardView());
+			mouseUtility.slideFromDeck(pile.getTopCardView(), dealDelay);
 		}
 
 	}
 
-	public void updatePlayerPlace(int playerNumber) {
+	private void setupFoundation(CardPileView foundationPileView, int handSize) {
+		for (CardView cardView : foundationPileView.getCards()) {
+			if (handSize == 0) {
+				mouseUtility.makeDraggable(cardView);
+			}
+			if (foundationPileView.getCards().size() == 1) {
+				mouseUtility.makeDraggable(cardView);
+				cardView.setToFaceUp();
+			}
+			
+			cardView.setMouseTransparent(false);
+		}
+	}
+
+	private void setupHand(CardPileView handPileView) {
+		for (CardView cardView : handPileView.getCards()) {
+			mouseUtility.makeDraggable(cardView);
+			mouseUtility.makeClickable(cardView);
+			cardView.setToFaceUp();
+			cardView.setMouseTransparent(false);
+		}
+	}
+
+	private void setupWaste(CardPileView wastePileView) {
+		for (CardView cardView : wastePileView.getCards()) {
+			mouseUtility.removeDraggable(cardView);
+			mouseUtility.makeClickable(cardView);
+			cardView.setToFaceUp();
+			cardView.setMouseTransparent(false);
+		}
+	}
+
+	private void checkForAdditions(CardPileView cardPileView, List<Card> cards) {
+		List<CardView> cardViews = cardPileView.getCards();
+
+		for (Card card : cards) {
+			CardView tempView = getCardViewById(card.getId());
+			if (!cardViews.contains(tempView) && tempView != null) {
+				mouseUtility.slideToPile(tempView,
+						tempView.getContainingPile(), cardPileView, false);
+			}
+		}
+	}
+
+	private void checkForWasteChanges(CardPileView wastePileView,
+			List<Card> cards) {
+		List<CardView> cardViews = wastePileView.getCards();
+
+		if (cardViews.size() > 0 && cards.size() == 0) {
+			removePileViewCards(wastePileView);
+		}
+
+	}
+
+	public void updateGameBoard() {
+		if(currentGameState.CurrentGamePhase()
+				.equals(IdiotGameState.GamePhases.GameCompleted)) {
+			AlertBox alert = new AlertBox();
+			alert.display("Game Over", "Game Over!");
+		}
+		
 		CardPileView foundationPileView_1;
 		CardPileView foundationPileView_2;
 		CardPileView foundationPileView_3;
 		CardPileView handPileView;
 
-		if (playerNumber == 1) {
-			foundationPileView_1 = foundationPiles.get(1).get(0);
-			foundationPileView_2 = foundationPiles.get(1).get(1);
-			foundationPileView_3 = foundationPiles.get(1).get(2);
-			handPileView = playerHands.get(1).get(0);
-		} else {
-			foundationPileView_1 = foundationPiles.get(2).get(0);
-			foundationPileView_2 = foundationPiles.get(2).get(1);
-			foundationPileView_3 = foundationPiles.get(2).get(2);
-			handPileView = playerHands.get(2).get(0);
+		for (int i = 1; i < playerHands.size(); i++) {
+			foundationPileView_1 = foundationPiles.get(i).get(0);
+			foundationPileView_2 = foundationPiles.get(i).get(1);
+			foundationPileView_3 = foundationPiles.get(i).get(2);
+			handPileView = playerHands.get(i).get(0);
+
+			checkForAdditions(foundationPileView_1, currentGameState
+					.getPlayerPlaces().get(i - 1).getAllTableCards1());
+			checkForAdditions(foundationPileView_2, currentGameState
+					.getPlayerPlaces().get(i - 1).getAllTableCards2());
+			checkForAdditions(foundationPileView_3, currentGameState
+					.getPlayerPlaces().get(i - 1).getAllTableCards3());
+			checkForAdditions(handPileView, currentGameState.getPlayerPlaces()
+					.get(i - 1).getHand().getCards());
+
+			setupFoundation(foundationPileView_1, handPileView.getCards()
+					.size());
+			setupFoundation(foundationPileView_2, handPileView.getCards()
+					.size());
+			setupFoundation(foundationPileView_3, handPileView.getCards()
+					.size());
+
+			setupHand(handPileView);
+
 		}
+		checkForAdditions(getWasteView(), currentGameState.GetPile().getCards());
+		checkForWasteChanges(getWasteView(), currentGameState.GetPile()
+				.getCards());
 		
-		//Update WasteView
-		
-		List<Card> waste = currentGameState.GetPile().getCards();
-		for(int i = 0; i < waste.size(); i++) {
-			CardView repView = getCardViewById(waste.get(i).getId());
-			
-			if (!getWasteView().getCards().contains(repView) && repView != null) {
-				mouseUtility.slideToPile(repView, repView.getContainingPile(),
-						handPileView, false);
-			}
-		}
-		
-		for(CardView wasteViewCard : getWasteView().getCards()) {
-			wasteViewCard.setToFaceUp();
-			mouseUtility.makeClickable(wasteViewCard);
-			mouseUtility.removeDraggable(wasteViewCard);
-		}
-		
-		
-	
-
-		// update foundation cards.
-
-		List<Card> hand = currentGameState.getPlayerPlaces()
-				.get(playerNumber - 1).getHand().getCards();
-
-		for (int i = 0; i < hand.size(); i++) {
-			CardView repView = getCardViewById(hand.get(i).getId());
-
-			if (!handPileView.getCards().contains(repView) && repView != null) {
-				mouseUtility.slideToPile(repView, repView.getContainingPile(),
-						handPileView, false);
-				repView.setToFaceUp();
-				mouseUtility.makeClickable(repView);
-				mouseUtility.makeDraggable(repView);
-
-			}
-		}
-		// deckIterator.forEachRemaining(card -> {
-		// handPileView.addCardView(CardViewFactory.createCardView(card));
-		//
-		// if(playerNumber == 1){
-		// mouseUtility.makeClickable(handPileView.getTopCardView());
-		// mouseUtility.makeDraggable(handPileView.getTopCardView());
-		// }
-		// else{
-		// mouseUtility.makeClickable(handPileView.getTopCardView());
-		// mouseUtility.makeDraggable(handPileView.getTopCardView());
-		// }
-		//
-		// getChildren().add(handPileView.getTopCardView());
-		// });
-
+		setupWaste(getWasteView());
 	}
 
 	/**

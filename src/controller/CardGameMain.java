@@ -118,7 +118,7 @@ public class CardGameMain extends Application {
 		gameEngine.initializeNewGame(2, new RuleConfigurationLoader("/configurationfiles/idiotRules.json"));
 		gameBoard.updateCurrentState(gameEngine.getCurrentGameState());
 		gameBoard.drawDeck();
-		gameBoard.drawBothPlayerPlaces();
+		gameBoard.setupGameBoard();
 		gameBoard.setActivePlayer(1);
 		setReadyButtonEventHandlers();
 
