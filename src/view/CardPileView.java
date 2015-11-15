@@ -187,6 +187,10 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 	}
 	
 	public void restackCards() {
+		if(cards.size() > 10) {
+			cardGapHorizontal /= 2;
+			cardGapVertical /= 2;
+		}
 		for(int i = 0; i < cards.size(); i++) {
 			CardView tempView = cards.get(i);
 			tempView.relocate(cards.get(i).getLayoutX() + tempView.getTranslateX(),
@@ -198,6 +202,12 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 					* cardGapHorizontal));
 			tempView.setLayoutY(getLayoutY() + (i * cardGapVertical));
 		}
+		
+		if(cards.size() > 10) {
+			cardGapHorizontal *= 2;
+			cardGapVertical *= 2;
+		}
+		
 	}
 
 	/**

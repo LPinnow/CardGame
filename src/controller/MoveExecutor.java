@@ -29,7 +29,6 @@ public class MoveExecutor implements IMoveExecutor {
 		boolean deckIsEmpty = state.drawCards.size() == 0;
 		boolean wasteIsEmpty = state.pile.size() == 0;
 
-
 		if (move instanceof TakePileMove && !wasteIsEmpty) {
 			state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand
 					.addAll(state.pile);
@@ -99,12 +98,12 @@ public class MoveExecutor implements IMoveExecutor {
 
 		if (move instanceof PlayMultipleCardsMove) {
 			PlayMultipleCardsMove cardsPlay = (PlayMultipleCardsMove) move;
-
-			if (!cardCanBePlayedOnPile(cardsPlay.cards.get(0).getRank(),
-					state.pile.get(state.pile.size() - 1).getRank()))
-				throw new IllegalStateException(
-						"Validator should have prevented an invalid pile card play from occurring.");
-
+			if (!wasteIsEmpty) {
+				if (!cardCanBePlayedOnPile(cardsPlay.cards.get(0).getRank(),
+						state.pile.get(state.pile.size() - 1).getRank()))
+					throw new IllegalStateException(
+							"Validator should have prevented an invalid pile card play from occurring.");
+			}
 			state.pile.addAll(cardsPlay.cards); // (move should be validated by
 												// move validator before this
 												// point)
@@ -143,14 +142,15 @@ public class MoveExecutor implements IMoveExecutor {
 		else {
 			advancePlayerTurn();
 		}
-		System.out.println("After turn game-state: \n\n" + state.toString() + "\n");
+		System.out.println("After turn game-state: \n\n" + state.toString()
+				+ "\n");
 		return new MoveResult() {
 			{
 				success = true;
 			}
 		};
-		
-		//TODO: When do we flip cards in game state?
+
+		// TODO: When do we flip cards in game state?
 	}
 
 	private boolean cardCanBePlayedOnPile(GameCardRank candidateCardRank,
