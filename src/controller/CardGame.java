@@ -92,10 +92,10 @@ public class CardGame {
     this.p2_foundations = FXCollections.observableArrayList();
     
     for (int i = 0; i < 3; i++)
-    	p1_foundations.add(new CardCollection(CardCollection.Type.DECK, "F" + i));
+    	p1_foundations.add(new CardCollection(CardCollection.Type.DECK, "p1Foundation" + i));
     
     for (int i = 3; i < 6; i++)
-    	p2_foundations.add(new CardCollection(CardCollection.Type.DECK, "F" + i));
+    	p2_foundations.add(new CardCollection(CardCollection.Type.DECK, "p2Foundation" + i));
 
     // create standard piles
     this.p1_handPile = new CardCollection(CardCollection.Type.HAND, "K");

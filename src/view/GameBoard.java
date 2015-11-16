@@ -321,7 +321,7 @@ public class GameBoard extends Pane {
 
 	CardView getCardViewById(String id) {
 		for (CardView cardView : cardViewList) {
-			if (cardView.getShortID() == id) {
+			if (cardView.getShortID().equals(id)) {
 				return cardView;
 			}
 		}
@@ -453,7 +453,9 @@ public class GameBoard extends Pane {
 			pile.addCardView(CardViewFactory
 					.createCardView(card));
 			getChildren().add(pile.getTopCardView());
+			cardViewList.add(pile.getTopCardView());
 			mouseUtility.slideFromDeck(pile.getTopCardView(), dealDelay);
+			
 		}
 
 	}
@@ -464,6 +466,7 @@ public class GameBoard extends Pane {
 				mouseUtility.makeDraggable(cardView);
 			}
 			if (foundationPileView.getCards().size() == 1) {
+				/*TODO Only set face up when the top card of all foundation piles has been played (potentially reference game engine face up status */
 				mouseUtility.makeDraggable(cardView);
 				cardView.setToFaceUp();
 			}
@@ -495,6 +498,9 @@ public class GameBoard extends Pane {
 
 		for (Card card : cards) {
 			CardView tempView = getCardViewById(card.getId());
+			if(tempView == null) {
+				System.out.println("Could not find " + card.getId());
+			}
 			if (!cardViews.contains(tempView) && tempView != null) {
 				mouseUtility.slideToPile(tempView,
 						tempView.getContainingPile(), cardPileView, false);

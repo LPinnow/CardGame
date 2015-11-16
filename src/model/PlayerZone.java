@@ -68,8 +68,8 @@ public class PlayerZone {
 	 */
 	public void initializePileIDs(){
 		this.idHand = "p" + this.playerNumber + "Hand";
-		this.idTableCards1 = this.playerNumber + "tableCards1";
-		this.idTableCards2 = this.playerNumber + "tableCards2";
-		this.idTableCards3 = this.playerNumber + "tableCards3";
+		this.idTableCards1 = "p" + this.playerNumber + "Foundation1";
+		this.idTableCards2 = "p" + this.playerNumber + "Foundation2";
+		this.idTableCards3 = "p" + this.playerNumber + "Foundation3";
 	}
 }
