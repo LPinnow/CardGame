@@ -134,7 +134,6 @@ public class MoveExecutor implements IMoveExecutor {
 		}
 
 		if (endGameChecker.endGameConditionReached()) {
-			state.CurrentGamePhase = GamePhases.GameCompleted;
 			return new MoveResult() {
 				{
 					success = true;

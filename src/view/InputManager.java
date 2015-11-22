@@ -70,7 +70,7 @@ public class InputManager {
 	 * The {@link GameBoard} object to manipulate.
 	 */
 	private GameBoard gameBoard;
-
+	
 	/**
 	 * This event handler is attached to cards that are still on the stock. When
 	 * the user clicks on a card, it will be flipped and put on the waste.
@@ -276,7 +276,7 @@ public class InputManager {
 		if (draggedCard == null && draggedCardView == null) {
 			return;
 		}
-		justDragged = true;
+		
 
 		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
 			draggedCard = null;
@@ -438,14 +438,19 @@ public class InputManager {
 					gameBoard.removeOffsetSelection();
 					for (CardView selectedCardView : gameBoard.getSelected()) {
 						slideToPile(selectedCardView, activePileView, pileView,
-								true);
+								false);
 					}
+					pileView.restackCards();
 					gameBoard.clearSelection();
 					gameBoard.updateGameBoard();
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
+					
+					if(pileView.equals(gameBoard.getWasteView())) {
+						justDragged = true;
+					}
 				} else {
 					result = false;
 					gameBoard
@@ -511,7 +516,7 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
-					justDragged = false;
+
 
 				}
 				else {
@@ -534,6 +539,9 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
+					if(pileView.equals(gameBoard.getWasteView())) {
+						justDragged = true;
+					}
 				} else {
 					result = false;
 					gameBoard.setMessageLabelText(playCard.getMessage());
@@ -649,27 +657,32 @@ public class InputManager {
 	 *            The destination pile.
 	 */
 	public void slideToPile(CardView cardToSlide, CardPileView sourcePile,
-			CardPileView destPile, boolean replaceAtIndex) {
+			CardPileView destPile, boolean toRestack) {
+		
 		if (cardToSlide == null)
 			return;
 
 		double targetX;
 		double targetY;
 
-		if (destPile.isEmpty()) {
-			targetX = destPile.getLayoutX();
-			targetY = destPile.getLayoutY();
-		} else {
-			targetX = destPile.getTopCardView().getLayoutX();
-			targetY = destPile.getTopCardView().getLayoutY();
-		}
+//		if (destPile.isEmpty()) {
+//			targetX = destPile.getLayoutX();
+//			targetY = destPile.getLayoutY();
+//		} else {
+//			targetX = destPile.getTopCardView().getLayoutX();
+//			targetY = destPile.getTopCardView().getLayoutY();
+//		}
 
 		CardView currentCardView = cardToSlide;
 		double sourceX =
 				currentCardView.getLayoutX() + currentCardView.getTranslateX();
 		double sourceY =
 				currentCardView.getLayoutY() + currentCardView.getTranslateY();
-		sourcePile.moveCardViewToPile(currentCardView, destPile);
+		if(toRestack) {
+			sourcePile.moveCardViewToPile(currentCardView, destPile, true);
+		} else {
+			sourcePile.moveCardViewToPile(currentCardView, destPile, false);
+		}
 
 		destPile.restackCards();
 		targetX = cardToSlide.getLayoutX();

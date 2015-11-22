@@ -519,11 +519,6 @@ public class GameBoard extends Pane {
 	}
 
 	public void updateGameBoard() {
-		if(currentGameState.CurrentGamePhase()
-				.equals(IdiotGameState.GamePhases.GameCompleted)) {
-			AlertBox alert = new AlertBox();
-			alert.display("Game Over", "Player " + currentGameState.CurrentPlayerTurn() + "has won the game.");
-		}
 		
 		CardPileView foundationPileView_1;
 		CardPileView foundationPileView_2;
