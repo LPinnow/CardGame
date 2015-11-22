@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import controller.CardGame;
+import controller.IIdiotGameEngine;
+import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -20,14 +23,13 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import model.IdiotGameState;
+import model.IdiotGameState.GamePhases;
 import model.card.Card;
 import model.move.MoveResult;
 import model.move.PlayMultipleCardsMove;
 import model.move.PlayOneCardMove;
 import model.move.PlayTopOfDeck;
 import model.move.TakePileMove;
-import controller.CardGame;
-import controller.IIdiotGameEngine;
 
 /**
  * This class serves as the controller for the application.
@@ -52,6 +54,8 @@ public class InputManager {
 	 * Same for the view of the cards.
 	 */
 	private CardView draggedCardView;
+	
+	private StatusBar statusBar; 
 
 
 
@@ -76,6 +80,13 @@ public class InputManager {
 		// ignore resulting click event generated after drag
 		if (justDragged) {
 			justDragged = false;
+			e.consume();
+			return;
+		}
+		
+		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
+			draggedCard = null;
+			draggedCardView = null;
 			e.consume();
 			return;
 		}
@@ -106,6 +117,7 @@ public class InputManager {
 								.getCurrentGameState().GetPile().toString()));
 				if (playDeckResult.success) {
 					gameBoard.setMessageLabelText("");
+					cardView.setToFaceUp();
 					slideToPile(cardView, gameBoard.getDeckView(),
 							gameBoard.getWasteView(), true);
 
@@ -131,12 +143,12 @@ public class InputManager {
 					gameBoard.updateGameBoard();
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
+					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
 				}
 				else {
 					gameBoard.setMessageLabelText("Cannot pick up cards");
 				}
 			}
-
 		}
 
 		e.consume();
@@ -190,6 +202,13 @@ public class InputManager {
 	EventHandler<MouseEvent> onMouseDraggedHandler = e -> {
 		// Calculate difference vector from clicked point
 		if (e.getButton() != MouseButton.PRIMARY) {
+			return;
+		}
+		
+		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
+			draggedCard = null;
+			draggedCardView = null;
+			e.consume();
 			return;
 		}
 
@@ -258,6 +277,13 @@ public class InputManager {
 		}
 		justDragged = true;
 
+		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
+			draggedCard = null;
+			draggedCardView = null;
+			e.consume();
+			return;
+		}
+			
 		// Get the actual card
 		/** get current card view. */
 		CardView cardView = (CardView) e.getSource();
@@ -334,9 +360,10 @@ public class InputManager {
 	 * @param gameBoard
 	 *            The {@link GameBoard} object.
 	 */
-	public InputManager(IIdiotGameEngine game, GameBoard gameBoard) {
+	public InputManager(IIdiotGameEngine game, GameBoard gameBoard, StatusBar statusBar) {
 		this.game = game;
 		this.gameBoard = gameBoard;
+		this.statusBar = statusBar;
 	}
 
 	/**
@@ -417,6 +444,7 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
+					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
 				} else {
 					result = false;
 					gameBoard
@@ -507,12 +535,17 @@ public class InputManager {
 							.CurrentPlayerTurn());
 				} else {
 					result = false;
-					gameBoard.setMessageLabelText("Invalid PlayOneCardMove");
+					gameBoard.setMessageLabelText(playCard.getMessage());
 				}
-
+				
+				if (playCard.isGameEnded()) {
+					gameBoard.setMessageLabelText(playCard.getMessage());
+				} 
 			}
 		}
-
+		
+		statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
+		
 		return result;
 	}
 
@@ -733,6 +766,25 @@ public class InputManager {
 				blurReset);
 		pt.play();
 	}
+	public void fadeOutAndRemove(CardView view) {
+		final FadeTransition fadeout = new FadeTransition(new Duration(400));
+    fadeout.setNode(view);
+    fadeout.setToValue(0.0);
+    fadeout.setOnFinished(e -> {
+    	gameBoard.getChildren().remove(view);
+    });
+		
+    Timeline timeline = new Timeline(
+            
+            new KeyFrame(
+                new Duration(400),
+                e -> {
+                	fadeout.play();
+                }
+            )
+        );
+        timeline.play();        
+    }
 
 	/**
 	 * Helper class for calculating card positions.
