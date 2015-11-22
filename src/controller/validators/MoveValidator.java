@@ -109,7 +109,7 @@ public class MoveValidator implements IMoveValidator {
 		if (currentPlayerHand.size() > 0) {
 			if (! currentPlayerHand.contains(card)) return new ValidationResult() {{ Success = false; ErrorMessage = "Card played is not in current player's hand or is not a valid card to play.";}}; 
 		}
-		else if (! faceUpTableCards.contains(card)) return new ValidationResult() {{ Success = false; ErrorMessage = "Card played is among current player's face up table cards.";}}; 
+		else if (! faceUpTableCards.contains(card)) return new ValidationResult() {{ Success = false; ErrorMessage = "Card played is not among current player's face up table cards.";}}; 
 
 		return successfulResult; 
 	}

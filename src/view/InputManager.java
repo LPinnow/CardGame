@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import controller.CardGame;
-import controller.IIdiotGameEngine;
-import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -29,6 +26,8 @@ import model.move.PlayMultipleCardsMove;
 import model.move.PlayOneCardMove;
 import model.move.PlayTopOfDeck;
 import model.move.TakePileMove;
+import controller.CardGame;
+import controller.IIdiotGameEngine;
 
 /**
  * This class serves as the controller for the application.
@@ -83,10 +82,10 @@ public class InputManager {
 
 		// put card from stock to waste and flip them
 		/** get current cardView. */
-		final CardView cardView = (CardView) e.getSource();
+		CardView cardView = (CardView) e.getSource();
 
 		/** get current card. */
-		final Card card = cardView.asGameCard();
+		Card card = cardView.asGameCard();
 
 		int currentPlayer = game.getCurrentGameState()
 				.CurrentPlayerTurn();
@@ -100,14 +99,13 @@ public class InputManager {
 		} else if (e.getButton() == MouseButton.PRIMARY) {
 
 			if (cardView.getContainingPile().equals(gameBoard.getDeckView())) {
-				final MoveResult playDeckResult = game.submitMove(game
+				MoveResult playDeckResult = game.submitMove(game
 						.getCurrentGameState()
 						.CurrentPlayerTurn(), new PlayTopOfDeck(card.getId(),
 						game
 								.getCurrentGameState().GetPile().toString()));
 				if (playDeckResult.success) {
 					gameBoard.setMessageLabelText("");
-					cardView.setToFaceUp();
 					slideToPile(cardView, gameBoard.getDeckView(),
 							gameBoard.getWasteView(), true);
 
@@ -121,8 +119,8 @@ public class InputManager {
 				}
 			} else if (cardView.getContainingPile().equals(
 					gameBoard.getWasteView())) {
-
-				final MoveResult playWasteResult = game.submitMove(game
+				System.out.println("Play Waste Pile Move ");
+				MoveResult playWasteResult = game.submitMove(game
 						.getCurrentGameState()
 						.CurrentPlayerTurn(), new TakePileMove(card.getId(),
 						" "));
@@ -196,15 +194,15 @@ public class InputManager {
 		}
 
 		/** x component. */
-		final double offsetX = e.getSceneX() - mousePos.x;
+		double offsetX = e.getSceneX() - mousePos.x;
 		/** y component. */
-		final double offsetY = e.getSceneY() - mousePos.y;
+		double offsetY = e.getSceneY() - mousePos.y;
 
 		/** get current cardView. */
-		final CardView cardView = (CardView) e.getSource();
+		CardView cardView = (CardView) e.getSource();
 
 		/** get current card. */
-		final Card card = game.getCurrentGameState().GetFullDeck()
+		Card card = game.getCurrentGameState().GetFullDeck()
 				.getById(cardView.getShortID());
 
 		draggedCardView = cardView;
@@ -219,22 +217,20 @@ public class InputManager {
 				&& gameBoard.getSelected().contains(cardView)) {
 
 			int count = 0;
-			final List<CardView> tempList = gameBoard.getSelected();
+			List<CardView> tempList = gameBoard.getSelected();
 			for (int i = tempList.size() - 1; i >= 0; i--) {
 
 				tempList.get(i).getDropShadow().setRadius(20);
 				tempList.get(i).getDropShadow().setOffsetX(10);
 				tempList.get(i).getDropShadow().setOffsetY(10);
-				tempList.get(i).setTranslateX(offsetX);
-				tempList.get(i).setTranslateY(offsetY);
-				tempList.get(i).setTranslateX(draggedCardView.getLayoutX()
-						- tempList.get(i).getLayoutX() + offsetX
-						+ tempList.get(i).getContainingPile()
-								.getCardGapHorizontal() * count);
-				tempList.get(i).setTranslateY(draggedCardView.getLayoutY()
-						- tempList.get(i).getLayoutY() + offsetY
-						+ tempList.get(i).getContainingPile()
-								.getCardGapVertical() * count);
+				tempList.get(i).setTranslateX((draggedCardView.getLayoutX()
+						- tempList.get(i).getLayoutX()) + offsetX
+						+ (tempList.get(i).getContainingPile()
+								.getCardGapHorizontal() * count));
+				tempList.get(i).setTranslateY((draggedCardView.getLayoutY()
+						- tempList.get(i).getLayoutY()) + offsetY
+						+ (tempList.get(i).getContainingPile()
+								.getCardGapVertical() * count));
 
 				count++;
 				tempList.get(i).toFront();
@@ -260,18 +256,17 @@ public class InputManager {
 		if (draggedCard == null && draggedCardView == null) {
 			return;
 		}
-		
-		
+		justDragged = true;
 
 		// Get the actual card
 		/** get current card view. */
-		final CardView cardView = (CardView) e.getSource();
+		CardView cardView = (CardView) e.getSource();
 		/** get current card. */
 		Card card = game.getCurrentGameState().GetFullDeck()
 				.getById(cardView.getShortID());
 
-		final List<Card> cardsToPlay = new ArrayList<Card>();
-		final List<CardView> draggedViewList = new ArrayList<CardView>();
+		List<Card> cardsToPlay = new ArrayList<Card>();
+		List<CardView> draggedViewList = new ArrayList<CardView>();
 
 		if (gameBoard.getSelected().size() > 1
 				&& gameBoard.getSelected().contains(cardView)) {
@@ -289,23 +284,21 @@ public class InputManager {
 		List<Card> activePile = game.getPileById(activePileView.getShortID());
 
 		for (Card c : activePile) {
-			if (c.getId().equals(cardView.getShortID())) {
+			if (c.getId().equals(cardView.getShortID()))
 				card = c;
-			}
 		}
 
 		System.out.println("CardView ID: " + cardView.getShortID()
 				+ " in pile: " + activePileView.getShortID());
 
 		// check if card(s) are intersecting with any of the piles
-		CardPileView nearestPile = gameBoard.getNearestPile(draggedCardView);
-		if (!cardsToPlay.isEmpty()) {
-			if (checkPile(cardsToPlay, cardView, activePile, activePileView, nearestPile)) {
+		if (cardsToPlay.size() > 0) {
+			if (checkPile(cardsToPlay, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
 				draggedCard = null;
 				draggedCardView = null;
 				return;
 			}
-		} else if (checkPile(card, cardView, activePile, activePileView, nearestPile)) {
+		} else if (checkPile(card, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
 			draggedCard = null;
 			draggedCardView = null;
 			return;
@@ -313,17 +306,16 @@ public class InputManager {
 
 		// if not intersecting with any valid pile, slide them back
 
-		if (!draggedViewList.isEmpty()) {
-			for (final CardView draggedView : draggedViewList) {
+		if (draggedViewList.size() > 0) {
+			for (CardView draggedView : draggedViewList) {
 				slideBack(draggedView);
 			}
-			gameBoard.resetSelection(false);
 		} else {
 			slideBack(draggedCardView);
 		}
 
 		// reorder CardViews
-		for (final CardView cv : activePileView) {
+		for (CardView cv : activePileView) {
 			cv.toFront();
 		}
 
@@ -400,9 +392,8 @@ public class InputManager {
 		boolean result = false;
 
 		// skip checking the same pile
-		if (pileView.equals(activePileView)) {
+		if (pileView.equals(activePileView))
 			return result;
-		}
 
 		if (isOverPile(cardView, pileView)) {
 
@@ -417,22 +408,15 @@ public class InputManager {
 								cards));
 				if (playCards.success) {
 					gameBoard.removeOffsetSelection();
-
 					for (CardView selectedCardView : gameBoard.getSelected()) {
 						slideToPile(selectedCardView, activePileView, pileView,
-								false);
+								true);
 					}
-					
-					activePileView.restackCards();
 					gameBoard.clearSelection();
 					gameBoard.updateGameBoard();
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
-					
-					if(pileView.equals(gameBoard.getWasteView())) {
-						justDragged = true;
-					}
 				} else {
 					result = false;
 					gameBoard
@@ -498,7 +482,7 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
-					
+					justDragged = false;
 
 				}
 				else {
@@ -521,9 +505,6 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
-					if(pileView.equals(gameBoard.getWasteView())) {
-						justDragged = true;
-					}
 				} else {
 					result = false;
 					gameBoard.setMessageLabelText("Invalid PlayOneCardMove");
@@ -545,13 +526,12 @@ public class InputManager {
 	 * @return true if the card is over the pile, false otherwise.
 	 */
 	private boolean isOverPile(CardView cardView, CardPileView pileView) {
-		if (pileView.isEmpty()) {
+		if (pileView.isEmpty())
 			return cardView.getBoundsInParent().intersects(
 					pileView.getBoundsInParent());
-		} else {
+		else
 			return cardView.getBoundsInParent().intersects(
 					pileView.getTopCardView().getBoundsInParent());
-		}
 	}
 
 	/**
@@ -566,13 +546,13 @@ public class InputManager {
 
 		double targetX = card.getLayoutX();
 		double targetY = card.getLayoutY();
-		
+
 		animateCardMovement(card, sourceX, sourceY,
-				targetX, targetY, Duration.millis(400), e -> {
+				targetX, targetY, Duration.millis(150), e -> {
 					card.getDropShadow().setRadius(2);
 					card.getDropShadow().setOffsetX(0);
 					card.getDropShadow().setOffsetY(0);
-					
+					gameBoard.resetSelection(false);
 			});
 	}
 
@@ -635,32 +615,27 @@ public class InputManager {
 	 *            The destination pile.
 	 */
 	public void slideToPile(CardView cardToSlide, CardPileView sourcePile,
-			CardPileView destPile, boolean toRestack) {
-		
+			CardPileView destPile, boolean replaceAtIndex) {
 		if (cardToSlide == null)
 			return;
 
 		double targetX;
 		double targetY;
 
-//		if (destPile.isEmpty()) {
-//			targetX = destPile.getLayoutX();
-//			targetY = destPile.getLayoutY();
-//		} else {
-//			targetX = destPile.getTopCardView().getLayoutX();
-//			targetY = destPile.getTopCardView().getLayoutY();
-//		}
+		if (destPile.isEmpty()) {
+			targetX = destPile.getLayoutX();
+			targetY = destPile.getLayoutY();
+		} else {
+			targetX = destPile.getTopCardView().getLayoutX();
+			targetY = destPile.getTopCardView().getLayoutY();
+		}
 
 		CardView currentCardView = cardToSlide;
 		double sourceX =
 				currentCardView.getLayoutX() + currentCardView.getTranslateX();
 		double sourceY =
 				currentCardView.getLayoutY() + currentCardView.getTranslateY();
-		if(toRestack) {
-			sourcePile.moveCardViewToPile(currentCardView, destPile, true);
-		} else {
-			sourcePile.moveCardViewToPile(currentCardView, destPile, false);
-		}
+		sourcePile.moveCardViewToPile(currentCardView, destPile);
 
 		destPile.restackCards();
 		targetX = cardToSlide.getLayoutX();
@@ -676,6 +651,40 @@ public class InputManager {
 
 				});
 
+	}
+
+	/**
+	 * Slides the list of dragged cards from the source pile to the destination
+	 * pile.
+	 *
+	 * @param cardsToSlide
+	 *            The list of dragged cards.
+	 * @param sourcePile
+	 *            The source pile.
+	 * @param destPile
+	 *            The destination pile.
+	 */
+	private void slideToHand(CardView cardToSlide, CardPileView sourcePile,
+			CardPileView destPile, double x, double y, int index,
+			boolean replaceAtIndex) {
+		if (cardToSlide == null)
+			return;
+
+		double sourceX = cardToSlide.getLayoutX() + cardToSlide.getTranslateX();
+		double sourceY = cardToSlide.getLayoutY() + cardToSlide.getTranslateY();
+
+		double targetX = x;
+		double targetY = y;
+
+		sourcePile.moveCardViewToPile(cardToSlide, destPile);
+
+		animateCardMovement(cardToSlide, sourceX, sourceY,
+				targetX, targetY, Duration.millis(150), e -> {
+
+					cardToSlide.getDropShadow().setRadius(2);
+					cardToSlide.getDropShadow().setOffsetX(0);
+					cardToSlide.getDropShadow().setOffsetY(0);
+				});
 	}
 
 	/**
@@ -724,27 +733,6 @@ public class InputManager {
 				blurReset);
 		pt.play();
 	}
-	
-	
-	public void fadeOutAndRemove(CardView view) {
-		final FadeTransition fadeout = new FadeTransition(new Duration(400));
-    fadeout.setNode(view);
-    fadeout.setToValue(0.0);
-    fadeout.setOnFinished(e -> {
-    	gameBoard.getChildren().remove(view);
-    });
-		
-    Timeline timeline = new Timeline(
-            
-            new KeyFrame(
-                new Duration(400),
-                e -> {
-                	fadeout.play();
-                }
-            )
-        );
-        timeline.play();        
-    }
 
 	/**
 	 * Helper class for calculating card positions.

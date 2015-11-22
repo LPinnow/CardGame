@@ -5,6 +5,7 @@ import view.CardViewFactory;
 import view.GameBoard;
 import view.GameMenu;
 import view.InputManager;
+import view.StatusBar;
 import controller.validators.MoveValidator;
 import controller.validators.TableSwapValidator;
 import javafx.application.Application;
@@ -113,7 +114,7 @@ public class CardGameMain extends Application {
 				new MoveValidator(), endGameChecker, new MoveExecutor(
 						endGameChecker));
 
-		mouseUtility = new InputManager(gameEngine, gameBoard);
+		mouseUtility = new InputManager(gameEngine, gameBoard, statusBar);
 		gameBoard.setInputManager(mouseUtility);
 		gameEngine.initializeNewGame(2, new RuleConfigurationLoader("/configurationfiles/idiotRules.json"));
 		gameBoard.updateCurrentState(gameEngine.getCurrentGameState());
