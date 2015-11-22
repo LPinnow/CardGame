@@ -124,6 +124,7 @@ public class InputManager {
 					gameBoard.updateGameBoard();
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
+					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
 
 				} else {
 					gameBoard
