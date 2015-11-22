@@ -20,6 +20,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import model.IdiotGameState;
+import model.IdiotGameState.GamePhases;
 import model.card.Card;
 import model.move.MoveResult;
 import model.move.PlayMultipleCardsMove;
@@ -76,6 +77,13 @@ public class InputManager {
 		// ignore resulting click event generated after drag
 		if (justDragged) {
 			justDragged = false;
+			e.consume();
+			return;
+		}
+		
+		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
+			draggedCard = null;
+			draggedCardView = null;
 			e.consume();
 			return;
 		}
@@ -192,6 +200,13 @@ public class InputManager {
 		if (e.getButton() != MouseButton.PRIMARY) {
 			return;
 		}
+		
+		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
+			draggedCard = null;
+			draggedCardView = null;
+			e.consume();
+			return;
+		}
 
 		/** x component. */
 		double offsetX = e.getSceneX() - mousePos.x;
@@ -258,6 +273,13 @@ public class InputManager {
 		}
 		justDragged = true;
 
+		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
+			draggedCard = null;
+			draggedCardView = null;
+			e.consume();
+			return;
+		}
+			
 		// Get the actual card
 		/** get current card view. */
 		CardView cardView = (CardView) e.getSource();
@@ -507,7 +529,11 @@ public class InputManager {
 							.CurrentPlayerTurn());
 				} else {
 					result = false;
-					gameBoard.setMessageLabelText("Invalid PlayOneCardMove");
+					gameBoard.setMessageLabelText(playCard.getMessage());
+				}
+				
+				if (playCard.isGameEnded()) {
+					gameBoard.setMessageLabelText(playCard.getMessage());
 				}
 
 			}

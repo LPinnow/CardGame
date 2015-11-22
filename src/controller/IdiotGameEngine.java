@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.*;
+import model.IdiotGameState.GamePhases;
 import model.card.Card;
 import model.card.CardDeck;
 import model.move.Move;
@@ -162,9 +163,19 @@ public class IdiotGameEngine implements IIdiotGameEngine {
 		ValidationResult moveValidationResult = moveValidator.IsValidMove(move);
 		
 		if (! moveValidationResult.Success) return new MoveResult() {{ success = false; message = moveValidationResult.ErrorMessage; }}; 
-		
-		return moveExecutor.executeMove(move);
 
+		MoveResult result = moveExecutor.executeMove(move);
+		
+		if (result.isSuccess()) {
+			if (gameEndedChecker.endGameConditionReached()) {
+				result.setGameEnded(true);
+			    result.setMessage("Game over.. Player " + state.currentPlayerTurn + " is the winner! ");
+			    state.CurrentGamePhase = GamePhases.GameCompleted;
+			    return result;
+			}
+		}
+		
+		return result;
 	}
 	
 	/**

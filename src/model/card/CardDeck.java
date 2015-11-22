@@ -22,7 +22,8 @@ public class CardDeck extends CardCollection {
 
     for (GameCardSuit suit : GameCardSuit.values()) {
       for (GameCardRank rank : GameCardRank.values()) {
-        result.addCard(new GameCard(true, suit, rank));
+    	  //if (rank.ordinal() > GameCardRank.Eight.ordinal())  // un-comment this for a faster game for testing
+    		  result.addCard(new GameCard(true, suit, rank));
       }
     }
 
