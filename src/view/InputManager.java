@@ -54,10 +54,8 @@ public class InputManager {
 	 * Same for the view of the cards.
 	 */
 	private CardView draggedCardView;
-	
-	private StatusBar statusBar; 
 
-
+	private StatusBar statusBar;
 
 	private boolean justDragged;
 
@@ -70,7 +68,7 @@ public class InputManager {
 	 * The {@link GameBoard} object to manipulate.
 	 */
 	private GameBoard gameBoard;
-	
+
 	/**
 	 * This event handler is attached to cards that are still on the stock. When
 	 * the user clicks on a card, it will be flipped and put on the waste.
@@ -83,7 +81,7 @@ public class InputManager {
 			e.consume();
 			return;
 		}
-		
+
 		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
 			draggedCard = null;
 			draggedCardView = null;
@@ -113,8 +111,8 @@ public class InputManager {
 				MoveResult playDeckResult = game.submitMove(game
 						.getCurrentGameState()
 						.CurrentPlayerTurn(), new PlayTopOfDeck(card.getId(),
-						game
-								.getCurrentGameState().GetPile().toString()));
+								game
+										.getCurrentGameState().GetPile().toString()));
 				if (playDeckResult.success) {
 					gameBoard.setMessageLabelText("");
 					cardView.setToFaceUp();
@@ -136,7 +134,7 @@ public class InputManager {
 				MoveResult playWasteResult = game.submitMove(game
 						.getCurrentGameState()
 						.CurrentPlayerTurn(), new TakePileMove(card.getId(),
-						" "));
+								" "));
 				if (playWasteResult.success) {
 					gameBoard.setMessageLabelText("");
 					slideToPile(cardView, gameBoard.getWasteView(),
@@ -145,8 +143,7 @@ public class InputManager {
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
-				}
-				else {
+				} else {
 					gameBoard.setMessageLabelText("Cannot pick up cards");
 				}
 			}
@@ -205,7 +202,7 @@ public class InputManager {
 		if (e.getButton() != MouseButton.PRIMARY) {
 			return;
 		}
-		
+
 		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
 			draggedCard = null;
 			draggedCardView = null;
@@ -227,7 +224,7 @@ public class InputManager {
 
 		draggedCardView = cardView;
 		draggedCard = card;
-		
+
 		// Handles dragging coordinates
 		draggedCardView.toFront();
 		draggedCardView.setTranslateX(offsetX);
@@ -276,7 +273,6 @@ public class InputManager {
 		if (draggedCard == null && draggedCardView == null) {
 			return;
 		}
-		
 
 		if (game.getCurrentGameState().CurrentGamePhase() == GamePhases.GameCompleted) {
 			draggedCard = null;
@@ -284,7 +280,7 @@ public class InputManager {
 			e.consume();
 			return;
 		}
-			
+
 		// Get the actual card
 		/** get current card view. */
 		CardView cardView = (CardView) e.getSource();
@@ -320,12 +316,14 @@ public class InputManager {
 
 		// check if card(s) are intersecting with any of the piles
 		if (cardsToPlay.size() > 0) {
-			if (checkPile(cardsToPlay, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
+			if (checkPile(cardsToPlay, cardView, activePile, activePileView,
+					gameBoard.getNearestPile(draggedCardView))) {
 				draggedCard = null;
 				draggedCardView = null;
 				return;
 			}
 		} else if (checkPile(card, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
+			System.out.println("True Check Pile single card");
 			draggedCard = null;
 			draggedCardView = null;
 			return;
@@ -337,6 +335,7 @@ public class InputManager {
 			for (CardView draggedView : draggedViewList) {
 				slideBack(draggedView);
 			}
+			gameBoard.resetSelection(false);
 		} else {
 			slideBack(draggedCardView);
 		}
@@ -426,8 +425,7 @@ public class InputManager {
 		if (isOverPile(cardView, pileView)) {
 
 			if (game.getCurrentGameState().CurrentGamePhase()
-					.equals(IdiotGameState.GamePhases.GamePlay))
-			{
+					.equals(IdiotGameState.GamePhases.GamePlay) && pileView.getShortID().contains("waste")) {
 				int currentPlayer = game.getCurrentGameState()
 						.CurrentPlayerTurn();
 				MoveResult playCards = game.submitMove(currentPlayer,
@@ -440,17 +438,15 @@ public class InputManager {
 						slideToPile(selectedCardView, activePileView, pileView,
 								false);
 					}
-					pileView.restackCards();
+					activePileView.restackCards();
 					gameBoard.clearSelection();
 					gameBoard.updateGameBoard();
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
-					
-					if(pileView.equals(gameBoard.getWasteView())) {
-						justDragged = true;
-					}
+
+					justDragged = true;
 				} else {
 					result = false;
 					gameBoard
@@ -488,11 +484,10 @@ public class InputManager {
 
 			if (game.getCurrentGameState().CurrentGamePhase()
 					.equals(IdiotGameState.GamePhases.CardSwapping)
-					&& pileView.getShortID().contains("Foundation"))
-			{
+					&& pileView.getShortID().contains("Foundation")) {
 				MoveResult swapResult = game.requestHandToTableCardSwap(game
 						.getCurrentGameState().CurrentPlayerTurn(), cardView
-						.asGameCard(),
+								.asGameCard(),
 						pileView.getCards().get(pileView.getCards().size() - 1)
 								.asGameCard());
 				if (swapResult.success) {
@@ -517,16 +512,12 @@ public class InputManager {
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
 
-
-				}
-				else {
+				} else {
 					result = false;
 					gameBoard.setMessageLabelText(swapResult.message);
 				}
-			}
-			else if (game.getCurrentGameState().CurrentGamePhase()
-					.equals(IdiotGameState.GamePhases.GamePlay))
-			{
+			} else if (game.getCurrentGameState().CurrentGamePhase()
+					.equals(IdiotGameState.GamePhases.GamePlay) && pileView.getShortID().contains("waste")) {
 				int currentPlayer = game.getCurrentGameState()
 						.CurrentPlayerTurn();
 				MoveResult playCard = game.submitMove(currentPlayer,
@@ -539,22 +530,20 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
-					if(pileView.equals(gameBoard.getWasteView())) {
-						justDragged = true;
-					}
+					justDragged = true;
 				} else {
 					result = false;
 					gameBoard.setMessageLabelText(playCard.getMessage());
 				}
-				
+
 				if (playCard.isGameEnded()) {
 					gameBoard.setMessageLabelText(playCard.getMessage());
-				} 
+				}
 			}
 		}
-		
+
 		statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
-		
+
 		return result;
 	}
 
@@ -568,12 +557,13 @@ public class InputManager {
 	 * @return true if the card is over the pile, false otherwise.
 	 */
 	private boolean isOverPile(CardView cardView, CardPileView pileView) {
-		if (pileView.isEmpty())
+		if (pileView.isEmpty()) {
 			return cardView.getBoundsInParent().intersects(
 					pileView.getBoundsInParent());
-		else
+		} else {
 			return cardView.getBoundsInParent().intersects(
 					pileView.getTopCardView().getBoundsInParent());
+		}
 	}
 
 	/**
@@ -594,8 +584,7 @@ public class InputManager {
 					card.getDropShadow().setRadius(2);
 					card.getDropShadow().setOffsetX(0);
 					card.getDropShadow().setOffsetY(0);
-					gameBoard.resetSelection(false);
-			});
+				});
 	}
 
 	public void slideFromDeck(CardView cardToSlide, int ms) {
@@ -658,27 +647,25 @@ public class InputManager {
 	 */
 	public void slideToPile(CardView cardToSlide, CardPileView sourcePile,
 			CardPileView destPile, boolean toRestack) {
-		
+
 		if (cardToSlide == null)
 			return;
 
 		double targetX;
 		double targetY;
 
-//		if (destPile.isEmpty()) {
-//			targetX = destPile.getLayoutX();
-//			targetY = destPile.getLayoutY();
-//		} else {
-//			targetX = destPile.getTopCardView().getLayoutX();
-//			targetY = destPile.getTopCardView().getLayoutY();
-//		}
+		// if (destPile.isEmpty()) {
+		// targetX = destPile.getLayoutX();
+		// targetY = destPile.getLayoutY();
+		// } else {
+		// targetX = destPile.getTopCardView().getLayoutX();
+		// targetY = destPile.getTopCardView().getLayoutY();
+		// }
 
 		CardView currentCardView = cardToSlide;
-		double sourceX =
-				currentCardView.getLayoutX() + currentCardView.getTranslateX();
-		double sourceY =
-				currentCardView.getLayoutY() + currentCardView.getTranslateY();
-		if(toRestack) {
+		double sourceX = currentCardView.getLayoutX() + currentCardView.getTranslateX();
+		double sourceY = currentCardView.getLayoutY() + currentCardView.getTranslateY();
+		if (toRestack) {
 			sourcePile.moveCardViewToPile(currentCardView, destPile, true);
 		} else {
 			sourcePile.moveCardViewToPile(currentCardView, destPile, false);
@@ -761,8 +748,7 @@ public class InputManager {
 		path.getElements().add(new MoveToAbs(card, sourceX, sourceY));
 		path.getElements().add(new LineToAbs(card, targetX, targetY));
 
-		PathTransition pathTransition =
-				new PathTransition(duration, path, card);
+		PathTransition pathTransition = new PathTransition(duration, path, card);
 		pathTransition.setInterpolator(Interpolator.EASE_OUT);
 		pathTransition.setOnFinished(doAfter);
 
@@ -780,25 +766,24 @@ public class InputManager {
 				blurReset);
 		pt.play();
 	}
+
 	public void fadeOutAndRemove(CardView view) {
 		final FadeTransition fadeout = new FadeTransition(new Duration(400));
-    fadeout.setNode(view);
-    fadeout.setToValue(0.0);
-    fadeout.setOnFinished(e -> {
-    	gameBoard.getChildren().remove(view);
-    });
-		
-    Timeline timeline = new Timeline(
-            
-            new KeyFrame(
-                new Duration(400),
-                e -> {
-                	fadeout.play();
-                }
-            )
-        );
-        timeline.play();        
-    }
+		fadeout.setNode(view);
+		fadeout.setToValue(0.0);
+		fadeout.setOnFinished(e -> {
+			gameBoard.getChildren().remove(view);
+		});
+
+		Timeline timeline = new Timeline(
+
+				new KeyFrame(
+						new Duration(400),
+						e -> {
+							fadeout.play();
+						}));
+		timeline.play();
+	}
 
 	/**
 	 * Helper class for calculating card positions.
