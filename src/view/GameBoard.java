@@ -443,7 +443,7 @@ public class GameBoard extends Pane {
 
 	private void removePileViewCards(CardPileView pile) {
 		for (CardView cardView : pile) {
-			getChildren().remove(cardView);
+			mouseUtility.fadeOutAndRemove(cardView);
 		}
 		pile.clearContents();
 	}
@@ -512,7 +512,7 @@ public class GameBoard extends Pane {
 			List<Card> cards) {
 		List<CardView> cardViews = wastePileView.getCards();
 
-		if (cardViews.size() > 0 && cards.size() == 0) {
+		if (!cardViews.isEmpty() && cards.isEmpty()) {
 			removePileViewCards(wastePileView);
 		}
 
@@ -522,7 +522,7 @@ public class GameBoard extends Pane {
 		if(currentGameState.CurrentGamePhase()
 				.equals(IdiotGameState.GamePhases.GameCompleted)) {
 			AlertBox alert = new AlertBox();
-			alert.display("Game Over", "Game Over!");
+			alert.display("Game Over", "Player " + currentGameState.CurrentPlayerTurn() + "has won the game.");
 		}
 		
 		CardPileView foundationPileView_1;
@@ -543,7 +543,7 @@ public class GameBoard extends Pane {
 			checkForAdditions(foundationPileView_3, currentGameState
 					.getPlayerPlaces().get(i - 1).getAllTableCards3());
 			checkForAdditions(handPileView, currentGameState.getPlayerPlaces()
-					.get(i - 1).getHand().getCards());
+					.get(i - 1).getHand().getCards());			
 
 			setupFoundation(foundationPileView_1, handPileView.getCards()
 					.size());
@@ -559,7 +559,8 @@ public class GameBoard extends Pane {
 		checkForWasteChanges(getWasteView(), currentGameState.GetPile()
 				.getCards());
 		
-		setupWaste(getWasteView());
+		setupWaste(getWasteView());	
+		
 	}
 
 	/**

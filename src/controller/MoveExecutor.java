@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controller.validators.ValidationResult;
 import model.IdiotGameConfiguration;
 import model.IdiotGameState;
+import model.IdiotGameState.GamePhases;
 import model.card.Card;
 import model.card.GameCardRank;
 import model.move.Move;
@@ -132,7 +133,8 @@ public class MoveExecutor implements IMoveExecutor {
 			handleIfPlayersHandDropsBelowThreeCards();
 		}
 
-		if (endGameChecker.endGameConditionReached())
+		if (endGameChecker.endGameConditionReached()) {
+			state.CurrentGamePhase = GamePhases.GameCompleted;
 			return new MoveResult() {
 				{
 					success = true;
@@ -140,7 +142,7 @@ public class MoveExecutor implements IMoveExecutor {
 					message = "Player " + state.currentPlayerTurn + " has won";
 				}
 			};
-		else {
+		} else {
 			advancePlayerTurn();
 		}
 		System.out.println("After turn game-state: \n\n" + state.toString()

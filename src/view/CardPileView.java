@@ -294,6 +294,15 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		cards.remove(cardToMove);
 		restackCards();
 	}
+	
+	public void moveCardViewToPile(CardView cardToMove, CardPileView destPile, boolean toRestack) {
+		System.out.println("Adding " + cardToMove.getShortID() + " to " + destPile.getShortID() + " from " + getShortID());
+		destPile.addCardView(cardToMove);
+		cards.remove(cardToMove);
+		if(toRestack) {
+			restackCards();
+		}
+	}
 
 	public void replaceCardViewOnPile(CardView cardToMove,
 			CardPileView destPile, double x, double y, int index, boolean replaceAtIndex) {

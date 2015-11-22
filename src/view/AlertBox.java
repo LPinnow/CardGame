@@ -43,7 +43,7 @@ public class AlertBox {
 
         Scene scene = new Scene(layout);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add("styles/main.css");
+        scene.getStylesheets().add("stylesheets/idiotMain.css");
         
         layout.setId("popup");
         
