@@ -53,6 +53,8 @@ public class InputManager {
 	 * Same for the view of the cards.
 	 */
 	private CardView draggedCardView;
+	
+	private StatusBar statusBar; 
 
 
 
@@ -139,12 +141,12 @@ public class InputManager {
 					gameBoard.updateGameBoard();
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
+					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
 				}
 				else {
 					gameBoard.setMessageLabelText("Cannot pick up cards");
 				}
 			}
-
 		}
 
 		e.consume();
@@ -356,9 +358,10 @@ public class InputManager {
 	 * @param gameBoard
 	 *            The {@link GameBoard} object.
 	 */
-	public InputManager(IIdiotGameEngine game, GameBoard gameBoard) {
+	public InputManager(IIdiotGameEngine game, GameBoard gameBoard, StatusBar statusBar) {
 		this.game = game;
 		this.gameBoard = gameBoard;
+		this.statusBar = statusBar;
 	}
 
 	/**
@@ -439,6 +442,7 @@ public class InputManager {
 					result = true;
 					gameBoard.setActivePlayer(game.getCurrentGameState()
 							.CurrentPlayerTurn());
+					statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
 				} else {
 					result = false;
 					gameBoard
@@ -534,11 +538,12 @@ public class InputManager {
 				
 				if (playCard.isGameEnded()) {
 					gameBoard.setMessageLabelText(playCard.getMessage());
-				}
-
+				} 
 			}
 		}
-
+		
+		statusBar.setActivePlayerText("Player " + game.getCurrentGameState().CurrentPlayerTurn());
+		
 		return result;
 	}
 
