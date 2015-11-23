@@ -29,6 +29,7 @@ public class MoveExecutor implements IMoveExecutor {
 	public MoveResult executeMove(Move move) {
 		boolean deckIsEmpty = state.drawCards.size() == 0;
 		boolean wasteIsEmpty = state.pile.size() == 0;
+		boolean skipAdvanceTurn = false;
 
 		if (move instanceof TakePileMove && !wasteIsEmpty) {
 			state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand
@@ -42,7 +43,7 @@ public class MoveExecutor implements IMoveExecutor {
 			if (wasteIsEmpty) {
 				state.pile.add(cardFromTopOfDeck);
 				state.drawCards.remove(cardFromTopOfDeck);
-				handleIfCardPlayedOnPileWasBurnCard();
+				skipAdvanceTurn = handleIfCardPlayedOnPileWasBurnCard();
 			} else {
 				GameCardRank topPileCardRank = state.pile
 						.get(state.pile.size() - 1).getRank();
@@ -50,8 +51,8 @@ public class MoveExecutor implements IMoveExecutor {
 						topPileCardRank)) {
 					state.pile.add(cardFromTopOfDeck);
 					state.drawCards.remove(cardFromTopOfDeck);
-					handleIfCardPlayedOnPileWasBurnCard();
-					handleIfTopFourPileCardsAreSameRank();
+					skipAdvanceTurn = handleIfCardPlayedOnPileWasBurnCard();
+					skipAdvanceTurn = handleIfTopFourPileCardsAreSameRank();
 				}
 				else {
 					state.PlayerPlaces.get(state.currentPlayerTurn - 1).hand
@@ -93,8 +94,8 @@ public class MoveExecutor implements IMoveExecutor {
 						.remove(cardPlay.card);
 			cardPlay.card.flip();
 
-			handleIfCardPlayedOnPileWasBurnCard();
-			handleIfTopFourPileCardsAreSameRank();
+			skipAdvanceTurn = handleIfCardPlayedOnPileWasBurnCard();
+			skipAdvanceTurn = handleIfTopFourPileCardsAreSameRank();
 			handleIfPlayersHandDropsBelowThreeCards();
 		}
 
@@ -128,8 +129,8 @@ public class MoveExecutor implements IMoveExecutor {
 							.remove(card);
 			}
 
-			handleIfCardPlayedOnPileWasBurnCard();
-			handleIfTopFourPileCardsAreSameRank();
+			skipAdvanceTurn = handleIfCardPlayedOnPileWasBurnCard();
+			skipAdvanceTurn = handleIfTopFourPileCardsAreSameRank();
 			handleIfPlayersHandDropsBelowThreeCards();
 		}
 
@@ -142,7 +143,10 @@ public class MoveExecutor implements IMoveExecutor {
 				}
 			};
 		} else {
-			advancePlayerTurn();
+			if (!skipAdvanceTurn) {
+				advancePlayerTurn();
+			}
+			
 		}
 		System.out.println("After turn game-state: \n\n" + state.toString()
 				+ "\n");
@@ -174,14 +178,17 @@ public class MoveExecutor implements IMoveExecutor {
 		return true;
 	}
 
-	private void handleIfCardPlayedOnPileWasBurnCard() {
+	private boolean handleIfCardPlayedOnPileWasBurnCard() {
 		if (state.pile.get(state.pile.size() - 1).getRank() == config.burnCard) {
 			state.discardedCards.addAll(state.pile);
 			state.pile = new ArrayList<Card>();
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	private void handleIfTopFourPileCardsAreSameRank() {
+	private boolean handleIfTopFourPileCardsAreSameRank() {
 		if (state.pile.size() >= 4) {
 			GameCardRank topCardRank = state.pile.get(state.pile.size() - 1)
 					.getRank();
@@ -197,8 +204,10 @@ public class MoveExecutor implements IMoveExecutor {
 			if (lastFourCardsAreSameRank) {
 				state.discardedCards.addAll(state.pile);
 				state.pile = new ArrayList<Card>();
+				return true;
 			}
 		}
+		return false;
 	}
 
 	private void handleIfPlayersHandDropsBelowThreeCards() {

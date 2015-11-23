@@ -237,10 +237,12 @@ public class GameBoard extends Pane {
 		
 		p1_sort.setOnMouseClicked(e-> {
 			mouseUtility.sortPile(playerHands.get(1).get(0));
+			e.consume();
 		});
 		
 		p2_sort.setOnMouseClicked(e-> {
 			mouseUtility.sortPile(playerHands.get(2).get(0));
+			e.consume();
 		});
 		
 		p2_ready.setVisible(false);
@@ -368,9 +370,9 @@ public class GameBoard extends Pane {
 			CardPileView currentPile = allPileViews.get(i);
 
 			// Don't check pile against itself
-			if (currentPile == cardView.getContainingPile()) {
-				continue;
-			}
+//			if (currentPile == cardView.getContainingPile()) {
+//				continue;
+//			}
 			double cardPileWidth = (currentPile.getCards().size() * cardWidth)
 					+ (currentPile.getCards().size() - 2 * currentPile
 							.getCardGapHorizontal());

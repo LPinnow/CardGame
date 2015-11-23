@@ -175,22 +175,6 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 
 	}
 
-	/**
-	 * Lays out the {@link CardView} object to sit nicely in this pile.
-	 *
-	 * @param cardView
-	 *            The {@link CardView} object to lay out.
-	 */
-	private void layoutCard(CardView cardView) {
-		cardView.relocate(cardView.getLayoutX() + cardView.getTranslateX(),
-				cardView.getLayoutY() + cardView.getTranslateY());
-
-		cardView.setTranslateX(0);
-		cardView.setTranslateY(0);
-		cardView.setLayoutX(getLayoutX() + (cards.size() - 1)
-				* cardGapHorizontal);
-		cardView.setLayoutY(getLayoutY() + (cards.size() - 1) * cardGapVertical);
-	}
 	
 	public void restackCards() {
 		if(cards.size() > 10) {
