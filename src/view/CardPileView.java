@@ -166,7 +166,13 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		cards.add(cardView);
 		cardView.setContainingPile(this);
 		cardView.toFront();
-		restackCards();
+//		restackCards();
+	}
+	
+	public void moveToEnd(CardView cardView) {
+		cards.remove(cardView);
+		cards.add(cardView);
+
 	}
 
 	/**
@@ -195,7 +201,6 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 			CardView tempView = cards.get(i);
 			tempView.relocate(cards.get(i).getLayoutX() + tempView.getTranslateX(),
 					tempView.getLayoutY() + tempView.getTranslateY());
-
 			tempView.setTranslateX(0);
 			tempView.setTranslateY(0);
 			tempView.setLayoutX(getLayoutX() + (i
@@ -292,7 +297,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		System.out.println("Adding " + cardToMove.getShortID() + " to " + destPile.getShortID() + " from " + getShortID());
 		destPile.addCardView(cardToMove);
 		cards.remove(cardToMove);
-		restackCards();
+//		restackCards();
 	}
 	
 	public void moveCardViewToPile(CardView cardToMove, CardPileView destPile, boolean toRestack) {
@@ -300,7 +305,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 		destPile.addCardView(cardToMove);
 		cards.remove(cardToMove);
 		if(toRestack) {
-			restackCards();
+//			restackCards();
 		}
 	}
 
@@ -316,7 +321,7 @@ public class CardPileView extends Pane implements Iterable<CardView> {
 			layoutReplaceCard(cardView, x, y);
 		} else {
 			cards.add(cardView);
-			restackCards();
+//			restackCards();
 		}
 		cardView.setContainingPile(this);
 		cardView.toFront();

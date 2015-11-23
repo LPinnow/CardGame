@@ -19,7 +19,6 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import model.IdiotGameState;
 import model.IdiotGameStateFacade;
 import model.card.Card;
 
@@ -72,6 +71,10 @@ public class GameBoard extends Pane {
 	 * Ready button for player 2
 	 */
 	private Button p2_ready;
+	
+	private Button p1_sort;
+	
+	private Button p2_sort;
 
 	private List<CardPileView> allPileViews;
 
@@ -98,6 +101,13 @@ public class GameBoard extends Pane {
 		this.p1_ready.setId("default-btn");
 		this.p2_ready = new Button("Player 2 Ready?");
 		this.p2_ready.setId("default-btn");
+		
+		this.p1_sort = new Button("Sort P1");
+		this.p1_sort.setId("default-btn");
+		
+		this.p2_sort = new Button("Sort P2");
+		this.p2_sort.setId("default-btn");
+		
 
 		this.messageLabel = new Label("");
 		this.messageLabel.setTextFill(Color.RED);
@@ -219,8 +229,20 @@ public class GameBoard extends Pane {
 			allPileViews.add(pileView);
 		}
 
-		placeReadyButton(p1_ready, 1000, 625);
-		placeReadyButton(p2_ready, 1000, 75);
+		placeButton(p1_ready, 1000, 625);
+		placeButton(p2_ready, 1000, 75);
+		placeButton(p1_sort, 525, 650);
+		
+		placeButton(p2_sort, 525, 125);
+		
+		p1_sort.setOnMouseClicked(e-> {
+			mouseUtility.sortPile(playerHands.get(1).get(0));
+		});
+		
+		p2_sort.setOnMouseClicked(e-> {
+			mouseUtility.sortPile(playerHands.get(2).get(0));
+		});
+		
 		p2_ready.setVisible(false);
 
 		placeLabel(messageLabel, 50, 500, 14);
@@ -257,7 +279,7 @@ public class GameBoard extends Pane {
 	 * @param x
 	 * @param y
 	 */
-	private void placeReadyButton(Button button, int x, int y) {
+	private void placeButton(Button button, int x, int y) {
 		button.setTranslateX(x);
 		button.setTranslateY(y);
 		getChildren().add(button);
@@ -403,6 +425,7 @@ public class GameBoard extends Pane {
 
 		deckIterator.forEachRemaining(card -> {
 			getDeckView().addCardView(CardViewFactory.createCardView(card));
+			mouseUtility.restack(getDeckView());
 			cardViewList.add(getDeckView().getTopCardView());
 			getChildren().add(getDeckView().getTopCardView());
 			mouseUtility.makeClickable(getDeckView().getTopCardView());
@@ -455,6 +478,7 @@ public class GameBoard extends Pane {
 		for (Card card : cards) {
 			pile.addCardView(CardViewFactory
 					.createCardView(card));
+			mouseUtility.restack(pile);
 			getChildren().add(pile.getTopCardView());
 			cardViewList.add(pile.getTopCardView());
 			mouseUtility.slideFromDeck(pile.getTopCardView(), dealDelay);
@@ -467,11 +491,11 @@ public class GameBoard extends Pane {
 		int maxIndex = foundationPileView.getCards().size() - 1;
 		for (CardView cardView : foundationPileView.getCards()) {
 			if (handSize == 0 && foundationPileView.getCards().size() > 1) {
-				mouseUtility.makeDraggable(cardView);
+				mouseUtility.makeDraggable(foundationPileView.getCards().get(maxIndex));
 			} else {
 				mouseUtility.removeDraggable(cardView);
 			}
-			if (allFoundationCardsVisible) {
+			if (allFoundationCardsVisible && handSize == 0) {
 				cardView.setToFaceUp();
 				mouseUtility.makeDraggable(cardView);
 			}

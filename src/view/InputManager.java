@@ -1,6 +1,7 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -335,9 +336,10 @@ public class InputManager {
 			for (CardView draggedView : draggedViewList) {
 				slideBack(draggedView);
 			}
-			gameBoard.resetSelection(false);
+			gameBoard.clearSelection();
 		} else {
 			slideBack(draggedCardView);
+			gameBoard.clearSelection();
 		}
 
 		// reorder CardViews
@@ -438,7 +440,7 @@ public class InputManager {
 						slideToPile(selectedCardView, activePileView, pileView,
 								false);
 					}
-					activePileView.restackCards();
+					restack(activePileView);
 					gameBoard.clearSelection();
 					gameBoard.updateGameBoard();
 					result = true;
@@ -575,6 +577,8 @@ public class InputManager {
 	private void slideBack(CardView card) {
 		double sourceX = card.getLayoutX() + card.getTranslateX();
 		double sourceY = card.getLayoutY() + card.getTranslateY();
+		
+		moveToEnd(card, card.getContainingPile());
 
 		double targetX = card.getLayoutX();
 		double targetY = card.getLayoutY();
@@ -608,11 +612,57 @@ public class InputManager {
 					cardToSlide.getDropShadow().setOffsetY(0);
 				});
 	}
+	
+	public void moveToEnd(CardView view, CardPileView pile) {
+		pile.getCards().remove(view);
+		pile.getCards().add(view);
+		restack(pile);
+	}
+	
+	public void sortPile(CardPileView pile) {
+		List<CardView> cards = pile.getCards();
+		for(int i = 1; i < cards.size(); i++) {
+			int j = i;
+			while(j > 0 && cards.get(j-1).asGameCard().getRank().ordinal() > cards.get(j).asGameCard().getRank().ordinal()) {
+				Collections.swap(cards, j, j-1);
+				j = j - 1;
+			}
+		}
+		restack(pile);
+	}
+	
+	public void restack(CardPileView pile) {
+		double cardGapHorizontal = pile.getCardGapHorizontal();
+		double cardGapVertical = pile.getCardGapVertical();
+		List<CardView> cards = pile.getCards();
+		if(cards.size() > 10) {
+			cardGapHorizontal /= 2;
+			cardGapVertical /= 2;
+		}
+		for(int i = 0; i < cards.size(); i++) {
+			CardView tempView = cards.get(i);
+//			tempView.relocate(cards.get(i).getLayoutX() + tempView.getTranslateX(),
+//					tempView.getLayoutY() + tempView.getTranslateY());
+			tempView.setTranslateX(0);
+			tempView.setTranslateY(0);
+			tempView.setLayoutX(pile.getLayoutX() + (i
+					* cardGapHorizontal));
+			tempView.setLayoutY(pile.getLayoutY() + (i * cardGapVertical));
+			tempView.toFront();
+		}
+		
+		
+		
+		if(cards.size() > 10) {
+			cardGapHorizontal *= 2;
+			cardGapVertical *= 2;
+		}
+	}
+
 
 	public void slideToPosition(CardView cardToSlide, double newX, double newY) {
 		if (cardToSlide == null)
 			return;
-
 		double targetX, targetY, sourceX, sourceY;
 
 		targetX = newX;
@@ -620,6 +670,7 @@ public class InputManager {
 
 		sourceX = cardToSlide.getLayoutX() + cardToSlide.getTranslateX();
 		sourceY = cardToSlide.getLayoutY() + cardToSlide.getTranslateY();
+		
 		cardToSlide.setLayoutX(newX);
 		cardToSlide.setLayoutY(newY);
 
@@ -667,11 +718,12 @@ public class InputManager {
 		double sourceY = currentCardView.getLayoutY() + currentCardView.getTranslateY();
 		if (toRestack) {
 			sourcePile.moveCardViewToPile(currentCardView, destPile, true);
+			restack(sourcePile);
 		} else {
 			sourcePile.moveCardViewToPile(currentCardView, destPile, false);
 		}
 
-		destPile.restackCards();
+		restack(destPile);
 		targetX = cardToSlide.getLayoutX();
 		targetY = cardToSlide.getLayoutY();
 
