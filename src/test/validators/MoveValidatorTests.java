@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import controller.validators.TableSwapValidationResult;
-import controller.validators.TableSwapValidator;
+import model.move.MoveResult;
+import model.move.TakePileMove;
+import controller.validators.MoveValidator;
+import controller.validators.ValidationResult;
 import model.*;
 import model.card.Card;
 import model.card.CardDeck;
@@ -16,9 +18,10 @@ import model.card.GameCard;
 import model.card.GameCardRank;
 import model.card.GameCardSuit;
 
-public class TableSwapValidatorTests {
+public class MoveValidatorTests {
 
 	IdiotGameState state = new IdiotGameState();
+	IdiotGameConfiguration defaultConfig;
 	
 	Player player = new Player(1, "Gary", true, true);
 	Card playerOneHandCard = new GameCard(false, GameCardSuit.Clubs, GameCardRank.Seven);
@@ -29,6 +32,8 @@ public class TableSwapValidatorTests {
 	
 	@Before
     public void setUp() throws Exception{
+		
+		defaultConfig = new IdiotGameConfiguration(GameCardRank.Two, GameCardRank.Ten, GameCardRank.Five);
 		
 		state = new IdiotGameState(2);
 		state.discardedCards = new ArrayList<Card>();
@@ -61,85 +66,54 @@ public class TableSwapValidatorTests {
     }
 	
 	@Test
-	public void IsValidSwap_ToLowAPlayerNumber_FailsValidation() {
+	public void IsValidMove_TakePileMoveRequestOnEmptyPile_ReturnsInvalidMove() {
+
+		MoveValidator classUnderTest = new MoveValidator();
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
 		classUnderTest.setState(state);
-	
-		TableSwapValidationResult result = classUnderTest.isValidSwap(0, playerOneHandCard, playerOneFaceUpTableCard);
+		classUnderTest.setConfig(defaultConfig);
+		
+		ValidationResult result = classUnderTest.IsValidMove(new TakePileMove("",""));
 		
 		assertFalse(result.Success);
-		assertEquals("Invalid Player Number: 0", result.ErrorMessage);
+		assertEquals("Cannot take pile because it is empty", result.ErrorMessage);
 	}
 	
 	@Test
-	public void IsValidSwap_ToHighAPlayerNumber_FailsValidation() {
+	public void IsValidMove_TakePileMoveRequestOnPileWithOneCard_ReturnsValidMove() {
+
+		MoveValidator classUnderTest = new MoveValidator();
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
 		classUnderTest.setState(state);
+		classUnderTest.setConfig(defaultConfig);
 		
-		TableSwapValidationResult result = classUnderTest.isValidSwap(3, playerOneHandCard, playerOneFaceUpTableCard);
+		state.pile.add(new GameCard(false, GameCardSuit.Clubs, GameCardRank.King));
 		
-		assertFalse(result.Success);
-		assertEquals("Invalid Player Number: 3", result.ErrorMessage);
-	}
-	
-	@Test
-	public void IsValidSwap_ValidPlayerNumber_PassesValidation() {
-		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
-		classUnderTest.setState(state);
-		
-		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneFaceUpTableCard);
+		ValidationResult result = classUnderTest.IsValidMove(new TakePileMove("",""));
 		
 		assertTrue(result.Success);
 	}
 	
 	@Test
-	public void IsValidSwap_TableCardIsOneFaceUpForAndHandCardBelongsToPlayer_PassesValidation() {
+	public void IsValidMove_TakePileMoveRequestOnPileWithManyCards_ReturnsValidMove() {
+
+		MoveValidator classUnderTest = new MoveValidator();
 		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
 		classUnderTest.setState(state);
+		classUnderTest.setConfig(defaultConfig);
 		
-		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneFaceUpTableCard);
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.King));
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.Queen));
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.Jack));
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.Ten));
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.Nine));
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.Eight));
+		state.pile.add(new GameCard(false, GameCardSuit.Diamonds, GameCardRank.Seven));
+		
+		ValidationResult result = classUnderTest.IsValidMove(new TakePileMove("",""));
 		
 		assertTrue(result.Success);
-	}
-	
-	@Test
-	public void IsValidSwap_TableCardIsOneFaceDownForPlayer_FailsValidation() {
-		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
-		classUnderTest.setState(state);
-	
-		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneFaceDownTableCard);
-		
-		assertFalse(result.Success);
-		assertEquals("Table card requested for swap not among Player 1's face up cards", result.ErrorMessage);
-	}
-	
-	@Test
-	public void IsValidSwap_TableCardIsNotOnTableForPlayer_FailsValidation() {
-		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
-		classUnderTest.setState(state);
-	
-		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneHandCard, playerOneNonTableCard);
-		
-		assertFalse(result.Success);
-		assertEquals("Table card requested for swap not among Player 1's face up cards", result.ErrorMessage);
-	}
-	
-	@Test
-	public void IsValidSwap_HandCardDoesNotBelongToPlayer_FailsValidation() {
-		
-		TableSwapValidator classUnderTest = new TableSwapValidator();
-		classUnderTest.setState(state);
-	
-		TableSwapValidationResult result = classUnderTest.isValidSwap(1, playerOneNonHandCard, playerOneFaceUpTableCard);
-		
-		assertFalse(result.Success);
-		assertEquals("Hand card requested for swap not in Player 1's hand", result.ErrorMessage);
 	}
 
 }
+
