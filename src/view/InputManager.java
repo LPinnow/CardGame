@@ -131,7 +131,6 @@ public class InputManager {
 				}
 			} else if (cardView.getContainingPile().equals(
 					gameBoard.getWasteView())) {
-				System.out.println("Play Waste Pile Move ");
 				MoveResult playWasteResult = game.submitMove(game
 						.getCurrentGameState()
 						.CurrentPlayerTurn(), new TakePileMove(card.getId(),
@@ -312,9 +311,6 @@ public class InputManager {
 				card = c;
 		}
 
-		System.out.println("CardView ID: " + cardView.getShortID()
-				+ " in pile: " + activePileView.getShortID());
-
 		// check if card(s) are intersecting with any of the piles
 		if (cardsToPlay.size() > 0) {
 			if (checkPile(cardsToPlay, cardView, activePile, activePileView,
@@ -324,7 +320,6 @@ public class InputManager {
 				return;
 			}
 		} else if (checkPile(card, cardView, activePile, activePileView, gameBoard.getNearestPile(draggedCardView))) {
-			System.out.println("True Check Pile single card");
 			draggedCard = null;
 			draggedCardView = null;
 			return;
@@ -485,8 +480,6 @@ public class InputManager {
 		}
 
 		if (isOverPile(cardView, pileView)) {
-			System.out.println("Dropped on pile: " + pileView.getShortID());
-
 			if (game.getCurrentGameState().CurrentGamePhase()
 					.equals(IdiotGameState.GamePhases.CardSwapping)
 					&& pileView.getShortID().contains("Foundation")) {
@@ -502,11 +495,6 @@ public class InputManager {
 					slideToPile(cardView, activePileView, pileView, true);
 					slideToPile(tablePileTopCardView, pileView, activePileView,
 							true);
-					// slideToHand(tablePileTopCardView, pileView,
-					// activePileView,
-					// draggedCardView.getLayoutX(),
-					// draggedCardView.getLayoutY(), draggedCardViewIndex,
-					// false);
 					makeDraggable(tablePileTopCardView);
 					makeClickable(tablePileTopCardView);
 					removeDraggable(cardView);
@@ -722,9 +710,6 @@ public class InputManager {
 	public void slideSortPile(CardPileView pile) {
 		List<CardView> cards = pile.getCards();
 
-		for (CardView card : cards) {
-			System.out.println(card.getShortID());
-		}
 		double[] sourceX = new double[cards.size()];
 		double[] sourceY = new double[cards.size()];
 		double[] targetX = new double[cards.size()];

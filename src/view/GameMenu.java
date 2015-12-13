@@ -22,11 +22,11 @@ public class GameMenu extends MenuBar {
   public GameMenu(CardGameMain cardGameApp) {
     Menu gameMenu = new Menu("Game");
     Menu settingsMenu = new Menu("Settings");
-    Menu testMenu = new Menu("Test");
-    getMenus().addAll(gameMenu, settingsMenu, testMenu);
+    getMenus().addAll(gameMenu, settingsMenu);
 
     MenuItem newGameMenuItem = new MenuItem("New Game");
-
+    newGameMenuItem.setOnAction(e -> cardGameApp.setupNewGame());
+    
     MenuItem exitGameMenuItem = new MenuItem("Exit");
     exitGameMenuItem.setOnAction(e -> Platform.exit());
 
@@ -60,7 +60,7 @@ public class GameMenu extends MenuBar {
     cardThemeSettingsMenu.getItems().addAll(classicMenuItem,
         piatnikImperialMenuItem, piatnikLuxuryMenuItem);
 
-    cardThemeToggleGroup.selectToggle(cardThemeToggleGroup.getToggles().get(0));
+    cardThemeToggleGroup.selectToggle(cardThemeToggleGroup.getToggles().get(2));
 
     // card backs
     Menu cardBackSettingsMenu = new Menu("Select card back");
@@ -112,7 +112,7 @@ public class GameMenu extends MenuBar {
         hearthStoneMenuItem, piatnikImperialBack1, piatnikImperialBack2,
         piatnikLuxuryBack1, piatnikLuxuryBack2);
 
-    cardBackToggleGroup.selectToggle(cardBackToggleGroup.getToggles().get(0));
+    cardBackToggleGroup.selectToggle(cardBackToggleGroup.getToggles().get(5));
 
     // table backgrounds
     Menu tableBackgroundsMenu = new Menu("Select table background");
@@ -122,37 +122,24 @@ public class GameMenu extends MenuBar {
     greenFeltBGItem.setToggleGroup(tableToggleGroup);
     greenFeltBGItem.setOnAction(e ->
         cardGameApp.gameBoard.setTableBackground(new Image("/tableaous/green-felt.png")));
+    
+    RadioMenuItem greenFeltBGItem2 = new RadioMenuItem("Green felt 2");
+    greenFeltBGItem2.setToggleGroup(tableToggleGroup);
+    greenFeltBGItem2.setOnAction(e ->
+        cardGameApp.gameBoard.setTableBackground(new Image("/tableaous/green-felt2.jpg")));
 
     RadioMenuItem woodBGItem = new RadioMenuItem("Wood desk");
     woodBGItem.setToggleGroup(tableToggleGroup);
     woodBGItem.setOnAction(e ->
         cardGameApp.gameBoard.setTableBackground(new Image("/tableaous/wood.jpg")));
 
-    tableBackgroundsMenu.getItems().addAll(greenFeltBGItem, woodBGItem);
+    tableBackgroundsMenu.getItems().addAll(greenFeltBGItem, greenFeltBGItem2, woodBGItem);
 
-    tableToggleGroup.selectToggle(tableToggleGroup.getToggles().get(0));
+    tableToggleGroup.selectToggle(tableToggleGroup.getToggles().get(1));
 
     settingsMenu.getItems().addAll(cardThemeSettingsMenu, cardBackSettingsMenu,
         tableBackgroundsMenu);
     
-    
-    MenuItem alertBoxTest = new MenuItem("Alert Box Test");
-    alertBoxTest.setOnAction(e -> {
-    	AlertBox.display("Alert Box Test", "Alert Box Test");
-    });
-    
-    MenuItem confirmBoxTest = new MenuItem("Confirm Box Test");
-    confirmBoxTest.setOnAction(e -> {
-    	boolean message = ConfirmBox.display("Confirm Box Test", "Question?");
-    });
 
-    
-    MenuItem inputBoxTest = new MenuItem("Input Box Test");
-    inputBoxTest.setOnAction(e -> {
-    	String message = InputBox.display("Input Box Test", "Enter your name:");
-    });
-
-
-    testMenu.getItems().addAll(alertBoxTest, confirmBoxTest, inputBoxTest);
   }
 }

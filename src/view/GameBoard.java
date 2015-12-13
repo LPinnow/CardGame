@@ -88,9 +88,11 @@ public class GameBoard extends Pane {
 	 * Constructs a new {@link DeCoupGameBoard} object.
 	 */
 	public GameBoard(ArrayList<CardPileView> piles) {
+		int TOTAL_NUM_OF_PLAYERS = 2;
+		
 		playerHands = new ArrayList<List<CardPileView>>();
 		foundationPiles = new HashMap<Integer, List<CardPileView>>();
-		int TOTAL_NUM_OF_PLAYERS = 2;
+		
 		// feed game rules # of players in
 		playerHands.add(0, new ArrayList<CardPileView>());
 		for (int i = 1; i < TOTAL_NUM_OF_PLAYERS + 1; i++) {
@@ -102,10 +104,10 @@ public class GameBoard extends Pane {
 		this.p2_ready = new Button("Player 2 Ready?");
 		this.p2_ready.setId("default-btn");
 		
-		this.p1_sort = new Button("Sort P1");
+		this.p1_sort = new Button("Sort Cards");
 		this.p1_sort.setId("default-btn");
 		
-		this.p2_sort = new Button("Sort P2");
+		this.p2_sort = new Button("Sort Cards");
 		this.p2_sort.setId("default-btn");
 		
 
@@ -246,6 +248,7 @@ public class GameBoard extends Pane {
 		});
 		
 		p2_ready.setVisible(false);
+		p2_sort.setVisible(false);
 
 		placeLabel(messageLabel, 50, 500, 14);
 	}
@@ -604,6 +607,8 @@ public class GameBoard extends Pane {
 	public void setActivePlayer(int activePlayerNumber) {
 		resetSelection(false);
 		if (activePlayerNumber == 1) {
+			p1_sort.setVisible(true);
+			p2_sort.setVisible(false);
 			for (CardView cardView : playerHands.get(1).get(0)) {
 				mouseUtility.makeDraggable(cardView);
 				cardView.setToFaceUp();
@@ -644,6 +649,8 @@ public class GameBoard extends Pane {
 			}
 
 		} else if (activePlayerNumber == 2) {
+			p1_sort.setVisible(false);
+			p2_sort.setVisible(true);
 			for (CardView cardView : playerHands.get(2).get(0)) {
 				mouseUtility.makeDraggable(cardView);
 				cardView.setToFaceUp();

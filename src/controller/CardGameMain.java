@@ -22,13 +22,12 @@ import javafx.stage.Stage;
  * @author Leah Pinnow, David Nordahl, Bryant Weaver, Divya Chepuri
  * @since October 2015
  * 
- * References:
- * Design and functionality of the Idiot Card Game are based on 
- * the following website:
- * cardgames.io/idiot
+ *        References: Design and functionality of the Idiot Card Game are based
+ *        on the following website: cardgames.io/idiot
  * 
- * This class has code based upon the following project:
- * Zoltan Dalmadi, "JCardGamesFX", 2015, GitHub repository, github.com/ZoltanDalmadi/JCardGamesFX.
+ *        This class has code based upon the following project: Zoltan Dalmadi,
+ *        "JCardGamesFX", 2015, GitHub repository,
+ *        github.com/ZoltanDalmadi/JCardGamesFX.
  * 
  */
 public class CardGameMain extends Application {
@@ -52,12 +51,14 @@ public class CardGameMain extends Application {
 	 * Reference to a {@link InputManager} instance.
 	 */
 	InputManager mouseUtility;
+	
+	private Stage stage;
 
 	/**
 	 * The current theme of the cards.
 	 */
 	public CardTheme cardTheme;
-	
+
 	public ConfigurationLoader configurationManager;
 
 	/**
@@ -79,11 +80,16 @@ public class CardGameMain extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) {
+		stage = primaryStage;
+		setupNewGame();
+	}
+
+	public void setupNewGame() {
 		configurationManager = new ConfigurationLoader("/configurationfiles/idiotCards.json",
 				"/configurationfiles/idiotGameBoard.json",
 				"/configurationfiles/idiotPlayers.json",
-				"/configurationfiles/idiotRules.json","/configurationfiles/idiotTheme.json");
-		
+				"/configurationfiles/idiotRules.json", "/configurationfiles/idiotTheme.json");
+
 		configurationManager.loadTheme();
 		// Game area
 		gameBoard = new GameBoard(configurationManager.loadGameBoardLayout(),
@@ -123,10 +129,9 @@ public class CardGameMain extends Application {
 		gameBoard.setActivePlayer(1);
 		setReadyButtonEventHandlers();
 
-		primaryStage.setTitle("Card Game");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-
+		stage.setTitle("Card Game");
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	/**
