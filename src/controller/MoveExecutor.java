@@ -2,10 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
-import controller.validators.ValidationResult;
 import model.IdiotGameConfiguration;
 import model.IdiotGameState;
-import model.IdiotGameState.GamePhases;
 import model.card.Card;
 import model.card.GameCardRank;
 import model.move.Move;

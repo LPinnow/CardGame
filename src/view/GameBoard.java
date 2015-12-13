@@ -36,8 +36,14 @@ public class GameBoard extends Pane {
 	 */
 	List<CardView> cardViewList = new ArrayList<>();
 
+	/**
+	 * List of playerhands per player(index)
+	 */
 	private List<List<CardPileView>> playerHands;
 
+	/**
+	 * Map of foundation pileview lists per player(key)
+	 */
 	private Map<Integer, List<CardPileView>> foundationPiles;
 
 	/**
@@ -72,16 +78,34 @@ public class GameBoard extends Pane {
 	 */
 	private Button p2_ready;
 	
+	/**
+	 * Sort button for player 1
+	 */
 	private Button p1_sort;
 	
+	/**
+	 * Sort button for player 2
+	 */
 	private Button p2_sort;
 
+	/**
+	 * All card pile views
+	 */
 	private List<CardPileView> allPileViews;
 
+	/**
+	 * List of cards currently selected
+	 */
 	private List<CardView> selection;
 
-	private InputManager mouseUtility;
+	/**
+	 * Reset input manager
+	 */
+	private InputManager inputManager;
 
+	/**
+	 * Current game state represented by model data
+	 */
 	private IdiotGameStateFacade currentGameState;
 
 	/**
@@ -120,13 +144,17 @@ public class GameBoard extends Pane {
 		initGameArea(piles);
 	}
 
+	/**
+	 * Add card view to selection
+	 * @param cardView Card view to add to selection
+	 */
 	public void addToSelection(CardView cardView) {
 		if (cardView == null) {
 			return;
 		}
 
 		if (selection.contains(cardView)) {
-			mouseUtility.slideToPosition(cardView,
+			inputManager.slideToPosition(cardView,
 					cardView.getLayoutX(), cardView.getLayoutY() + 20);
 			selection.remove(cardView);
 			return;
@@ -138,7 +166,7 @@ public class GameBoard extends Pane {
 				if (selectedCardView.asGameCard().getRank() != cardView
 						.asGameCard().getRank()) {
 					isDifferentCard = true;
-					mouseUtility.slideToPosition(selectedCardView,
+					inputManager.slideToPosition(selectedCardView,
 							selectedCardView.getLayoutX(),
 							selectedCardView.getLayoutY() + 20);
 				}
@@ -149,22 +177,29 @@ public class GameBoard extends Pane {
 			}
 		}
 		selection.add(cardView);
-		mouseUtility.slideToPosition(cardView, cardView.getLayoutX(),
+		inputManager.slideToPosition(cardView, cardView.getLayoutX(),
 				cardView.getLayoutY() - 20);
 
 	}
 
+	/**
+	 * @return Selected cards
+	 */
 	public List<CardView> getSelected() {
 		return selection;
 	}
 
+	/**
+	 * Reset card selection y-offset and clear selection cards
+	 * @param toDrag Selection being removed for drag event
+	 */
 	public void resetSelection(boolean toDrag) {
 		for (CardView selectedCardView : selection) {
 			if (toDrag) {
 				selectedCardView
 						.setLayoutY((selectedCardView.getLayoutY() + 20));
 			} else {
-				mouseUtility.slideToPosition(selectedCardView,
+				inputManager.slideToPosition(selectedCardView,
 						selectedCardView.getLayoutX(),
 						selectedCardView.getLayoutY() + 20);
 			}
@@ -172,6 +207,9 @@ public class GameBoard extends Pane {
 		selection.clear();
 	}
 
+	/**
+	 * Remove y offset for a selected card.
+	 */
 	public void removeOffsetSelection() {
 		for (CardView selectedCardView : selection) {
 			selectedCardView.setLayoutY((selectedCardView.getLayoutY() + 20));
@@ -179,6 +217,9 @@ public class GameBoard extends Pane {
 
 	}
 
+	/**
+	 * Clear selected cards
+	 */
 	public void clearSelection() {
 		selection.clear();
 	}
@@ -238,12 +279,12 @@ public class GameBoard extends Pane {
 		placeButton(p2_sort, 525, 125);
 		
 		p1_sort.setOnMouseClicked(e-> {
-			mouseUtility.sortPile(playerHands.get(1).get(0));
+			inputManager.sortPile(playerHands.get(1).get(0));
 			e.consume();
 		});
 		
 		p2_sort.setOnMouseClicked(e-> {
-			mouseUtility.sortPile(playerHands.get(2).get(0));
+			inputManager.sortPile(playerHands.get(2).get(0));
 			e.consume();
 		});
 		
@@ -253,6 +294,10 @@ public class GameBoard extends Pane {
 		placeLabel(messageLabel, 50, 500, 14);
 	}
 
+	/**
+	 * Build card pile view
+	 * @param cardPileView CardPileView to build
+	 */
 	private void buildPile(CardPileView cardPileView) {
 		BackgroundFill backgroundFill = new BackgroundFill(
 				Color.gray(0.0, 0.2), null, null);
@@ -348,6 +393,10 @@ public class GameBoard extends Pane {
 				});
 	}
 
+	/**
+	 * @param id id of Card View
+	 * @return Card view represented by this card view
+	 */
 	CardView getCardViewById(String id) {
 		for (CardView cardView : cardViewList) {
 			if (cardView.getShortID().equals(id)) {
@@ -357,6 +406,11 @@ public class GameBoard extends Pane {
 		return null;
 	}
 
+	/**
+	 * Gets nearest pile view to current card view (hypotenuse distance calculation)
+	 * @param cardView Card view to check against pile view locations
+	 * @return Nearest pile view
+	 */
 	public CardPileView getNearestPile(CardView cardView) {
 		double cardWidth = cardView.getFitWidth();
 		double cardHeight = cardView.getFitHeight();
@@ -372,10 +426,6 @@ public class GameBoard extends Pane {
 		for (int i = 0; i < allPileViews.size(); i++) {
 			CardPileView currentPile = allPileViews.get(i);
 
-			// Don't check pile against itself
-//			if (currentPile == cardView.getContainingPile()) {
-//				continue;
-//			}
 			double cardPileWidth = (currentPile.getCards().size() * cardWidth)
 					+ (currentPile.getCards().size() - 2 * currentPile
 							.getCardGapHorizontal());
@@ -396,33 +446,55 @@ public class GameBoard extends Pane {
 		return allPileViews.get(closestPileByIndex);
 	}
 
+	/**
+	 * @return P1 Ready Button
+	 */
 	public Button getP1_ReadyButton() {
 		return p1_ready;
 	}
 
+	/**
+	 * @return P2 Ready Button
+	 */
 	public Button getP2_ReadyButton() {
 		return p2_ready;
 	}
 
+	/**
+	 * Set button's visibility
+	 * @param b Button
+	 * @param visible visibility status
+	 */
 	public void setButtonVisibility(Button b, boolean visible) {
 		b.setVisible(visible);
 	}
 
-	public void setInputManager(InputManager mouseUtility) {
-		this.mouseUtility = mouseUtility;
+	/**
+	 * Set input manager
+	 * @param inputManager Input manager for processing input
+	 */
+	public void setInputManager(InputManager inputManager) {
+		this.inputManager = inputManager;
 	}
 
+	/**
+	 * Manually push current game state
+	 * @param currentGameState Current game state
+	 */
 	public void updateCurrentState(IdiotGameStateFacade currentGameState) {
 		this.currentGameState = currentGameState;
 	}
 
+	/**
+	 * Set message label text
+	 * @param text Text for message label
+	 */
 	public void setMessageLabelText(String text) {
 		messageLabel.setText(text);
 	}
 
 	/**
 	 * Draws the deck of cards
-	 * 
 	 * @param drawCards
 	 */
 	public void drawDeck() {
@@ -430,18 +502,16 @@ public class GameBoard extends Pane {
 
 		deckIterator.forEachRemaining(card -> {
 			getDeckView().addCardView(CardViewFactory.createCardView(card));
-			mouseUtility.restack(getDeckView());
+			inputManager.restack(getDeckView());
 			cardViewList.add(getDeckView().getTopCardView());
 			getChildren().add(getDeckView().getTopCardView());
-			mouseUtility.makeClickable(getDeckView().getTopCardView());
+			inputManager.makeClickable(getDeckView().getTopCardView());
 		});
 		deckView.getTopCardView().setMouseTransparent(false);
 	}
 
 	/**
 	 * Called at the start of the game to draw initialized board state
-	 * 
-	 * @param playerPlace
 	 */
 	public void setupGameBoard() {
 		for (int i = 1; i < playerHands.size(); i++) {
@@ -472,61 +542,89 @@ public class GameBoard extends Pane {
 		setupWaste(getWasteView());
 	}
 
+	/**
+	 * Remove pile view (fades out cards)
+	 * @param pile Pile to remove
+	 */
 	private void removePileViewCards(CardPileView pile) {
 		for (CardView cardView : pile) {
-			mouseUtility.fadeOutAndRemove(cardView);
+			inputManager.fadeOutAndRemove(cardView);
 		}
 		pile.clearContents();
 	}
 
+	/**
+	 * Creates a new pile
+	 * @param pile Pile view
+	 * @param cards Model cards that the pile view represents
+	 * @param dealDelay Delay in deal (animation duration)
+	 */
 	private void createPile(CardPileView pile, List<Card> cards, int dealDelay) {
 		for (Card card : cards) {
 			pile.addCardView(CardViewFactory
 					.createCardView(card));
-			mouseUtility.restack(pile);
+			inputManager.restack(pile);
 			getChildren().add(pile.getTopCardView());
 			cardViewList.add(pile.getTopCardView());
-			mouseUtility.slideFromDeck(pile.getTopCardView(), dealDelay);
+			inputManager.slideFromDeck(pile.getTopCardView(), dealDelay);
 
 		}
 
 	}
 
+	/**
+	 * Set up foundation pile
+	 * @param foundationPileView Foundation Pile View
+	 * @param handSize Size of hand for corresponding player's hand
+	 * @param allFoundationCardsVisible Specifies whether or not to show foundation cards
+	 */
 	private void setupFoundation(CardPileView foundationPileView, int handSize, boolean allFoundationCardsVisible) {
 		int maxIndex = foundationPileView.getCards().size() - 1;
 		for (CardView cardView : foundationPileView.getCards()) {
 			if (handSize == 0 && foundationPileView.getCards().size() > 1) {
-				mouseUtility.makeDraggable(foundationPileView.getCards().get(maxIndex));
+				inputManager.makeDraggable(foundationPileView.getCards().get(maxIndex));
 			} else {
-				mouseUtility.removeDraggable(cardView);
+				inputManager.removeDraggable(cardView);
 			}
 			if (allFoundationCardsVisible && handSize == 0) {
 				cardView.setToFaceUp();
-				mouseUtility.makeDraggable(cardView);
+				inputManager.makeDraggable(cardView);
 			}
 			cardView.setMouseTransparent(false);
 		}
 
 	}
 
+	/**
+	 * Set up hand pile view
+	 * @param handPileView Pile view for hand
+	 */
 	private void setupHand(CardPileView handPileView) {
 		for (CardView cardView : handPileView.getCards()) {
-			mouseUtility.makeDraggable(cardView);
-			mouseUtility.makeClickable(cardView);
+			inputManager.makeDraggable(cardView);
+			inputManager.makeClickable(cardView);
 			cardView.setToFaceUp();
 			cardView.setMouseTransparent(false);
 		}
 	}
 
+	/**
+	 * Set up waste pile view
+	 * @param wastePileView Waste pile view
+	 */
 	private void setupWaste(CardPileView wastePileView) {
 		for (CardView cardView : wastePileView.getCards()) {
-			mouseUtility.removeDraggable(cardView);
-			mouseUtility.makeClickable(cardView);
+			inputManager.removeDraggable(cardView);
+			inputManager.makeClickable(cardView);
 			cardView.setToFaceUp();
 			cardView.setMouseTransparent(false);
 		}
 	}
 
+	/**
+	 * @param cardPileView Pile view
+	 * @param cards Corresponding model data cards in pile
+	 */
 	private void checkForAdditions(CardPileView cardPileView, List<Card> cards) {
 		List<CardView> cardViews = cardPileView.getCards();
 
@@ -536,12 +634,16 @@ public class GameBoard extends Pane {
 				System.out.println("Could not find " + card.getId());
 			}
 			if (!cardViews.contains(tempView) && tempView != null) {
-				mouseUtility.slideToPile(tempView,
+				inputManager.slideToPile(tempView,
 						tempView.getContainingPile(), cardPileView, false);
 			}
 		}
 	}
 
+	/**
+	 * @param wastePileView Waste pile view
+	 * @param cards Model view representation of Waste pile view
+	 */
 	private void checkForWasteChanges(CardPileView wastePileView,
 			List<Card> cards) {
 		List<CardView> cardViews = wastePileView.getCards();
@@ -552,6 +654,9 @@ public class GameBoard extends Pane {
 
 	}
 
+	/**
+	 * Update game board to reflect any updates to model data.
+	 */
 	public void updateGameBoard() {
 
 		CardPileView foundationPileView_1;
@@ -602,7 +707,7 @@ public class GameBoard extends Pane {
 
 	/**
 	 * Deactivates current player's cards and activates the other player's
-	 * cards. Changes drag event status.
+	 * cards. 
 	 */
 	public void setActivePlayer(int activePlayerNumber) {
 		resetSelection(false);
@@ -610,12 +715,12 @@ public class GameBoard extends Pane {
 			p1_sort.setVisible(true);
 			p2_sort.setVisible(false);
 			for (CardView cardView : playerHands.get(1).get(0)) {
-				mouseUtility.makeDraggable(cardView);
+				inputManager.makeDraggable(cardView);
 				cardView.setToFaceUp();
 			}
 
 			for (CardView cardView : playerHands.get(2).get(0)) {
-				mouseUtility.removeDraggable(cardView);
+				inputManager.removeDraggable(cardView);
 				cardView.setToFaceDown();
 			}
 
@@ -652,12 +757,12 @@ public class GameBoard extends Pane {
 			p1_sort.setVisible(false);
 			p2_sort.setVisible(true);
 			for (CardView cardView : playerHands.get(2).get(0)) {
-				mouseUtility.makeDraggable(cardView);
+				inputManager.makeDraggable(cardView);
 				cardView.setToFaceUp();
 			}
 
 			for (CardView cardView : playerHands.get(1).get(0)) {
-				mouseUtility.removeDraggable(cardView);
+				inputManager.removeDraggable(cardView);
 				cardView.setToFaceDown();
 			}
 
@@ -693,12 +798,15 @@ public class GameBoard extends Pane {
 		}
 	}
 
+	/**
+	 * Changes player turn based on current player info submitted
+	 * @param currentPlayer Current players turn
+	 */
 	public void changePlayerTurn(int currentPlayer) {
 		if (currentPlayer == 1) {
 			setActivePlayer(2);
 		} else {
 			setActivePlayer(1);
 		}
-
 	}
 }

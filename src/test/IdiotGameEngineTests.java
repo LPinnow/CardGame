@@ -1,17 +1,22 @@
 package test;
 
-import controller.*;
-import controller.validators.TableSwapValidationResult;
-import model.IdiotGameState;
-import model.Player;
-import model.card.Card;
-import model.move.MoveResult;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import test.mocks.*;
+import controller.IdiotGameEngine;
+import controller.validators.TableSwapValidationResult;
+import model.IdiotGameState;
+import model.card.Card;
+import model.move.MoveResult;
+import test.mocks.MockGameEndedChecker;
+import test.mocks.MockMoveExecutor;
+import test.mocks.MockMoveValidator;
+import test.mocks.MockRuleConfigurationLoader;
+import test.mocks.MockTableSwapValidator;
 
 public class IdiotGameEngineTests {
 

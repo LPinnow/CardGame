@@ -1,22 +1,25 @@
 package test.validators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import model.move.MoveResult;
-import model.move.TakePileMove;
 import controller.validators.MoveValidator;
 import controller.validators.ValidationResult;
-import model.*;
+import model.IdiotGameConfiguration;
+import model.IdiotGameState;
+import model.Player;
 import model.card.Card;
 import model.card.CardDeck;
 import model.card.GameCard;
 import model.card.GameCardRank;
 import model.card.GameCardSuit;
+import model.move.TakePileMove;
 
 public class MoveValidatorTests {
 

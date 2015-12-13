@@ -6,13 +6,13 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Map;
 
-import model.IdiotGameConfiguration;
-import model.card.GameCardRank;
-import view.CardPileView;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import model.IdiotGameConfiguration;
+import model.card.GameCardRank;
+import view.CardPileView;
 
 public class ConfigurationLoader implements IConfigurationLoader {
 
